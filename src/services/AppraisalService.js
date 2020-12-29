@@ -21,6 +21,8 @@ function Item(item) {
 const AppraisalService = {
   getPeriodsPath: '/api/periods',
   addPeriodsPath: '/api/periods',
+  periodPath: (periodId) => `/api/periods/${periodId}`,
+  periodFinishPath: (periodId) => `/api/periods/${periodId}/finish`,
   getItemsPath: (id) => `/api/periods/${id}`,
   getUserItemsPath: (id, userId) => `/api/periods/${id}/users/${userId}`,
   toggleLockPeriodPath: (id, userId) => `/api/periods/${id}/users/${userId}/toggle-lock`,
@@ -35,7 +37,6 @@ const AppraisalService = {
   updateUserItemPath: (periodId, userId, itemId) => `/api/periods/${periodId}/users/${userId}/items/${itemId}`,
   deleteItemFromPeriodPath: (periodId, itemId) => `/api/periods/${periodId}/items/${itemId}`,
   deleteUserItemPath: (periodId, userId, itemId) => `/api/periods/${periodId}/users/${userId}/items/${itemId}`,
-  finishPeriodPath: (periodId) => `/api/periods/${periodId}/finish`,
   updateItemTypePath: (periodId, itemId) => `/api/periods/${periodId}/items/${itemId}/change-type`,
   updateUserItemTypePath: (periodId, userId, itemId) => `/api/periods/${periodId}/users/${userId}/items/${itemId}/change-type`,
 
@@ -374,9 +375,26 @@ const AppraisalService = {
     }
   },
 
+  async updatePeriod(periodId, body) {
+    try {
+      const response = await axios.put(this.periodPath(periodId), body);
+      if (response.status === 200) {
+        return response.data;
+      }
+      throw new Error(`Server response: ${response.status} - ${response.statusText}`);
+    } catch (err) {
+      NotificationService.notify({
+        type: 'error',
+        header: 'Error',
+        content: (err.response && err.response.data.error) || err.message,
+      });
+      throw err;
+    }
+  },
+
   async finishPeriod(periodId) {
     try {
-      const response = await axios.post(this.finishPeriodPath(periodId));
+      const response = await axios.post(this.periodFinishPath(periodId));
       if (response.status === 200) {
         return true;
       }

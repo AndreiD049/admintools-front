@@ -1,32 +1,300 @@
-import React, { useState, useEffect, useContext } from 'react';
+/* eslint-disable no-param-reassign */
+import React, {
+  useState, useEffect, useContext,
+} from 'react';
 import {
-  Link, Switch, Route, useRouteMatch,
+  Switch, Route, useRouteMatch, useHistory,
 } from 'react-router-dom';
+import { useTheme } from '@fluentui/react-theme-provider';
+import {
+  Checkbox,
+  CommandBar,
+  SearchBox,
+  SelectionMode,
+  Separator,
+  Stack,
+  Text,
+  Selection,
+} from '@fluentui/react';
+import {
+  Col, Container, Row, useScreenClass,
+} from 'react-grid-system';
+import Table from '../../components/shared/table';
 import AppraisalService from '../../services/AppraisalService';
 import GlobalContext from '../../services/GlobalContext';
 import AppraisalDetailsPage from '../appraisal-details';
-import { makeStyles } from '@fluentui/react-theme-provider';
+import PageHeader from '../../components/shared/page-header';
+import Chip from '../../components/shared/chip';
+import PanelNew from '../../components/appraisal-list/panel-new/PanelNew';
+import constants from '../../utils/constants';
+import PanelEdit from '../../components/appraisal-list/panel-edit/PanelEdit';
 
-const useStyles = makeStyles((theme) => ({
-
-}));
+const { APPRAISAL_PERIODS: AP } = constants.securities;
 
 const AppraisalsPage = () => {
+  const theme = useTheme();
+  const history = useHistory();
+  const screenClass = useScreenClass();
   const [items, setItems] = useState([]);
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const [filteredItems, setFilteredItems] = useState([]);
+  const [showClosed, setShowClosed] = useState(true);
+  const [newPanelOpen, setNewPanelOpen] = useState(false);
+  const [editPanelOpen, setEditPanelOpen] = useState(false);
+  const [searchValue, setSearchValue] = useState('');
   const global = useContext(GlobalContext);
-  const classes = useStyles();
   const { path } = useRouteMatch();
+  const [selectionDetails, setSelectionDetails] = useState({
+    count: 0,
+    items: [],
+  });
+
+  const [columns] = useState([
+    {
+      key: 'status',
+      name: 'Status',
+      fieldName: 'status',
+      minWidth: 70,
+      maxWidth: 70,
+      isSortable: true,
+      isFilterable: true,
+      sort: (a, b) => (a.status > b.status ? -1 : 1),
+      onRender: (item) => (
+        <Chip
+          style={{
+            backgroundColor: item.status === 'Finished'
+              ? theme.palette.blue
+              : theme.palette.green,
+            padding: '3px',
+          }}
+        >
+          <Text
+            variant="xSmall"
+            style={{
+              color: '#fff',
+            }}
+          >
+            {item.status}
+          </Text>
+        </Chip>
+      ),
+    },
+    {
+      key: 'name',
+      name: 'Name',
+      fieldName: 'name',
+      data: 'string',
+      isResizable: true,
+      isSortable: true,
+      isFilterable: true,
+      minWidth: 100,
+      maxWidth: 350,
+    },
+    {
+      key: 'createdUser',
+      name: 'Created by',
+      fieldName: 'createdUser',
+      isPadded: true,
+      isResizable: true,
+      isSortable: true,
+      isFilterable: true,
+      filterValueAccessor: (i) => i.createdUser.username,
+      sort: (a, b) => (a.createdUser.username < b.createdUser.username ? -1 : 1),
+      data: 'string',
+      minWidth: 200,
+      maxWidth: 300,
+      onRender: (item) => (<div>{item.createdUser.username}</div>),
+    },
+    {
+      key: 'createdDate',
+      name: 'Created on',
+      fieldName: 'createdDate',
+      isResizable: true,
+      isPadded: true,
+      isSortable: true,
+      data: 'date',
+      minWidth: 200,
+      maxWidth: 300,
+      onRender: (item) => (<div>{new Date(item.createdDate).toLocaleString()}</div>),
+    },
+  ]);
+  const [sortedColumn, setSortedColumn] = useState(null);
 
   useEffect(() => {
     async function loadData() {
-      setItems(await AppraisalService.getPeriods());
+      const result = await AppraisalService.getPeriods();
+      setItems(result);
     }
     loadData();
   }, []);
 
+  useEffect(() => {
+    setSortedColumn({
+      ...columns[3],
+      isSorted: true,
+      isSortedDescending: true,
+    });
+  }, [columns]);
+
+  useEffect(() => {
+    setFilteredItems(showClosed ? items : items.filter((i) => i.status !== 'Finished'));
+  }, [showClosed, items]);
+
+  const handleItemInvoked = (item) => {
+    history.push(`${path}/${item.id}`);
+  };
+
+  const clickFinishHandler = async () => {
+    if (selectionDetails.count) {
+      const item = selectionDetails.items[0];
+      const result = await AppraisalService.finishPeriod(item.id);
+      if (result) {
+        setItems((prev) => prev.map((i) => (i.id === item.id ? { ...item, status: 'Finished' } : i)));
+      }
+    }
+  };
+
+  const handleCreate = async (name) => {
+    if (global.user
+      && global.user.id
+      && global.user.organization
+      && global.user.organization.id
+      && global.Authorize(AP.code, AP.grants.create)) {
+      const result = await AppraisalService.addPeriod({
+        name,
+        status: 'Active',
+        organizationId: global.user.organization.id,
+        createdUser: global.user.id,
+      });
+      setItems((prev) => prev.slice().concat(result));
+    }
+  };
+
+  const handleEdit = async (id, name) => {
+    if (global.user
+      && global.user.id
+      && global.user.organization
+      && global.user.organization.id
+      && global.Authorize(AP.code, AP.grants.update)) {
+      const result = await AppraisalService.updatePeriod(id, {
+        name,
+      });
+      setItems((prev) => prev.map((i) => (i.id === result.id ? result : i)));
+    }
+  };
+
   return (
-    <h1>AppraisalsPage</h1>
+    <>
+      <Switch>
+        <Route exact path={path}>
+          <Container md>
+            <Row>
+              <Col xs={12}>
+                <PageHeader text="Appraisals" />
+              </Col>
+            </Row>
+            <Separator />
+            <Row>
+              <Col xs={12}>
+                <Stack horizontalAlign="stretch">
+                  <Row align="start">
+                    <Col xs={12} sm={6}>
+                      <CommandBar items={[
+                        {
+                          key: 'openItem',
+                          text: 'Open',
+                          disabled: selectionDetails.count === 0,
+                          iconProps: { iconName: 'OpenFile' },
+                          onClick: () => handleItemInvoked(
+                            selectionDetails.count
+                            && selectionDetails.items[0],
+                          ),
+                        },
+                        {
+                          key: 'newItem',
+                          text: 'New',
+                          iconProps: { iconName: 'Add' },
+                          onClick: () => setNewPanelOpen(true),
+                        },
+                        {
+                          key: 'editItem',
+                          text: 'Edit',
+                          disabled: selectionDetails.count === 0,
+                          iconProps: { iconName: 'Edit' },
+                          onClick: () => setEditPanelOpen(true),
+                        },
+                        {
+                          key: 'finishItem',
+                          text: 'Finish',
+                          disabled: selectionDetails.count === 0
+                            || (selectionDetails.count && selectionDetails.items[0].status === 'Finished'),
+                          iconProps: { iconName: 'SaveAndClose' },
+                          onClick: clickFinishHandler,
+                        },
+                      ]}
+                      />
+                    </Col>
+                    <Col xs={12} sm={6}>
+                      <Stack horizontalAlign={screenClass === 'xs' ? 'start' : 'end'} horizontal>
+                        <Stack verticalAlign="center" horizontalAlign="start">
+                          <SearchBox
+                            placeholder="Search"
+                            styles={{
+                              root: {
+                                minWidth: 250,
+                              },
+                            }}
+                            value={searchValue}
+                            onChange={(e) => setSearchValue(e && e.target ? e.target.value : '')}
+                          />
+                          <Checkbox
+                            label="Show closed"
+                            checked={showClosed}
+                            onChange={() => setShowClosed((prev) => !prev)}
+                            styles={{
+                              root: {
+                                paddingTop: theme.spacing.s1,
+                              },
+                            }}
+                          />
+                        </Stack>
+                      </Stack>
+                    </Col>
+                  </Row>
+                  <Separator />
+                  <Table
+                    items={filteredItems}
+                    columns={columns}
+                    selectionMode={SelectionMode.single}
+                    onItemInvoked={handleItemInvoked}
+                    searchValue={searchValue}
+                    sortedCol={sortedColumn}
+                    setSelectionDetails={setSelectionDetails}
+                  />
+                  <PanelNew
+                    isOpen={newPanelOpen}
+                    setOpen={setNewPanelOpen}
+                    handleCreate={handleCreate}
+                  />
+                  <PanelEdit
+                    item={selectionDetails.count ? selectionDetails.items[0] : null}
+                    isOpen={editPanelOpen}
+                    setOpen={setEditPanelOpen}
+                    handleEdit={handleEdit}
+                  />
+                </Stack>
+              </Col>
+            </Row>
+          </Container>
+        </Route>
+        <Route exact path={`${path}/:id/user/:userId`}>
+          <AppraisalDetailsPage ctx={global} setCtx={global.setContext} />
+        </Route>
+        <Route path={`${path}/:id`}>
+          <AppraisalDetailsPage ctx={global} setCtx={global.setContext} />
+        </Route>
+      </Switch>
+
+    </>
   );
 };
 

@@ -1,16 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  classNamesFunction, IconButton, Text,
+  Icon, IconButton, Text,
 } from '@fluentui/react';
-import { useTheme } from '@fluentui/react-theme-provider';
+import { useTheme, makeStyles } from '@fluentui/react-theme-provider';
 import UserInfo from '../user-info/UserInfo';
+import keytipStyles from '../../../../styles/keytipStyles';
 
-const classNames = classNamesFunction();
-const styles = (props) => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     position: 'relative',
-    backgroundColor: props.theme.palette.themeDark,
+    backgroundColor: theme.palette.themeDark,
     height: '40px',
     width: '100vw',
     display: 'flex',
@@ -25,24 +25,48 @@ const styles = (props) => ({
   },
   icon: {
     height: '40px',
-    color: props.theme.palette.themeLight,
+    color: theme.palette.accent,
   },
   text: {
     width: '150px',
     alignSelf: 'center',
     textAlign: 'center',
-    color: '#fff',
+    color: theme.palette.accent,
   },
-});
+}));
 
-const AppBar = ({toggleDrawer}) => {
+const AppBar = ({ toggleDrawer }) => {
   const theme = useTheme();
-  const classes = classNames(styles, { theme });
+  const classes = useStyles();
   return (
     <div className={classes.root}>
       <div className={classes.flex}>
-        <IconButton className={classes.icon} iconProps={{ iconName: 'GlobalNavButton' }} title="Global Nav" ariaLabel="Global Navigation" onClick={toggleDrawer} />
-        <Text className={classes.text} variant="large" block>Admin Tools</Text>
+        <IconButton
+          className={classes.icon}
+          iconProps={{ iconName: 'GlobalNavButton' }}
+          title="Global Nav"
+          ariaLabel="Global Navigation"
+          onClick={toggleDrawer}
+          keytipProps={{
+            styles: keytipStyles,
+            content: 'M',
+            keySequences: ['m'],
+            onExecute: toggleDrawer,
+            hasMenu: true,
+          }}
+        />
+        <Text className={classes.text} variant="large" block nowrap>
+          <Icon
+            iconName="Glasses"
+            styles={{
+              root: {
+                fontSize: '25px',
+                padding: theme.spacing.s2,
+              },
+            }}
+          />
+          Admin Tools
+        </Text>
       </div>
       <UserInfo />
     </div>

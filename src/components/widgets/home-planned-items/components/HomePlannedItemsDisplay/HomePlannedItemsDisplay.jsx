@@ -96,7 +96,15 @@ const HomePlannedItemsDisplay = ({ items, setItems }) => {
             value={newItemVal}
             onChange={handleInputChange}
             suffix="Add"
-            onRenderSuffix={({ suffix }) => (<CommandButton type="submit" default iconProps={{ iconName: 'Add' }}>{suffix}</CommandButton>)}
+            onRenderSuffix={({ suffix }) => (
+              <CommandButton
+                type="submit"
+                default
+                iconProps={{ iconName: 'Add' }}
+              >
+                {suffix}
+              </CommandButton>
+            )}
           />
         </form>
       </Stack>

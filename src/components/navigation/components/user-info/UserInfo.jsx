@@ -1,6 +1,5 @@
 import React, { useContext, useState } from 'react';
 import {
-  classNamesFunction,
   Persona,
   PersonaSize,
   Stack,
@@ -8,12 +7,14 @@ import {
   Link as FluidLink,
   Callout,
   Separator,
+  ActionButton,
 } from '@fluentui/react';
-import { Link } from 'react-router-dom';
+import { makeStyles } from '@fluentui/react-theme-provider';
+import keytipStyles from '../../../../styles/keytipStyles';
 import GlobalContext from '../../../../services/GlobalContext';
+import ChooseThemeModal from '../choose-theme-modal/ChooseThemeModal';
 
-const classNames = classNamesFunction();
-const styles = {
+const useStyles = makeStyles((theme) => ({
   root: {
     height: '40px',
     width: '200px',
@@ -22,27 +23,31 @@ const styles = {
     justifyContent: 'center',
   },
   link: {
-    color: '#fff',
+    color: theme.palette.accent,
     textAlign: 'center',
     display: 'block',
     paddingRight: '16px',
+  },
+  fluidLink: {
+    color: theme.palette.accent,
   },
   usernameText: {
     overflow: 'hidden',
     paddingRight: '8px',
     textDecoration: 'none',
-    color: '#fff',
+    color: theme.palette.accent,
   },
   callout: {
     minWidth: '200px',
     minHeight: '100px',
     padding: '16px',
   },
-};
+}));
 
-const UserInfo = (props) => {
-  const classes = classNames(styles);
+const UserInfo = () => {
+  const classes = useStyles();
   const [calloutVisible, setCalloutVisible] = useState(false);
+  const [themeModalOpen, setThemeModalOpen] = useState(false);
   const global = useContext(GlobalContext);
   const displayName = global.user
     ? (global.user.displayName || global.user.username)
@@ -55,10 +60,32 @@ const UserInfo = (props) => {
       {
         global.user
           ? (
-            <FluidLink onClick={handleCalloutToggle} id="persona">
+            <FluidLink
+              onClick={handleCalloutToggle}
+              style={{
+                textDecoration: 'none',
+              }}
+              id="persona"
+              keytipProps={{
+                styles: keytipStyles,
+                content: 'I',
+                keySequences: ['i'],
+                onExecute: (el) => el.click(),
+              }}
+            >
               <Stack verticalAlign="center" wrap={false} horizontal>
                 <Text className={classes.usernameText}>{global.user.username}</Text>
-                <Persona size={PersonaSize.size32} />
+                <Persona
+                  size={PersonaSize.size32}
+                  text={displayName}
+                  hidePersonaDetails
+                  className={classes.fluidLink}
+                  styles={{
+                    root: {
+                      marginRight: '18px',
+                    },
+                  }}
+                />
               </Stack>
               {
                 calloutVisible && (
@@ -83,7 +110,20 @@ const UserInfo = (props) => {
                       <Text variant="mediumPlus">{global.user.username}</Text>
                     </Stack>
                     <Separator />
+                    <ActionButton
+                      onClick={() => setThemeModalOpen(true)}
+                      iconProps={{
+                        iconName: 'Brush',
+                      }}
+                    >
+                      Chgange Layout
+                    </ActionButton>
+                    <Separator />
                   </Stack>
+                  <ChooseThemeModal
+                    isOpen={themeModalOpen}
+                    setOpen={setThemeModalOpen}
+                  />
                 </Callout>
                 )
               }

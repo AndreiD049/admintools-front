@@ -66,7 +66,11 @@ const ReportingService = {
 
   async updateTemplate(id, update) {
     try {
-      const response = await axios.put(this.templatePath(id), update);
+      const response = await axios.put(this.templatePath(id), update, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
       if (response.status === 200) {
         return response.data;
       }

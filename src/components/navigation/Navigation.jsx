@@ -7,6 +7,7 @@ const classNames = classNamesFunction();
 const styles = {
   root: {
     position: 'fixed',
+    zIndex: 1002,
     left: 0,
     top: 0,
   },

@@ -2,15 +2,15 @@ import { createTheme } from '@fluentui/react';
 
 export default createTheme({
   palette: {
-    themePrimary: '#0078d4',
-    themeLighterAlt: '#eff6fc',
-    themeLighter: '#deecf9',
-    themeLight: '#c7e0f4',
-    themeTertiary: '#71afe5',
-    themeSecondary: '#2b88d8',
-    themeDarkAlt: '#106ebe',
-    themeDark: '#005a9e',
-    themeDarker: '#004578',
+    themePrimary: '#0078d7',
+    themeLighterAlt: '#f3f9fd',
+    themeLighter: '#d1e7f8',
+    themeLight: '#aad2f3',
+    themeTertiary: '#5ca8e7',
+    themeSecondary: '#1a84db',
+    themeDarkAlt: '#006ac1',
+    themeDark: '#005aa3',
+    themeDarker: '#004278',
     neutralLighterAlt: '#faf9f8',
     neutralLighter: '#f3f2f1',
     neutralLight: '#edebe9',
@@ -24,5 +24,7 @@ export default createTheme({
     neutralDark: '#201f1e',
     black: '#000000',
     white: '#ffffff',
+    accent: '#ffffff',
   },
+  type: 'light',
 });

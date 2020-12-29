@@ -12,13 +12,17 @@
     "axios": "^0.21.0",
     "clsx": "^1.1.1",
     "download.js": "^1.0.0",
+    "eventemitter3": "^4.0.7",
     "prop-types": "^15.7.2",
     "react": "^17.0.1",
+    "react-collapse": "^5.1.0",
     "react-document-title": "^2.0.3",
     "react-dom": "^17.0.1",
     "react-grid-system": "^7.1.1",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "3.4.4"
+    "react-scripts": "3.4.4",
+    "react-transition-group": "^4.4.1",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "eslint": "^6.6.0",

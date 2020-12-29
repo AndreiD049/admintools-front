@@ -1,4 +1,6 @@
-import { Label, loadTheme } from '@fluentui/react';
+import {
+  KeytipLayer, KeyCodes,
+} from '@fluentui/react';
 import DocumentTitle from 'react-document-title';
 import {
   BrowserRouter as Router,
@@ -16,9 +18,10 @@ import AppraisalsPage from '../../routes/appraisals';
 import HomePage from '../../routes/home';
 import SettingsPage from '../../routes/settings';
 import ReportingPage from '../../routes/reporting';
+import LoginRequired from '../shared/login-required';
 import LoginPage from '../../routes/login';
-import lightTheme from '../../themes/lightTheme';
-import darkTheme from '../../themes/darkTheme';
+import { selectTheme } from '../../themes';
+import NotificationContainer from '../notification/NotificationContainer';
 
 const App = () => {
   const [context, setContext] = useState({
@@ -26,7 +29,7 @@ const App = () => {
     Authorize: AuthorizationService.Authorize,
     setContext: null,
     userPreferences: {
-      theme: localStorage.getItem('theme') === 'dark' ? darkTheme : lightTheme,
+      theme: selectTheme(),
     },
   });
 
@@ -43,10 +46,18 @@ const App = () => {
   return (
     <GlobalContext.Provider value={context}>
       <ThemeProvider applyTo="body" theme={theme}>
+        <KeytipLayer
+          keytipStartSequences={[{
+            key: 'a',
+            modifierKeys: [KeyCodes.alt],
+          }]}
+        />
         <UserInfoProvider ctx={context} setCtx={setContext} />
         <UserSecuritiesProvider />
+        <NotificationContainer />
         <Router>
           <Navigation />
+          <LoginRequired />
           {/* The page switch */}
           <Switch>
             <div style={{ marginTop: '40px' }}>

@@ -2,13 +2,14 @@ import React, { useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {
-  Panel, PanelType, classNamesFunction, Icon, ActionButton, Nav,
+  Panel, PanelType, classNamesFunction, Icon, ActionButton, Nav, Link,
 } from '@fluentui/react';
 import constants from '../../../../utils/constants';
 import GlobalContext from '../../../../services/GlobalContext';
+import keytipStyles from '../../../../styles/keytipStyles';
 
 const classNames = classNamesFunction();
-const styles = (props) => ({
+const styles = () => ({
   root: {
   },
   icon: {
@@ -31,6 +32,9 @@ const navLinkGroups = [
         name: 'Home',
         url: '/',
         icon: 'Home',
+        keyTipContent: '1',
+        keyTipSequence: ['m', '1'],
+        hasMenu: false,
       },
       {
         name: 'Appraisals',
@@ -38,6 +42,9 @@ const navLinkGroups = [
         code: constants.securities.APPRAISAL_PERIODS.code,
         grant: 'read',
         icon: 'Feedback',
+        keyTipContent: '2',
+        keyTipSequence: ['m', '2'],
+        hasMenu: false,
       },
       {
         name: 'Audits',
@@ -45,11 +52,17 @@ const navLinkGroups = [
         code: constants.securities.AUDITS.code,
         grant: 'read',
         icon: 'ComplianceAudit',
+        keyTipContent: '3',
+        keyTipSequence: ['m', '3'],
+        hasMenu: false,
       },
       {
         name: 'Reporting',
         code: constants.securities.REPORTS.code,
         grant: 'read',
+        keyTipContent: '4',
+        keyTipSequence: ['m', '4'],
+        hasMenu: true,
         links: [
           {
             name: 'Reports',
@@ -57,6 +70,9 @@ const navLinkGroups = [
             code: constants.securities.REPORTS.code,
             grant: 'read',
             icon: 'ReportDocument',
+            keyTipContent: '1',
+            keyTipSequence: ['m', '4', '1'],
+            hasMenu: false,
           },
           {
             name: 'Templates',
@@ -64,6 +80,9 @@ const navLinkGroups = [
             code: constants.securities.REPORT_TEMPLATES.code,
             grant: 'read',
             icon: 'FileTemplate',
+            keyTipContent: '2',
+            keyTipSequence: ['m', '4', '2'],
+            hasMenu: false,
           },
         ],
       },
@@ -71,6 +90,9 @@ const navLinkGroups = [
         name: 'Settings',
         code: constants.securities.SETTINGS.code,
         grant: 'read',
+        keyTipContent: '5',
+        keyTipSequence: ['m', '5'],
+        hasMenu: true,
         links: [
           {
             name: 'General',
@@ -78,6 +100,9 @@ const navLinkGroups = [
             code: constants.securities.SETTINGS.code,
             grant: 'read',
             icon: 'Settings',
+            keyTipContent: '1',
+            keyTipSequence: ['m', '5', '1'],
+            hasMenu: false,
           },
           {
             name: 'Users',
@@ -85,6 +110,9 @@ const navLinkGroups = [
             code: constants.securities.SETTINGS.code,
             grant: 'users',
             icon: 'UserFollowed',
+            keyTipContent: '2',
+            keyTipSequence: ['m', '5', '2'],
+            hasMenu: false,
           },
           {
             name: 'Permissions',
@@ -92,6 +120,9 @@ const navLinkGroups = [
             code: constants.securities.SETTINGS.code,
             grant: 'permissions',
             icon: 'Permissions',
+            keyTipContent: '3',
+            keyTipSequence: ['m', '5', '3'],
+            hasMenu: false,
           },
         ],
       },
@@ -137,8 +168,14 @@ const Drawer = ({ isOpen, toggleDrawer }) => {
       isLightDismiss
       onDismiss={toggleDrawer}
     >
-      <ActionButton className={classes.icon} onClick={toggleDrawer}>
-        <Icon iconName="GlobalNavButton" style={{ marginLeft: 5 }} />
+      <ActionButton
+        className={classes.icon}
+        onClick={toggleDrawer}
+      >
+        <Icon
+          iconName="GlobalNavButton"
+          style={{ marginLeft: 5 }}
+        />
       </ActionButton>
       <Nav
         className={classes.nav}
@@ -146,6 +183,22 @@ const Drawer = ({ isOpen, toggleDrawer }) => {
         selectedKey=""
         groups={links}
         onLinkClick={handleLinkClick}
+        onRenderLink={(link) => (
+          <ActionButton
+            keytipProps={
+              link.keyTipContent
+              && ({
+                styles: keytipStyles,
+                content: link.keyTipContent,
+                onExecute: (el) => (link.links ? link.isExpanded || el.click() : el.click()),
+                keySequences: link.keyTipSequence,
+                hasMenu: link.hasMenu || false,
+              })
+            }
+          >
+            {link.name}
+          </ActionButton>
+        )}
       />
     </Panel>
   );

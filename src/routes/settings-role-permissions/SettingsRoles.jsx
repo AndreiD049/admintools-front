@@ -1,5 +1,6 @@
 import React from 'react';
+import SecurityDetails from '../../components/appraisal-details/components/security-details/SecurityDetails';
 
-const SettingsRolesPage = () => (<h1>Roles</h1>);
+const SettingsRolesPage = () => (<SecurityDetails />);
 
 export default SettingsRolesPage;

@@ -2,15 +2,46 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useRouteMatch, Switch, Route } from 'react-router-dom';
 import DocumentTitle from 'react-document-title';
+import { Container } from 'react-grid-system';
 import ReportsPage from '../reporting-reports';
 import ReportingTemplatesPage from '../reporting-templates';
+import AuthorizationRedirectComponent from '../../components/shared/authorization-redirect-component';
 
 const ReportingPage = ({ ctx, setCtx }) => {
   const { path } = useRouteMatch();
   return (
-    <>
-      <h1>ReportingPage</h1>
-    </>
+    <Container lg>
+      <Switch>
+        <Route path={`${path}/reports`}>
+          <AuthorizationRedirectComponent
+            code="REPORTS"
+            grant="read"
+            to="/"
+            failureNotification={{
+              header: 'No Access',
+              content: 'No permission to access this page. Please contact your administrator.',
+            }}
+          >
+            <ReportsPage />
+          </AuthorizationRedirectComponent>
+        </Route>
+        <Route path={`${path}/templates`}>
+          <AuthorizationRedirectComponent
+            code="REPORT-TEMPLATES"
+            grant="read"
+            to="/"
+            failureNotification={{
+              header: 'No Access',
+              content: 'No permission to access this page. Please contact your administrator.',
+            }}
+          >
+            <DocumentTitle title="Reporting Templates">
+              <ReportingTemplatesPage />
+            </DocumentTitle>
+          </AuthorizationRedirectComponent>
+        </Route>
+      </Switch>
+    </Container>
   );
 };
 
