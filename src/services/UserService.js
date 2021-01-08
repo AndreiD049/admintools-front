@@ -30,11 +30,7 @@ const UserService = {
       }
       throw new Error(`Server response: ${response.status} - ${response.statusText}`);
     } catch (err) {
-      NotificationService.notify({
-        type: 'error',
-        header: 'Error',
-        content: (err.response.data && err.response.data.error) || err.message,
-      });
+      NotificationService.notifyError((err.response.data && err.response.data.error) || err.message);
       throw err;
     }
   },
@@ -47,11 +43,7 @@ const UserService = {
       }
       throw new Error(`Server response: ${response.status} - ${response.statusText}`);
     } catch (err) {
-      NotificationService.notify({
-        type: 'error',
-        header: 'Error',
-        content: (err.response.data && err.response.data.error) || err.message,
-      });
+      NotificationService.notifyError((err.response.data && err.response.data.error) || err.message);
       throw err;
     }
   },
@@ -64,11 +56,7 @@ const UserService = {
       }
       throw new Error(`Server response: ${response.status} - ${response.statusText}`);
     } catch (err) {
-      NotificationService.notify({
-        type: 'error',
-        header: 'Error',
-        content: (err.response.data && err.response.data.error) || err.message,
-      });
+      NotificationService.notifyError((err.response.data && err.response.data.error) || err.message);
       throw err;
     }
   },
@@ -81,11 +69,7 @@ const UserService = {
       }
       throw new Error(`Server response: ${response.status} - ${response.statusText}\n`);
     } catch (err) {
-      NotificationService.notify({
-        type: 'error',
-        header: 'Error',
-        content: (err.response.data && err.response.data.error) || err.message,
-      });
+      NotificationService.notifyError((err.response.data && err.response.data.error) || err.message);
       throw err;
     }
   },
@@ -98,11 +82,7 @@ const UserService = {
       }
       throw new Error(`Server response: ${response.status} - ${response.statusText}\n`);
     } catch (err) {
-      NotificationService.notify({
-        type: 'error',
-        header: 'Error',
-        content: (err.response.data && err.response.data.error) || err.message,
-      });
+      NotificationService.notifyError((err.response.data && err.response.data.error) || err.message);
       throw err;
     }
   },
@@ -115,11 +95,7 @@ const UserService = {
       }
       throw new Error(`Server response: ${response.status} - ${response.statusText}`);
     } catch (err) {
-      NotificationService.notify({
-        type: 'error',
-        header: 'Error',
-        content: (err.response.data && err.response.data.error) || err.message,
-      });
+      NotificationService.notifyError((err.response.data && err.response.data.error) || err.message);
       throw err;
     }
   },
@@ -129,11 +105,7 @@ const UserService = {
       const response = await axios.get(this.getUserTeamMembersPath);
       return response.data;
     } catch (err) {
-      NotificationService.notify({
-        type: 'error',
-        header: 'Error',
-        content: (err.response.data && err.response.data.error) || err.message,
-      });
+      NotificationService.notifyError((err.response.data && err.response.data.error) || err.message);
       throw err;
     }
   },

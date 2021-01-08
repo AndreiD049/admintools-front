@@ -1,3 +1,5 @@
+import React from 'react';
+import { DefaultButton } from '@fluentui/react';
 import axios from 'axios';
 import NotificationService from './NotificationService';
 
@@ -11,11 +13,10 @@ const LoginService = {
       }
       return null;
     } catch (err) {
-      NotificationService.notify({
-        type: 'error',
-        header: 'Error',
-        content: `Not logged in. ${(err.response.data && err.response.data.error) || err.message}`,
-      });
+      NotificationService.notify(`Not logged in. ${(err.response.data && err.response.data.error) || err.message}`,
+        'error',
+        (<DefaultButton as="a" href="/api/login">Log in</DefaultButton>)
+        );
       return null;
     }
   },

@@ -48,11 +48,7 @@ const AppraisalService = {
       }
       throw new Error(`Server response: ${response.status} - ${response.statusText}`);
     } catch (err) {
-      NotificationService.notify({
-        type: 'error',
-        header: 'Error',
-        content: (err.response && err.response.data.error) || err.message,
-      });
+      NotificationService.notifyError((err.response && err.response.data.error) || err.message);
       throw err;
     }
   },
@@ -65,11 +61,7 @@ const AppraisalService = {
       }
       throw new Error(`Server response: ${response.status} - ${response.statusText}`);
     } catch (err) {
-      NotificationService.notify({
-        type: 'error',
-        header: 'Error',
-        content: (err.response && err.response.data.error) || err.message,
-      });
+      NotificationService.notifyError((err.response && err.response.data.error) || err.message);
       throw err;
     }
   },
@@ -86,11 +78,7 @@ const AppraisalService = {
       }
       throw new Error(`Server response: ${response.status} - ${response.statusText}`);
     } catch (err) {
-      NotificationService.notify({
-        type: 'error',
-        header: 'Error',
-        content: (err.response && err.response.data.error) || err.message,
-      });
+      NotificationService.notifyError((err.response && err.response.data.error) || err.message);
       throw err;
     }
   },
@@ -103,11 +91,7 @@ const AppraisalService = {
       }
       throw new Error(`Server response: ${response.status} - ${response.statusText}`);
     } catch (err) {
-      NotificationService.notify({
-        type: 'error',
-        header: 'Error',
-        content: (err.response && err.response.data.error) || err.message,
-      });
+      NotificationService.notifyError((err.response && err.response.data.error) || err.message);
       throw err;
     }
   },
@@ -120,11 +104,7 @@ const AppraisalService = {
       }
       throw new Error(`Server response: ${response.status} - ${response.statusText}`);
     } catch (err) {
-      NotificationService.notify({
-        type: 'error',
-        header: 'Error',
-        content: (err.response && err.response.data.error) || err.message,
-      });
+      NotificationService.notifyError((err.response && err.response.data.error) || err.message);
       throw err;
     }
   },
@@ -142,11 +122,7 @@ const AppraisalService = {
       }
       throw new Error(`Server response: ${response.status} - ${response.statusText}`);
     } catch (err) {
-      NotificationService.notify({
-        type: 'error',
-        header: 'Error',
-        content: (err.response && err.response.data.error) || err.message,
-      });
+      NotificationService.notifyError((err.response && err.response.data.error) || err.message);
       throw err;
     }
   },
@@ -159,11 +135,7 @@ const AppraisalService = {
       }
       throw new Error(`Server response: ${response.status} - ${response.statusText}`);
     } catch (err) {
-      NotificationService.notify({
-        type: 'error',
-        header: 'Error',
-        content: (err.response && err.response.data.error) || err.message,
-      });
+      NotificationService.notifyError((err.response && err.response.data.error) || err.message);
       throw err;
     }
   },
@@ -181,11 +153,7 @@ const AppraisalService = {
       }
       throw new Error(`Server response: ${response.status} - ${response.statusText}`);
     } catch (err) {
-      NotificationService.notify({
-        type: 'error',
-        header: 'Error',
-        content: (err.response && err.response.data.error) || err.message,
-      });
+      NotificationService.notifyError((err.response && err.response.data.error) || err.message);
       throw err;
     }
   },
@@ -204,11 +172,7 @@ const AppraisalService = {
       }
       throw new Error(`Server response: ${response.status} - ${response.statusText}`);
     } catch (err) {
-      NotificationService.notify({
-        type: 'error',
-        header: 'Error',
-        content: (err.response && err.response.data.error) || err.message,
-      });
+      NotificationService.notifyError((err.response && err.response.data.error) || err.message);
       throw err;
     }
   },
@@ -226,11 +190,7 @@ const AppraisalService = {
       }
       throw new Error(`Server response: ${response.status} - ${response.statusText}`);
     } catch (err) {
-      NotificationService.notify({
-        type: 'error',
-        header: 'Error',
-        content: (err.response && err.response.data.error) || err.message,
-      });
+      NotificationService.notifyError((err.response && err.response.data.error) || err.message);
       throw err;
     }
   },
@@ -250,11 +210,7 @@ const AppraisalService = {
       }
       throw new Error(`Server response: ${response.status} - ${response.statusText}`);
     } catch (err) {
-      NotificationService.notify({
-        type: 'error',
-        header: 'Error',
-        content: (err.response && err.response.data.error) || err.message,
-      });
+      NotificationService.notifyError((err.response && err.response.data.error) || err.message);
       throw err;
     }
   },
@@ -274,11 +230,7 @@ const AppraisalService = {
       }
       throw new Error(`Server response: ${response.status} - ${response.statusText}`);
     } catch (err) {
-      NotificationService.notify({
-        type: 'error',
-        header: 'Error',
-        content: (err.response && err.response.data.error) || err.message,
-      });
+      NotificationService.notifyError((err.response && err.response.data.error) || err.message);
       throw err;
     }
   },
@@ -298,11 +250,7 @@ const AppraisalService = {
       }
       throw new Error(`Server response: ${response.status} - ${response.statusText}`);
     } catch (err) {
-      NotificationService.notify({
-        type: 'error',
-        header: 'Error',
-        content: (err.response && err.response.data.error) || err.message,
-      });
+      NotificationService.notifyError((err.response && err.response.data.error) || err.message);
       throw err;
     }
   },
@@ -315,11 +263,7 @@ const AppraisalService = {
       }
       throw new Error(`Server response: ${response.status} - ${response.statusText}`);
     } catch (err) {
-      NotificationService.notify({
-        type: 'error',
-        header: 'Error',
-        content: (err.response && err.response.data.error) || err.message,
-      });
+      NotificationService.notifyError((err.response && err.response.data.error) || err.message);
       throw err;
     }
   },
@@ -332,11 +276,7 @@ const AppraisalService = {
       }
       throw new Error(`Server response: ${response.status} - ${response.statusText}`);
     } catch (err) {
-      NotificationService.notify({
-        type: 'error',
-        header: 'Error',
-        content: (err.response && err.response.data.error) || err.message,
-      });
+      NotificationService.notifyError((err.response && err.response.data.error) || err.message);
       throw err;
     }
   },
@@ -349,11 +289,7 @@ const AppraisalService = {
       }
       throw new Error(`Server response: ${response.status} - ${response.statusText}`);
     } catch (err) {
-      NotificationService.notify({
-        type: 'error',
-        header: 'Error',
-        content: (err.response && err.response.data.error) || err.message,
-      });
+      NotificationService.notifyError((err.response && err.response.data.error) || err.message);
       throw err;
     }
   },
@@ -366,11 +302,7 @@ const AppraisalService = {
       }
       throw new Error(`Server response: ${response.status} - ${response.statusText}`);
     } catch (err) {
-      NotificationService.notify({
-        type: 'error',
-        header: 'Error',
-        content: (err.response && err.response.data.error) || err.message,
-      });
+      NotificationService.notifyError((err.response && err.response.data.error) || err.message);
       throw err;
     }
   },
@@ -383,11 +315,7 @@ const AppraisalService = {
       }
       throw new Error(`Server response: ${response.status} - ${response.statusText}`);
     } catch (err) {
-      NotificationService.notify({
-        type: 'error',
-        header: 'Error',
-        content: (err.response && err.response.data.error) || err.message,
-      });
+      NotificationService.notifyError((err.response && err.response.data.error) || err.message);
       throw err;
     }
   },
@@ -400,11 +328,7 @@ const AppraisalService = {
       }
       throw new Error(`Server response: ${response.status} - ${response.statusText}`);
     } catch (err) {
-      NotificationService.notify({
-        type: 'error',
-        header: 'Error',
-        content: (err.response && err.response.data.error) || err.message,
-      });
+      NotificationService.notifyError((err.response && err.response.data.error) || err.message);
       throw err;
     }
   },
@@ -424,11 +348,7 @@ const AppraisalService = {
       }
       throw new Error(`Server response: ${response.status} - ${response.statusText}`);
     } catch (err) {
-      NotificationService.notify({
-        type: 'error',
-        header: 'Error',
-        content: (err.response && err.response.data.error) || err.message,
-      });
+      NotificationService.notifyError((err.response && err.response.data.error) || err.message);
       throw err;
     }
   },

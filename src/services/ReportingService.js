@@ -3,9 +3,6 @@ import { downloadBlob } from 'download.js';
 import NotificationService from './NotificationService';
 
 const ReportingService = {
-  notify(type, header, content) {
-    NotificationService.notify({ type, header, content });
-  },
   /**
    * Templates
    */
@@ -24,7 +21,7 @@ const ReportingService = {
       }
       throw new Error(`Server response: ${response.status} - ${response.statusText}`);
     } catch (err) {
-      this.notify('error', 'Error', (err.response && err.response.data && err.response.data.error));
+      NotificationService.notifyError((err.response && err.response.data && err.response.data.error));
       throw err;
     }
   },
@@ -37,7 +34,7 @@ const ReportingService = {
       }
       throw new Error(`Server response: ${response.status} - ${response.statusText}`);
     } catch (err) {
-      this.notify('error', 'Error', (err.response && err.response.data && err.response.data.error));
+      NotificationService.notifyError((err.response && err.response.data && err.response.data.error));
       throw err;
     }
   },
@@ -50,16 +47,12 @@ const ReportingService = {
         },
       });
       if (response.status === 200) {
-        NotificationService.notify({
-          type: 'success',
-          header: 'Created',
-          content: 'Tempalte successfully created',
-        });
+        NotificationService.notifySuccess('Tempalte successfully created');
         return response.data;
       }
       throw new Error(`Server response: ${response.status} - ${response.statusText}`);
     } catch (err) {
-      this.notify('error', 'Error', (err.response && err.response.data && err.response.data.error));
+      NotificationService.notifyError((err.response && err.response.data && err.response.data.error));
       throw err;
     }
   },
@@ -76,7 +69,7 @@ const ReportingService = {
       }
       throw new Error(`Server response: ${response.status} - ${response.statusText}`);
     } catch (err) {
-      this.notify('error', 'Error', (err.response && err.response.data && err.response.data.error));
+      NotificationService.notifyError(err.response && err.response.data && err.response.data.error);
       throw err;
     }
   },
@@ -90,7 +83,7 @@ const ReportingService = {
         await downloadBlob(filename, response.data);
       }
     } catch (err) {
-      this.notify('error', 'Error', (err.response && err.response.data && err.response.data.error));
+      NotificationService.notifyError(err.response && err.response.data && err.response.data.error);
       throw err;
     }
   },
@@ -103,7 +96,7 @@ const ReportingService = {
       }
       throw new Error(`Server response: ${response.status} - ${response.statusText}`);
     } catch (err) {
-      this.notify('error', 'Error', (err.response && err.response.data && err.response.data.error));
+      NotificationService.notifyError(err.response && err.response.data && err.response.data.error);
       throw err;
     }
   },
@@ -117,16 +110,12 @@ const ReportingService = {
         responseType: 'blob',
       });
       if (response.status === 200) {
-        NotificationService.notify({
-          type: 'success',
-          header: 'Generated',
-          content: 'Tempalte successfully generated',
-        });
+        NotificationService.notifySuccess('Tempalte successfully generated');
         return response.data;
       }
       throw new Error(`Server response: ${response.status} - ${response.statusText}`);
     } catch (err) {
-      this.notify('error', 'Error', (err.response && err.response.data && err.response.data.error));
+      NotificationService.notifyError((err.response && err.response.data && err.response.data.error));
       throw err;
     }
   },
@@ -139,7 +128,7 @@ const ReportingService = {
       }
       throw new Error(`Server response: ${response.status} - ${response.statusText}`);
     } catch (err) {
-      this.notify('error', 'Error', (err.response && err.response.data && err.response.data.error));
+      NotificationService.notifyError((err.response && err.response.data && err.response.data.error));
       throw err;
     }
   },
@@ -159,7 +148,7 @@ const ReportingService = {
       }
       throw new Error(`Server response: ${response.status} - ${response.statusText}`);
     } catch (err) {
-      this.notify('error', 'Error', (err.response && err.response.data && err.response.data.error));
+      NotificationService.notifyError((err.response && err.response.data && err.response.data.error));
       throw err;
     }
   },
@@ -172,7 +161,7 @@ const ReportingService = {
       }
       throw new Error(`Server response: ${response.status} - ${response.statusText}`);
     } catch (err) {
-      this.notify('error', 'Error', (err.response && err.response.data && err.response.data.error));
+      NotificationService.notifyError((err.response && err.response.data && err.response.data.error));
       throw err;
     }
   },
@@ -186,7 +175,7 @@ const ReportingService = {
       });
       return result.data;
     } catch (err) {
-      this.notify('error', 'Error', (err.response && err.response.data && err.response.data.error));
+      NotificationService.notifyError((err.response && err.response.data && err.response.data.error));
       throw err;
     }
   },
@@ -196,7 +185,7 @@ const ReportingService = {
       const result = await axios.put(this.reportPath(id), update);
       return result.data;
     } catch (err) {
-      this.notify('error', 'Error', (err.response && err.response.data && err.response.data.error));
+      NotificationService.notifyError((err.response && err.response.data && err.response.data.error));
       throw err;
     }
   },
@@ -211,7 +200,7 @@ const ReportingService = {
       }
       throw new Error(`Server response: ${response.status} - ${response.statusText}`);
     } catch (err) {
-      this.notify('error', 'Error', (err.response && err.response.data && err.response.data.error));
+      NotificationService.notifyError((err.response && err.response.data && err.response.data.error));
       throw err;
     }
   },

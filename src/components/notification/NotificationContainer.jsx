@@ -1,33 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import {
-  MessageBar, MessageBarType, Text,
-} from '@fluentui/react';
-import { Transition, TransitionGroup } from 'react-transition-group';
+import { CSSTransition, Transition, TransitionGroup } from 'react-transition-group';
 import { v4 as uuid } from 'uuid';
 import Emitter from '../shared/Emitter';
+import './styles.css';
 
-const defaultStyles = {
-  transition: 'all 1s',
-  marginLeft: 100,
-};
-
-const transitionStyles = {
-  entering: { opacity: 1, marginLeft: 0 },
-  entered: { opacity: 1, marginLeft: 0 },
-  exiting: { opacity: 0, marginLeft: 0 },
-  exited: { opacity: 0, marginLeft: 0 },
-};
-
-const Notification = ({ item, setItems }) => (
-  <MessageBar
-    MessageBarType={MessageBarType.severeWarning}
-  >
-    <Text variant="mediumPlus">{item.title}</Text>
-  </MessageBar>
-);
-
-const NotificationContainer = () => {
+const NotificationContainer = ({ timeout = 5000 }) => {
   const [items, setItems] = useState([]);
+
+  const onDismiss = (idx) => () => {
+    setItems((prev) => {
+      const found = prev.find((i) => i.id === idx);
+      if (found) {
+        if (found.timer) clearTimeout(found.timer);
+        return prev.filter((i) => i.id !== idx);
+      }
+      return prev;
+    })
+  }
 
   // Use below effect to start listening to Notification events
   // When element is unmounted, listener is removed
@@ -35,10 +24,11 @@ const NotificationContainer = () => {
     const listener = (item) => {
       const idx = uuid();
       setItems((prev) => [...prev, {
-        title: `${item.title} ${idx}`,
+        ...item,
+        onRender: item.onRender.bind({}, onDismiss(idx)),
         id: idx,
+        timer: setTimeout(() => setItems((prev) => prev.filter((i) => i.id !== idx)), timeout),
       }]);
-      setTimeout(() => setItems((prev) => prev.filter((i) => i.id !== idx)), 5000);
     };
 
     Emitter.on('notification-add', listener);
@@ -48,28 +38,18 @@ const NotificationContainer = () => {
   }, []);
 
   return (
-    <div style={{
-      marginTop: '50px',
-    }}
-    >
+    <div className="container">
       <TransitionGroup>
         {items.map((item) => (
-          <Transition
+          <CSSTransition
             key={item.id}
-            timeout={1000}
+            timeout={400}
+            classNames="notification"
           >
-            {(state) => (
-              <div
-                test={console.log(state)}
-                style={{
-                  ...defaultStyles,
-                  ...transitionStyles[state],
-                }}
-              >
-                <Notification item={item} />
-              </div>
-            )}
-          </Transition>
+            <div className="item-wrapper">
+              {item.onRender()}
+            </div>
+          </CSSTransition>
         ))}
       </TransitionGroup>
     </div>

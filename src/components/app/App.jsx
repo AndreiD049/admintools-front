@@ -8,7 +8,7 @@ import {
   Switch,
 } from 'react-router-dom';
 import { ThemeProvider } from '@fluentui/react-theme-provider';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import GlobalContext from '../../services/GlobalContext';
 import AuthorizationService from '../../services/AuthorizationService';
 import UserInfoProvider from '../shared/user-info-provider';
@@ -32,12 +32,14 @@ const App = () => {
       theme: selectTheme(),
     },
   });
+  const initContext = useContext(GlobalContext);
 
   const { userPreferences } = context;
   const { theme } = userPreferences;
 
   useEffect(() => {
     setContext((prev) => ({
+      ...initContext,
       ...prev,
       setContext,
     }));
@@ -46,16 +48,16 @@ const App = () => {
   return (
     <GlobalContext.Provider value={context}>
       <ThemeProvider applyTo="body" theme={theme}>
+        <NotificationContainer timeout={10000} />
         <KeytipLayer
           keytipStartSequences={[{
             key: 'a',
             modifierKeys: [KeyCodes.alt],
           }]}
         />
-        <UserInfoProvider ctx={context} setCtx={setContext} />
-        <UserSecuritiesProvider />
-        <NotificationContainer />
         <Router>
+          <UserInfoProvider ctx={context} setCtx={setContext} />
+          <UserSecuritiesProvider />
           <Navigation />
           <LoginRequired />
           {/* The page switch */}

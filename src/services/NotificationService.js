@@ -1,30 +1,29 @@
-let nextId = 0;
-
-const getNextId = () => {
-  if (nextId > 100000) {
-    nextId = 0;
-  }
-  nextId += 1;
-  return nextId;
-};
+import React from 'react';
+import { Notification } from '../components/notification';
+import Emitter from "../components/shared/Emitter";
 
 const NotificationService = {
-  notifications: [],
-  setNotifications(func) {
-    this.notifications = func(this.notifications);
-  },
-  addNotification(notification) { 
-    this.setNotifications((prev) => {
-      const n = notification;
-      const copy = prev.slice();
-      n.id = getNextId();
-      copy.push(n);
-      return copy;
+  notify(text, type, actions) {
+    Emitter.emit('notification-add', {
+      onRender: (onDismiss) => (<Notification text={text} type={type} actions={actions} onDismiss={onDismiss} />) 
     });
   },
-  notify(notification) {
-    this.addNotification(notification);
+
+  notifyError(text) {
+    this.notify(text, 'error');
   },
+  
+  notifySuccess(text) {
+    this.notify(text, 'success');
+  },
+
+  notifyInfo(text) {
+    this.notify(text, 'info');
+  },
+
+  notifySevereWarning(text) {
+    this.notify(text, 'severeWarning');
+  }
 };
 
 export default NotificationService;

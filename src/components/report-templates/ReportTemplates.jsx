@@ -2,6 +2,7 @@ import {
   DetailsListLayoutMode, Icon, SelectionMode, Separator,
 } from '@fluentui/react';
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { Col, Container, Row } from 'react-grid-system';
 import ReportingService from '../../services/ReportingService';
 import CommandTable from '../shared/command-table/CommandTable';
@@ -26,12 +27,14 @@ const ItemType = ({ item }) => {
         iconName = 'FileBug';
         break;
     }
+
     return (
       <div style={{ textAlign: 'center' }}>
         <Icon styles={{ root: { fontSize: '1.3em' } }} iconName={iconName} />
       </div>
     );
   }
+  return null;
 };
 
 const ReportTemplates = () => {
@@ -191,6 +194,10 @@ const ReportTemplates = () => {
       />
     </Container>
   );
+};
+
+ItemType.propTypes = {
+  item: PropTypes.string.isRequired,
 };
 
 export default ReportTemplates;

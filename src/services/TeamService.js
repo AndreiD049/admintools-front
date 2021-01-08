@@ -18,11 +18,7 @@ const TeamService = {
       }
       throw new Error(`Server response: ${response.status} - ${response.statusText}`);
     } catch (err) {
-      NotificationService.notify({
-        type: 'error',
-        header: 'Error',
-        content: (err.response.data && err.response.data.error) || err.message,
-      });
+      NotificationService.notifyError((err.response.data && err.response.data.error) || err.message);
       throw err;
     }
   },
@@ -36,11 +32,7 @@ const TeamService = {
       }
       throw new Error(`Server response: ${response.status} - ${response.statusText}`);
     } catch (err) {
-      NotificationService.notify({
-        type: 'error',
-        header: 'Error',
-        content: (err.response.data && err.response.data.error) || err.message,
-      });
+      NotificationService.notifyError((err.response.data && err.response.data.error) || err.message);
       throw err;
     }
   },

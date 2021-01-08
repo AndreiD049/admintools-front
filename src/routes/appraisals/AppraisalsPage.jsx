@@ -28,6 +28,7 @@ import Chip from '../../components/shared/chip';
 import PanelNew from '../../components/appraisal-list/panel-new/PanelNew';
 import constants from '../../utils/constants';
 import PanelEdit from '../../components/appraisal-list/panel-edit/PanelEdit';
+import NotificationService from '../../services/NotificationService';
 
 const { APPRAISAL_PERIODS: AP } = constants.securities;
 
@@ -149,6 +150,7 @@ const AppraisalsPage = () => {
       const result = await AppraisalService.finishPeriod(item.id);
       if (result) {
         setItems((prev) => prev.map((i) => (i.id === item.id ? { ...item, status: 'Finished' } : i)));
+      NotificationService.notifySuccess(`Period '${item.name}' finished`);
       }
     }
   };
@@ -157,8 +159,7 @@ const AppraisalsPage = () => {
     if (global.user
       && global.user.id
       && global.user.organization
-      && global.user.organization.id
-      && global.Authorize(AP.code, AP.grants.create)) {
+      && global.user.organization.id) {
       const result = await AppraisalService.addPeriod({
         name,
         status: 'Active',
@@ -166,6 +167,7 @@ const AppraisalsPage = () => {
         createdUser: global.user.id,
       });
       setItems((prev) => prev.slice().concat(result));
+      NotificationService.notifySuccess(`Period '${name}' created`);
     }
   };
 
