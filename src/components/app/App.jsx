@@ -1,5 +1,5 @@
 import {
-  KeytipLayer, KeyCodes,
+  KeytipLayer, KeyCodes, initializeIcons,
 } from '@fluentui/react';
 import DocumentTitle from 'react-document-title';
 import {
@@ -9,7 +9,6 @@ import {
 } from 'react-router-dom';
 import { ThemeProvider } from '@fluentui/react-theme-provider';
 import React, { useState, useEffect, useContext } from 'react';
-import { AzureThemeDark, AzureThemeHighContrastDark } from '@uifabric/azure-themes';
 import GlobalContext from '../../services/GlobalContext';
 import AuthorizationService from '../../services/AuthorizationService';
 import UserInfoProvider from '../shared/user-info-provider';
@@ -21,8 +20,10 @@ import SettingsPage from '../../routes/settings';
 import ReportingPage from '../../routes/reporting';
 import LoginRequired from '../shared/login-required';
 import LoginPage from '../../routes/login';
-import { darkTheme, selectTheme } from '../../themes';
+import { selectTheme } from '../../themes';
 import NotificationContainer from '../notification/NotificationContainer';
+
+initializeIcons();
 
 const App = () => {
   const [context, setContext] = useState({
