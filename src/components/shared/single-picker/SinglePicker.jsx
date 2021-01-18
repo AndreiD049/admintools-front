@@ -53,6 +53,7 @@ const SinglePicker = ({
   placeholder = 'Select or search a value in the list...',
   className,
   styles,
+  maxHeight,
 }) => {
   const classes = useStyles();
   const sc = useScreenClass();
@@ -102,7 +103,7 @@ const SinglePicker = ({
         pickerSuggestionsProps={{
           styles: {
             suggestionsContainer: {
-              maxHeight: '600px',
+              maxHeight,
             },
           },
         }}
@@ -139,6 +140,7 @@ SinglePicker.propTypes = {
     screenReaderText: PropTypes.shape({}),
     text: PropTypes.shape({}),
   }),
+  maxHeight: PropTypes.string,
 };
 
 SinglePicker.defaultProps = {
@@ -150,6 +152,7 @@ SinglePicker.defaultProps = {
   placeholder: 'Select or search a value in the list...',
   className: '',
   styles: null,
+  maxHeight: '600px',
 };
 
 export default SinglePicker;

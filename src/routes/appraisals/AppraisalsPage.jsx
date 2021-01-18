@@ -14,7 +14,6 @@ import {
   Separator,
   Stack,
   Text,
-  Selection,
 } from '@fluentui/react';
 import {
   Col, Container, Row, useScreenClass,
@@ -150,7 +149,7 @@ const AppraisalsPage = () => {
       const result = await AppraisalService.finishPeriod(item.id);
       if (result) {
         setItems((prev) => prev.map((i) => (i.id === item.id ? { ...item, status: 'Finished' } : i)));
-      NotificationService.notifySuccess(`Period '${item.name}' finished`);
+        NotificationService.notifySuccess(`Period '${item.name}' finished`);
       }
     }
   };

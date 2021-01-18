@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { ComboBox } from '@fluentui/react';
 import UserService from '../../../services/UserService';
 import SinglePicker from '../single-picker/SinglePicker';
 

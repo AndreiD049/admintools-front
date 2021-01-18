@@ -1,6 +1,6 @@
 import { createTheme } from '@fluentui/react';
 
-export default createTheme({
+const theme = createTheme({
   palette: {
     themePrimary: '#0078d7',
     themeLighterAlt: '#000509',
@@ -27,4 +27,7 @@ export default createTheme({
     accent: '#ffffff',
   },
   type: 'dark',
+  isInverted: true,
 });
+
+export default theme;

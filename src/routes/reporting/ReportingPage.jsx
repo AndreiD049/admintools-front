@@ -6,6 +6,7 @@ import { Container } from 'react-grid-system';
 import ReportsPage from '../reporting-reports';
 import ReportingTemplatesPage from '../reporting-templates';
 import AuthorizationRedirectComponent from '../../components/shared/authorization-redirect-component';
+import AppraisalReport from '../../components/appraisal-report/AppraisalReport';
 
 const ReportingPage = ({ ctx, setCtx }) => {
   const { path } = useRouteMatch();
@@ -37,6 +38,21 @@ const ReportingPage = ({ ctx, setCtx }) => {
           >
             <DocumentTitle title="Reporting Templates">
               <ReportingTemplatesPage />
+            </DocumentTitle>
+          </AuthorizationRedirectComponent>
+        </Route>
+        <Route path={`${path}/appraisal-report`}>
+          <AuthorizationRedirectComponent
+            code="REPORTS"
+            grant="read"
+            to="/"
+            failureNotification={{
+              header: 'No Access',
+              content: 'No permission to access this page. Please contact your administrator.',
+            }}
+          >
+            <DocumentTitle title="Appraisal Report">
+              <AppraisalReport />
             </DocumentTitle>
           </AuthorizationRedirectComponent>
         </Route>

@@ -19,8 +19,8 @@ const SelectTheme = () => {
       imageSize: { width: 64, height: 64 },
     },
     {
-      key: 'solarized',
-      text: 'Solarized',
+      key: 'warm',
+      text: 'Warm',
       imageSrc: solarizedImg,
       selectedImageSrc: solarizedImg,
       imageSize: { width: 64, height: 64 },

@@ -1,7 +1,9 @@
 import React from 'react';
 import { MessageBar, MessageBarType, Text } from '@fluentui/react';
 
-const Notification = ({ type, text, actions, onDismiss }) => {
+const Notification = ({
+  type, text, actions, onDismiss,
+}) => {
   let typeMessage;
   switch (type) {
     case 'success':
@@ -35,6 +37,6 @@ const Notification = ({ type, text, actions, onDismiss }) => {
       <Text variant="medium">{text}</Text>
     </MessageBar>
   );
-}
+};
 
 export default Notification;

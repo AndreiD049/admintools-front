@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {
-  Panel, PanelType, classNamesFunction, Icon, ActionButton, Nav, Link,
+  Panel, PanelType, classNamesFunction, Icon, ActionButton, Nav,
 } from '@fluentui/react';
 import constants from '../../../../utils/constants';
 import GlobalContext from '../../../../services/GlobalContext';
@@ -65,13 +65,23 @@ const navLinkGroups = [
         hasMenu: true,
         links: [
           {
-            name: 'Reports',
+            name: 'Appraisal report',
+            url: '/reporting/appraisal-report',
+            code: constants.securities.REPORTS.code,
+            grant: 'read',
+            icon: 'AutoFillTemplate',
+            keyTipContent: '1',
+            keyTipSequence: ['m', '4', '1'],
+            hasMenu: false,
+          },
+          {
+            name: 'Custom reports',
             url: '/reporting/reports',
             code: constants.securities.REPORTS.code,
             grant: 'read',
             icon: 'ReportDocument',
             keyTipContent: '1',
-            keyTipSequence: ['m', '4', '1'],
+            keyTipSequence: ['m', '4', '2'],
             hasMenu: false,
           },
           {
@@ -81,7 +91,7 @@ const navLinkGroups = [
             grant: 'read',
             icon: 'FileTemplate',
             keyTipContent: '2',
-            keyTipSequence: ['m', '4', '2'],
+            keyTipSequence: ['m', '4', '3'],
             hasMenu: false,
           },
         ],

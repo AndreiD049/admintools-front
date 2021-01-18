@@ -8,17 +8,24 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Box = ({ children }) => {
+const Box = ({ children, style, className }) => {
   const classes = useStyles();
   return (
-    <div className={classes.box}>
+    <div style={style} className={`${classes.box} ${className}`}>
       {children}
     </div>
   );
 };
 
 Box.propTypes = {
-  children: PropTypes.element.isRequired,
+  style: PropTypes.shape({}),
+  className: PropTypes.string,
+  children: PropTypes.arrayOf(PropTypes.element).isRequired,
+};
+
+Box.defaultProps = {
+  style: {},
+  className: '',
 };
 
 export default Box;

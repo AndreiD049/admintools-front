@@ -1,14 +1,13 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Col, Container, Row } from 'react-grid-system';
 import {
   Checkbox,
-  ComboBox, CommandBar, PrimaryButton, SearchBox, Stack, TagPicker, Text,
+  CommandBar, SearchBox, Stack, Text,
 } from '@fluentui/react';
 import { makeStyles } from '@fluentui/react-theme-provider';
 import AuthorizationService from '../../../../../../services/AuthorizationService';
 import Accordion from '../../../../../shared/accordion/Accordion';
-import SearchableCombobox from '../../../../../shared/searchable-combobox';
 import SinglePicker from '../../../../../shared/single-picker/SinglePicker';
 
 const useStyles = makeStyles((theme) => ({

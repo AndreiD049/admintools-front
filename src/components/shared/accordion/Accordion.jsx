@@ -173,7 +173,7 @@ const Accordion = ({
       });
       return result;
     });
-  }, [items]);
+  }, [items, getKey]);
 
   return (
     <div className={classes.root}>

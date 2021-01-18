@@ -287,7 +287,7 @@ const AppraisalInput = ({
       <TextField
         id={`app-item-${item.type.toLowerCase()}-${idx}`}
         value={value.content}
-        resizable={false}
+        resizable
         multiline={multiline}
         styles={{
           prefix: {
@@ -296,6 +296,9 @@ const AppraisalInput = ({
           },
           suffix: {
             backgroundColor: 'transparent',
+            padding: '0',
+          },
+          field: {
             padding: '0',
           },
         }}
@@ -314,6 +317,7 @@ const AppraisalInput = ({
             bottom: 0,
             right: 0,
             paddingRight: 0,
+            marginLeft: '8px',
           },
         } : null}
       />

@@ -136,9 +136,32 @@ const ReportingService = {
   /**
    * Reports
    */
+  appraisalReportPath: '/api/reporting/reports/appraisal-report',
   reportPath: (id) => `/api/reporting/reports/${id}`,
   postReportGeneratePath: (id) => `/api/reporting/reports/${id}/generate`,
   reportsPath: '/api/reporting/reports',
+
+  async generateAppraisalReport(params) {
+    try {
+      const response = await axios.post(this.appraisalReportPath, params, {
+        responseType: 'blob',
+      });
+      if (response.status === 200) {
+        return response.data;
+      } if (response.status === 204) {
+        NotificationService.notifyError('No data available for this filter');
+        return null;
+      }
+      throw new Error(`Server response: ${response.status} - ${response.statusText}`);
+    } catch (err) {
+      if (err.response && err.response.status === 400) {
+        NotificationService.notifyError('Invalid filters provided');
+      } else {
+        NotificationService.notifyError(err.message);
+      }
+      return null;
+    }
+  },
 
   async getReports() {
     try {

@@ -1,6 +1,6 @@
 import lightTheme from './lightTheme';
 import darkTheme from './darkTheme';
-import solarizedTheme from './solarizedTheme';
+import warmTheme from './warmTheme';
 import blackWhiteTheme from './blackWhiteTheme';
 
 const selectTheme = (theme) => {
@@ -10,8 +10,8 @@ const selectTheme = (theme) => {
       return lightTheme;
     case 'dark':
       return darkTheme;
-    case 'solarized':
-      return solarizedTheme;
+    case 'warm':
+      return warmTheme;
     case 'blackwhite':
       return blackWhiteTheme;
     default:
@@ -22,6 +22,6 @@ const selectTheme = (theme) => {
 export {
   lightTheme,
   darkTheme,
-  solarizedTheme,
+  warmTheme,
   selectTheme,
 };

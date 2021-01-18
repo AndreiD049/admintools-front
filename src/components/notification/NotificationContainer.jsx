@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { CSSTransition, Transition, TransitionGroup } from 'react-transition-group';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { v4 as uuid } from 'uuid';
 import Emitter from '../shared/Emitter';
 import './styles.css';
@@ -35,7 +35,7 @@ const NotificationContainer = ({ timeout = 5000 }) => {
     return () => {
       Emitter.off('notification-add');
     };
-  }, []);
+  }, [timeout]);
 
   return (
     <div className="container">

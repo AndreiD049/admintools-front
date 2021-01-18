@@ -4,8 +4,14 @@ import { DetailsListLayoutMode, SelectionMode, Separator } from '@fluentui/react
 import ReportsInfoProvider from './components/reports-info-provider';
 import PageHeader from '../shared/page-header/PageHeader';
 import CommandTable from '../shared/command-table/CommandTable';
+import ReportsNewPanel from './components/reports-new-panel';
+import ReportsDetailsPanel from './components/reports-details-panel/ReportsDetailsPanel';
+import ReportsEditPanel from './components/reports-edit-panel';
 
 const ReportsList = () => {
+  const [newPanelOpen, setNewPanelOpen] = useState(false);
+  const [detailsPanelOpen, setDetailsPanelOpen] = useState(false);
+  const [editPanelOpen, setEditPanelOpen] = useState(false);
   const [reports, setReports] = useState([]);
   const [selectionDetails, setSelectionDetails] = useState({
     count: 0,
@@ -90,21 +96,21 @@ const ReportsList = () => {
                 key: 'createItem',
                 text: 'Create',
                 iconProps: { iconName: 'BoxAdditionSolid' },
-                onClick: () => null,
+                onClick: () => setNewPanelOpen(true),
               },
               {
                 key: 'details',
                 text: 'Details',
                 disabled: selectionDetails.count === 0,
                 iconProps: { iconName: 'ProfileSearch' },
-                onClick: () => null,
+                onClick: () => setDetailsPanelOpen(true),
               },
               {
                 key: 'editItem',
                 text: 'Edit',
                 disabled: selectionDetails.count === 0,
                 iconProps: { iconName: 'Edit' },
-                onClick: () => null,
+                onClick: () => setEditPanelOpen(true),
               },
             ]}
             tableProps={{
@@ -112,13 +118,31 @@ const ReportsList = () => {
               columns,
               setSelectionDetails,
               selectionMode: SelectionMode.single,
-              onItemInvoked: () => null,
+              onItemInvoked: () => setDetailsPanelOpen(true),
               layoutMode: DetailsListLayoutMode.justified,
               sortedCol: sortedColumn,
             }}
           />
         </Col>
       </Row>
+      <ReportsNewPanel
+        isOpen={newPanelOpen}
+        setOpen={setNewPanelOpen}
+        addReport={(report) => setReports((prev) => prev.concat(report))}
+      />
+      <ReportsDetailsPanel
+        id={selectionDetails.count > 0 ? selectionDetails.items[0].id : null}
+        isOpen={detailsPanelOpen}
+        setOpen={setDetailsPanelOpen}
+      />
+      <ReportsEditPanel
+        id={selectionDetails.count > 0 ? selectionDetails.items[0].id : null}
+        isOpen={editPanelOpen}
+        setOpen={setEditPanelOpen}
+        setReport={
+          (report) => setReports((prev) => prev.map((r) => (r.id === report.id ? report : r)))
+        }
+      />
     </Container>
   );
 };

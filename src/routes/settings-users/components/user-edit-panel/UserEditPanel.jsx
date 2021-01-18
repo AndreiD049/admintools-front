@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   ComboBox,
-  DefaultButton, Panel, PanelType, PrimaryButton, Stack, TextField,
+  DefaultButton, Panel, PanelType, PrimaryButton, Stack,
 } from '@fluentui/react';
 
 const UserEditPanel = ({

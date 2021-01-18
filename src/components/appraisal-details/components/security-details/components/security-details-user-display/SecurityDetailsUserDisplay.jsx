@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Col, Container, Row } from 'react-grid-system';
 import {
-  Checkbox, ComboBox, CommandBar, SearchBox, Stack, Text,
+  Checkbox, CommandBar, SearchBox, Stack, Text
 } from '@fluentui/react';
 import { makeStyles } from '@fluentui/react-theme-provider';
 import AuthorizationService from '../../../../../../services/AuthorizationService';

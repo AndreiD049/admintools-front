@@ -2,7 +2,12 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   Checkbox,
-  CommandButton, IconButton, List, Separator, Stack, Text, TextField,
+  CommandButton,
+  List,
+  Separator,
+  Stack,
+  Text,
+  TextField,
 } from '@fluentui/react';
 import { makeStyles } from '@fluentui/react-theme-provider';
 import AppraisalService from '../../../../../services/AppraisalService';

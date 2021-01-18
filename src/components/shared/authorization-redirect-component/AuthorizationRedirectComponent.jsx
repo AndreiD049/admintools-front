@@ -17,7 +17,7 @@ const AuthorizationRedirectComponent = ({
     if (global.security) {
       setRedirect(!isAuthorized);
       if (failureNotification && !isAuthorized && !notified) {
-        NotificationService.notify(failureNotification);
+        NotificationService.notify(failureNotification.content);
         setNotified(true);
       }
     }
