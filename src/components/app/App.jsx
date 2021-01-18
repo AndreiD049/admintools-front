@@ -23,8 +23,6 @@ import LoginPage from '../../routes/login';
 import { selectTheme } from '../../themes';
 import NotificationContainer from '../notification/NotificationContainer';
 
-initializeIcons();
-
 const App = () => {
   const [context, setContext] = useState({
     user: null,
