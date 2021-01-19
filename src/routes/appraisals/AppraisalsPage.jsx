@@ -219,7 +219,7 @@ const AppraisalsPage = () => {
                         {
                           key: 'openItem',
                           text: 'Open',
-                          disabled: selectionDetails.count === 0 || !global.Authorize(AP.code, AP.grants.create),
+                          disabled: selectionDetails.count === 0 || !global.Authorize(AP.code, AP.grants.read),
                           iconProps: { iconName: 'OpenFile' },
                           onClick: () => handleItemInvoked(
                             selectionDetails.count
