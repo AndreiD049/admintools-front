@@ -219,7 +219,7 @@ const AppraisalsPage = () => {
                         {
                           key: 'openItem',
                           text: 'Open',
-                          disabled: selectionDetails.count === 0,
+                          disabled: selectionDetails.count === 0 || !global.Authorize(AP.code, AP.grants.create),
                           iconProps: { iconName: 'OpenFile' },
                           onClick: () => handleItemInvoked(
                             selectionDetails.count
@@ -229,13 +229,14 @@ const AppraisalsPage = () => {
                         {
                           key: 'newItem',
                           text: 'New',
+                          disabled: !global.Authorize(AP.code, AP.grants.create),
                           iconProps: { iconName: 'Add' },
                           onClick: () => setNewPanelOpen(true),
                         },
                         {
                           key: 'editItem',
                           text: 'Edit',
-                          disabled: selectionDetails.count === 0,
+                          disabled: selectionDetails.count === 0 || !global.Authorize(AP.code, AP.grants.update),
                           iconProps: { iconName: 'Edit' },
                           onClick: () => setEditPanelOpen(true),
                         },
