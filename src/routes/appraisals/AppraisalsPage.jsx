@@ -244,7 +244,8 @@ const AppraisalsPage = () => {
                           key: 'finishItem',
                           text: 'Finish',
                           disabled: selectionDetails.count === 0
-                            || (selectionDetails.count && selectionDetails.items[0].status === 'Finished'),
+                            || (selectionDetails.count && selectionDetails.items[0].status === 'Finished')
+                            || !global.Authorize(AP.code, AP.grants.finish),
                           iconProps: { iconName: 'SaveAndClose' },
                           onClick: clickFinishHandler,
                         },
