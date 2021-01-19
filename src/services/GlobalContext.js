@@ -6,7 +6,7 @@ import Emitter from '../components/shared/Emitter';
 // components but i don't want to pass it around as props.
 const GlobalContext = React.createContext({
   user: null,
-  Authorize: () => false,
+  Authorize: (code, grant, notification) => false,
   setContext: () => null,
   userPreferences: {
     theme: null,

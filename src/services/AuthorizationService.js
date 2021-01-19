@@ -130,7 +130,7 @@ const AuthorizationService = {
   },
 
   // this function is meant to be injected in the context in order to have access to 'this'
-  Authorize(code, grant) {
+  Authorize(code, grant, notification = true) {
     try {
       if (this.security) {
         const codes = this.security.map((el) => el.code);

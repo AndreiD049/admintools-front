@@ -18,6 +18,7 @@ import {
 import {
   Col, Container, Row, useScreenClass,
 } from 'react-grid-system';
+import { downloadBlob } from 'download.js';
 import Table from '../../components/shared/table';
 import AppraisalService from '../../services/AppraisalService';
 import GlobalContext from '../../services/GlobalContext';
@@ -28,8 +29,9 @@ import PanelNew from '../../components/appraisal-list/panel-new/PanelNew';
 import constants from '../../utils/constants';
 import PanelEdit from '../../components/appraisal-list/panel-edit/PanelEdit';
 import NotificationService from '../../services/NotificationService';
+import ReportingService from '../../services/ReportingService';
 
-const { APPRAISAL_PERIODS: AP } = constants.securities;
+const { APPRAISAL_PERIODS: AP, REPORTS: REP } = constants.securities;
 
 const AppraisalsPage = () => {
   const theme = useTheme();
@@ -183,6 +185,20 @@ const AppraisalsPage = () => {
     }
   };
 
+  const handleGenerateReport = async (id) => {
+    try {
+      const reportBlob = await ReportingService.generateAppraisalReport({
+        periods: [id],
+      });
+      if (reportBlob) {
+        downloadBlob('appraisal.xlsx', reportBlob);
+        NotificationService.notifySuccess('Report generated');
+      }
+    } catch (err) {
+      NotificationService.notifyError('Cannot generate report -', err.message);
+    }
+  };
+
   return (
     <>
       <Switch>
@@ -230,6 +246,14 @@ const AppraisalsPage = () => {
                             || (selectionDetails.count && selectionDetails.items[0].status === 'Finished'),
                           iconProps: { iconName: 'SaveAndClose' },
                           onClick: clickFinishHandler,
+                        },
+                        {
+                          key: 'generateReport',
+                          text: 'Appraisal report',
+                          disabled: selectionDetails.count === 0
+                            || !global.Authorize(REP.code, REP.grants.read),
+                          iconProps: { iconName: 'MobileReport' },
+                          onClick: () => handleGenerateReport(selectionDetails.count ? selectionDetails.items[0].id : null),
                         },
                       ]}
                       />

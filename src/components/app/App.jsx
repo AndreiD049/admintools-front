@@ -1,5 +1,5 @@
 import {
-  KeytipLayer, KeyCodes, initializeIcons,
+  KeytipLayer, KeyCodes,
 } from '@fluentui/react';
 import DocumentTitle from 'react-document-title';
 import {
