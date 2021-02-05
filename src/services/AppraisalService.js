@@ -322,7 +322,9 @@ const AppraisalService = {
 
   async finishPeriod(periodId) {
     try {
-      const response = await axios.post(this.periodFinishPath(periodId));
+      const response = await axios.post(this.periodFinishPath(periodId), null, {
+        timeout: 200000,
+      });
       if (response.status === 200) {
         return true;
       }

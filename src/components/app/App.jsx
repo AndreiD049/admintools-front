@@ -22,6 +22,7 @@ import LoginRequired from '../shared/login-required';
 import LoginPage from '../../routes/login';
 import { selectTheme } from '../../themes';
 import NotificationContainer from '../notification/NotificationContainer';
+import Tasks from '../../routes/tasks';
 
 const App = () => {
   const [context, setContext] = useState({
@@ -81,6 +82,11 @@ const App = () => {
               <Route path="/settings">
                 <DocumentTitle title="Settings">
                   <SettingsPage />
+                </DocumentTitle>
+              </Route>
+              <Route path="/tasks">
+                <DocumentTitle title="Tasks">
+                  <Tasks />
                 </DocumentTitle>
               </Route>
               <Route path="/login">

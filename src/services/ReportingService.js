@@ -21,7 +21,8 @@ const ReportingService = {
       }
       throw new Error(`Server response: ${response.status} - ${response.statusText}`);
     } catch (err) {
-      NotificationService.notifyError((err.response && err.response.data && err.response.data.error));
+      NotificationService
+        .notifyError((err.response && err.response.data && err.response.data.error));
       throw err;
     }
   },
@@ -34,7 +35,8 @@ const ReportingService = {
       }
       throw new Error(`Server response: ${response.status} - ${response.statusText}`);
     } catch (err) {
-      NotificationService.notifyError((err.response && err.response.data && err.response.data.error));
+      NotificationService
+        .notifyError((err.response && err.response.data && err.response.data.error));
       throw err;
     }
   },
@@ -47,12 +49,14 @@ const ReportingService = {
         },
       });
       if (response.status === 200) {
-        NotificationService.notifySuccess('Tempalte successfully created');
+        NotificationService
+          .notifySuccess('Tempalte successfully created');
         return response.data;
       }
       throw new Error(`Server response: ${response.status} - ${response.statusText}`);
     } catch (err) {
-      NotificationService.notifyError((err.response && err.response.data && err.response.data.error));
+      NotificationService
+        .notifyError((err.response && err.response.data && err.response.data.error));
       throw err;
     }
   },
@@ -69,7 +73,8 @@ const ReportingService = {
       }
       throw new Error(`Server response: ${response.status} - ${response.statusText}`);
     } catch (err) {
-      NotificationService.notifyError(err.response && err.response.data && err.response.data.error);
+      NotificationService
+        .notifyError(err.response && err.response.data && err.response.data.error);
       throw err;
     }
   },
@@ -83,7 +88,8 @@ const ReportingService = {
         await downloadBlob(filename, response.data);
       }
     } catch (err) {
-      NotificationService.notifyError(err.response && err.response.data && err.response.data.error);
+      NotificationService
+        .notifyError(err.response && err.response.data && err.response.data.error);
       throw err;
     }
   },
@@ -96,7 +102,8 @@ const ReportingService = {
       }
       throw new Error(`Server response: ${response.status} - ${response.statusText}`);
     } catch (err) {
-      NotificationService.notifyError(err.response && err.response.data && err.response.data.error);
+      NotificationService
+        .notifyError(err.response && err.response.data && err.response.data.error);
       throw err;
     }
   },
@@ -110,12 +117,14 @@ const ReportingService = {
         responseType: 'blob',
       });
       if (response.status === 200) {
-        NotificationService.notifySuccess('Tempalte successfully generated');
+        NotificationService
+          .notifySuccess('Tempalte successfully generated');
         return response.data;
       }
       throw new Error(`Server response: ${response.status} - ${response.statusText}`);
     } catch (err) {
-      NotificationService.notifyError((err.response && err.response.data && err.response.data.error));
+      NotificationService
+        .notifyError((err.response && err.response.data && err.response.data.error));
       throw err;
     }
   },
@@ -128,7 +137,8 @@ const ReportingService = {
       }
       throw new Error(`Server response: ${response.status} - ${response.statusText}`);
     } catch (err) {
-      NotificationService.notifyError((err.response && err.response.data && err.response.data.error));
+      NotificationService
+        .notifyError((err.response && err.response.data && err.response.data.error));
       throw err;
     }
   },
@@ -149,7 +159,8 @@ const ReportingService = {
       if (response.status === 200) {
         return response.data;
       } if (response.status === 204) {
-        NotificationService.notifyError('No data available for this filter');
+        NotificationService
+          .notifyError('No data available for this filter');
         return null;
       }
       throw new Error(`Server response: ${response.status} - ${response.statusText}`);
@@ -157,7 +168,8 @@ const ReportingService = {
       if (err.response && err.response.status === 400) {
         NotificationService.notifyError('Invalid filters provided');
       } else {
-        NotificationService.notifyError(err.message);
+        NotificationService
+          .notifyError(err.message);
       }
       return null;
     }
@@ -171,7 +183,8 @@ const ReportingService = {
       }
       throw new Error(`Server response: ${response.status} - ${response.statusText}`);
     } catch (err) {
-      NotificationService.notifyError((err.response && err.response.data && err.response.data.error));
+      NotificationService
+        .notifyError((err.response && err.response.data && err.response.data.error));
       throw err;
     }
   },
@@ -184,7 +197,8 @@ const ReportingService = {
       }
       throw new Error(`Server response: ${response.status} - ${response.statusText}`);
     } catch (err) {
-      NotificationService.notifyError((err.response && err.response.data && err.response.data.error));
+      NotificationService
+        .notifyError((err.response && err.response.data && err.response.data.error));
       throw err;
     }
   },
@@ -198,7 +212,8 @@ const ReportingService = {
       });
       return result.data;
     } catch (err) {
-      NotificationService.notifyError((err.response && err.response.data && err.response.data.error));
+      NotificationService
+        .notifyError((err.response && err.response.data && err.response.data.error));
       throw err;
     }
   },
@@ -208,7 +223,8 @@ const ReportingService = {
       const result = await axios.put(this.reportPath(id), update);
       return result.data;
     } catch (err) {
-      NotificationService.notifyError((err.response && err.response.data && err.response.data.error));
+      NotificationService
+        .notifyError((err.response && err.response.data && err.response.data.error));
       throw err;
     }
   },
@@ -223,7 +239,8 @@ const ReportingService = {
       }
       throw new Error(`Server response: ${response.status} - ${response.statusText}`);
     } catch (err) {
-      NotificationService.notifyError((err.response && err.response.data && err.response.data.error));
+      NotificationService
+        .notifyError((err.response && err.response.data && err.response.data.error));
       throw err;
     }
   },

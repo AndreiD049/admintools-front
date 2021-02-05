@@ -19,7 +19,7 @@ module.exports = {
     ecmaFeatures: {
       jsx: true,
     },
-    ecmaVersion: 2018,
+    ecmaVersion: 2020,
     sourceType: 'module',
   },
 
@@ -30,6 +30,7 @@ module.exports = {
   rules: {
     'linebreak-style': [0, (os.EOL === '\r\n' ? 'windows' : '\n')],
     'no-unused-expressions': ['error', { allowShortCircuit: true }],
+    'no-unused-vars': 'warn'
   },
 
 };

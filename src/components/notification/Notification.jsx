@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { MessageBar, MessageBarType, Text } from '@fluentui/react';
 
 const Notification = ({
@@ -37,6 +38,13 @@ const Notification = ({
       <Text variant="medium">{text}</Text>
     </MessageBar>
   );
+};
+
+Notification.propTypes = {
+  type: PropTypes.string.isRequired,
+  text: PropTypes.string.isRequired,
+  actions: PropTypes.shape({}).isRequired,
+  onDismiss: PropTypes.func.isRequired,
 };
 
 export default Notification;

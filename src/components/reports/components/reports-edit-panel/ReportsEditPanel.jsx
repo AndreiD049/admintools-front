@@ -32,7 +32,7 @@ const ReportsEditPanel = ({
   const [details, setDetails] = useState(null);
   const [parameters, setParameters] = useState([]);
   const [parametersList, setParametersList] = useState([]);
-  const [inputErrorMessages, setInputErrorMessages] = useState({}); 
+  const [inputErrorMessages, setInputErrorMessages] = useState({});
   const [newParameter, setNewParameter] = useState({
     name: '',
     path: '',
@@ -59,7 +59,7 @@ const ReportsEditPanel = ({
     ));
   };
 
-  const deleteParam = (param) => (evt) => {
+  const deleteParam = (param) => () => {
     setParameters((prev) => prev.filter((p) => p.path !== param.path));
   };
 
@@ -75,44 +75,43 @@ const ReportsEditPanel = ({
     let error = false;
     if (newParameter.name === '') {
       error = true;
-      setInputErrorMessages(prev => ({
+      setInputErrorMessages((prev) => ({
         ...prev,
-        'newParamName': 'Name is required',
+        newParamName: 'Name is required',
       }));
     } else {
-      setInputErrorMessages(prev => ({
+      setInputErrorMessages((prev) => ({
         ...prev,
-        'newParamName': '',
+        newParamName: '',
       }));
     }
     if (newParameter.path === '') {
       error = true;
-      setInputErrorMessages(prev => ({
+      setInputErrorMessages((prev) => ({
         ...prev,
-        'newParamPath': 'Path is required',
+        newParamPath: 'Path is required',
       }));
     } else {
-      setInputErrorMessages(prev => ({
+      setInputErrorMessages((prev) => ({
         ...prev,
-        'newParamPath': '',
+        newParamPath: '',
       }));
     }
     if (error) return;
-    setParameters(prev => {
+    setParameters((prev) => {
       const item = prev.find((p) => p.path === newParameter.path);
-      console.log(item);
       if (!item) {
         return prev.concat(newParameter);
       }
-      setInputErrorMessages(prev => ({
+      setInputErrorMessages(() => ({
         ...prev,
-        'newParamPath': 'This parameter is already added.',
+        newParamPath: 'This parameter is already added.',
       }));
       return prev;
-    })
-  }
+    });
+  };
 
-  const handleSave = async (evt) => {
+  const handleSave = async () => {
     const result = await ReportingService.updateReport(details.id, {
       description: details.description,
       parameters,
@@ -239,7 +238,7 @@ const ReportsEditPanel = ({
                       data: `${param.name}${path}`,
                     }))).flat()}
                     getTextFromItem={(item) => item.data}
-                    onSelect={(item) => setNewParameter(prev => ({
+                    onSelect={(item) => setNewParameter((prev) => ({
                       ...prev,
                       path: item.data,
                     }))}

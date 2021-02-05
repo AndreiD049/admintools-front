@@ -15,8 +15,8 @@ const NotificationContainer = ({ timeout = 5000 }) => {
         return prev.filter((i) => i.id !== idx);
       }
       return prev;
-    })
-  }
+    });
+  };
 
   // Use below effect to start listening to Notification events
   // When element is unmounted, listener is removed
@@ -27,7 +27,9 @@ const NotificationContainer = ({ timeout = 5000 }) => {
         ...item,
         onRender: item.onRender.bind({}, onDismiss(idx)),
         id: idx,
-        timer: setTimeout(() => setItems((prev) => prev.filter((i) => i.id !== idx)), timeout),
+        timer: setTimeout(
+          () => setItems((prevState) => prevState.filter((i) => i.id !== idx)), timeout,
+        ),
       }]);
     };
 

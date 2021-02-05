@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@fluentui/react-theme-provider';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   chip: {
     borderRadius: '16px',
     textAlign: 'center',

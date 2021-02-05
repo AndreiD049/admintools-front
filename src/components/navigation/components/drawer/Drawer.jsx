@@ -97,11 +97,61 @@ const navLinkGroups = [
         ],
       },
       {
+        name: 'Tasks',
+        code: constants.securities.TASK.code,
+        grant: constants.securities.TASK.grants.read,
+        keyTipContent: '5',
+        keyTipSequence: ['m', '5'],
+        hasMenu: true,
+        links: [
+          {
+            name: 'Dashboard',
+            url: '/tasks',
+            code: constants.securities.TASK.code,
+            grant: constants.securities.TASK.grants.read,
+            icon: 'ViewDashboard',
+            keyTipContent: '1',
+            keyTipSequence: ['m', '5', '1'],
+            hasMenu: false,
+          },
+          {
+            name: 'Planning',
+            url: '/tasks/planning',
+            code: constants.securities.TASK.code,
+            grant: constants.securities.TASK.grants.read,
+            icon: 'PlanView',
+            keyTipContent: '2',
+            keyTipSequence: ['m', '5', '2'],
+            hasMenu: false,
+          },
+          {
+            name: 'Rules',
+            url: '/tasks/task-rules',
+            code: constants.securities.TASK.code,
+            grant: constants.securities.TASK.grants.read,
+            icon: 'AustralianRules',
+            keyTipContent: '3',
+            keyTipSequence: ['m', '5', '3'],
+            hasMenu: false,
+          },
+          {
+            name: 'Flows',
+            url: '/tasks/task-flows',
+            code: constants.securities.TASK.code,
+            grant: constants.securities.TASK.grants.read,
+            icon: 'Flow',
+            keyTipContent: '4',
+            keyTipSequence: ['m', '5', '4'],
+            hasMenu: false,
+          },
+        ],
+      },
+      {
         name: 'Settings',
         code: constants.securities.SETTINGS.code,
         grant: 'read',
-        keyTipContent: '5',
-        keyTipSequence: ['m', '5'],
+        keyTipContent: '6',
+        keyTipSequence: ['m', '6'],
         hasMenu: true,
         links: [
           {
@@ -111,7 +161,7 @@ const navLinkGroups = [
             grant: 'read',
             icon: 'Settings',
             keyTipContent: '1',
-            keyTipSequence: ['m', '5', '1'],
+            keyTipSequence: ['m', '6', '1'],
             hasMenu: false,
           },
           {
@@ -121,7 +171,7 @@ const navLinkGroups = [
             grant: 'users',
             icon: 'UserFollowed',
             keyTipContent: '2',
-            keyTipSequence: ['m', '5', '2'],
+            keyTipSequence: ['m', '6', '2'],
             hasMenu: false,
           },
           {
@@ -131,7 +181,7 @@ const navLinkGroups = [
             grant: 'permissions',
             icon: 'Permissions',
             keyTipContent: '3',
-            keyTipSequence: ['m', '5', '3'],
+            keyTipSequence: ['m', '6', '3'],
             hasMenu: false,
           },
         ],
@@ -151,6 +201,7 @@ const Drawer = ({ isOpen, toggleDrawer }) => {
       if (link.code && link.grant) {
         if (global.Authorize(link.code, link.grant)) {
           if (link.links) {
+            // eslint-disable-next-line no-param-reassign
             link.links = filterLinks(link.links);
           }
           result.push(link);

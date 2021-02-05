@@ -8,7 +8,7 @@ import ReportingTemplatesPage from '../reporting-templates';
 import AuthorizationRedirectComponent from '../../components/shared/authorization-redirect-component';
 import AppraisalReport from '../../components/appraisal-report/AppraisalReport';
 
-const ReportingPage = ({ ctx, setCtx }) => {
+const ReportingPage = () => {
   const { path } = useRouteMatch();
   return (
     <Container lg>
@@ -67,7 +67,6 @@ ReportingPage.propTypes = {
       username: PropTypes.string,
     }),
   }).isRequired,
-  setCtx: PropTypes.func.isRequired,
 };
 
 export default ReportingPage;

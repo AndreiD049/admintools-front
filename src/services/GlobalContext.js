@@ -6,6 +6,7 @@ import Emitter from '../components/shared/Emitter';
 // components but i don't want to pass it around as props.
 const GlobalContext = React.createContext({
   user: null,
+  // eslint-disable-next-line no-unused-vars
   Authorize: (code, grant, notification) => false,
   setContext: () => null,
   userPreferences: {
@@ -13,9 +14,17 @@ const GlobalContext = React.createContext({
   },
   notify: (text, type, actions = null) => {
     Emitter.emit('notification-add', {
-      onRender: (onDismiss) => <Notification text={text} type={type} actions={actions} onDismiss={onDismiss} />
+      onRender: (onDismiss) => (
+        // eslint-disable-next-line react/jsx-filename-extension
+        <Notification
+          text={text}
+          type={type}
+          actions={actions}
+          onDismiss={onDismiss}
+        />
+      ),
     });
-  }
+  },
 });
 
 export default GlobalContext;

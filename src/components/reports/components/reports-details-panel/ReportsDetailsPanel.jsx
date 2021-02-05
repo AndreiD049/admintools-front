@@ -129,7 +129,7 @@ const ReportsDetailsPanel = ({ id, isOpen, setOpen }) => {
             <Separator>Aggregation</Separator>
             <Row justify="start">
               <Col xs={12} sm={8} md={6}>
-                <TextField 
+                <TextField
                   value={JSON.stringify(JSON.parse(details.template.aggregation), null, 4)}
                   multiline
                   underlined

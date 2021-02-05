@@ -57,7 +57,7 @@ const ReportsNewPanel = ({ isOpen, setOpen, addReport }) => {
     setParameter(item.data);
   };
 
-  const handleAddParameter = (e) => {
+  const handleAddParameter = () => {
     if (parameter !== '') {
       setParameter('');
       setSelectedParameters((prev) => {
@@ -185,7 +185,7 @@ const ReportsNewPanel = ({ isOpen, setOpen, addReport }) => {
                 options={templates.map((t) => ({ key: t.id, data: t }))}
                 getTextFromItem={(item) => item.data.name}
                 onSelect={handleChangeTempalte}
-                onRenderItem={(item) => (
+                onRenderItem={() => (
                   <TextField
                     value={template ? templates.find((temp) => temp.id === template)?.name : null}
                     underlined

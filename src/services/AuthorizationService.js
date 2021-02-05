@@ -20,7 +20,8 @@ const AuthorizationService = {
       }
       return null;
     } catch (err) {
-      NotificationService.notifyError((err.response.data && err.response.data.error) || err.message);
+      NotificationService
+        .notifyError((err.response.data && err.response.data.error) || err.message);
       throw err;
     }
   },
@@ -33,7 +34,8 @@ const AuthorizationService = {
       }
       return null;
     } catch (err) {
-      NotificationService.notifyError((err.response.data && err.response.data.error) || err.message);
+      NotificationService
+        .notifyError((err.response.data && err.response.data.error) || err.message);
       throw err;
     }
   },
@@ -46,7 +48,8 @@ const AuthorizationService = {
       }
       return null;
     } catch (err) {
-      NotificationService.notifyError((err.response.data && err.response.data.error) || err.message);
+      NotificationService
+        .notifyError((err.response.data && err.response.data.error) || err.message);
       throw err;
     }
   },
@@ -59,7 +62,8 @@ const AuthorizationService = {
       }
       return null;
     } catch (err) {
-      NotificationService.notifyError((err.response.data && err.response.data.error) || err.message);
+      NotificationService
+        .notifyError((err.response.data && err.response.data.error) || err.message);
       throw err;
     }
   },
@@ -72,7 +76,8 @@ const AuthorizationService = {
       }
       return null;
     } catch (err) {
-      NotificationService.notifyError((err.response.data && err.response.data.error) || err.message);
+      NotificationService
+        .notifyError((err.response.data && err.response.data.error) || err.message);
       throw err;
     }
   },
@@ -85,7 +90,8 @@ const AuthorizationService = {
       }
       return null;
     } catch (err) {
-      NotificationService.notifyError((err.response.data && err.response.data.error) || err.message);
+      NotificationService
+        .notifyError((err.response.data && err.response.data.error) || err.message);
       throw err;
     }
   },
@@ -98,7 +104,8 @@ const AuthorizationService = {
       }
       return null;
     } catch (err) {
-      NotificationService.notifyError((err.response.data && err.response.data.error) || err.message);
+      NotificationService
+        .notifyError((err.response.data && err.response.data.error) || err.message);
       throw err;
     }
   },
@@ -111,7 +118,8 @@ const AuthorizationService = {
       }
       return null;
     } catch (err) {
-      NotificationService.notifyError((err.response.data && err.response.data.error) || err.message);
+      NotificationService
+        .notifyError((err.response.data && err.response.data.error) || err.message);
       throw err;
     }
   },
@@ -124,13 +132,14 @@ const AuthorizationService = {
       }
       return null;
     } catch (err) {
-      NotificationService.notifyError((err.response.data && err.response.data.error) || err.message);
+      NotificationService
+        .notifyError((err.response.data && err.response.data.error) || err.message);
       throw err;
     }
   },
 
   // this function is meant to be injected in the context in order to have access to 'this'
-  Authorize(code, grant, notification = true) {
+  Authorize(code, grant) {
     try {
       if (this.security) {
         const codes = this.security.map((el) => el.code);
@@ -141,7 +150,8 @@ const AuthorizationService = {
       }
       return false;
     } catch (err) {
-      NotificationService.notifyError((err.response.data && err.response.data.error) || err.message);
+      NotificationService
+        .notifyError((err.response.data && err.response.data.error) || err.message);
       return false;
     }
   },

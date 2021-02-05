@@ -219,7 +219,8 @@ const AppraisalsPage = () => {
                         {
                           key: 'openItem',
                           text: 'Open',
-                          disabled: selectionDetails.count === 0 || !global.Authorize(AP.code, AP.grants.read),
+                          disabled: selectionDetails.count === 0
+                          || !global.Authorize(AP.code, AP.grants.read),
                           iconProps: { iconName: 'OpenFile' },
                           onClick: () => handleItemInvoked(
                             selectionDetails.count
@@ -236,7 +237,8 @@ const AppraisalsPage = () => {
                         {
                           key: 'editItem',
                           text: 'Edit',
-                          disabled: selectionDetails.count === 0 || !global.Authorize(AP.code, AP.grants.update),
+                          disabled: selectionDetails.count === 0
+                          || !global.Authorize(AP.code, AP.grants.update),
                           iconProps: { iconName: 'Edit' },
                           onClick: () => setEditPanelOpen(true),
                         },
@@ -255,7 +257,9 @@ const AppraisalsPage = () => {
                           disabled: selectionDetails.count === 0
                             || !global.Authorize(REP.code, REP.grants.read),
                           iconProps: { iconName: 'MobileReport' },
-                          onClick: () => handleGenerateReport(selectionDetails.count ? selectionDetails.items[0].id : null),
+                          onClick: () => handleGenerateReport(
+                            selectionDetails.count ? selectionDetails.items[0].id : null,
+                          ),
                         },
                       ]}
                       />

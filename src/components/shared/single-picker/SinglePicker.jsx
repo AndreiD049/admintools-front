@@ -62,7 +62,8 @@ const SinglePicker = ({
   const inputRef = useRef();
   const getText = getTextFromItem || defaultGetText;
   const renderItem = onRenderItem || defaultRenderItem(getText, classes);
-  const renderSuggestionsItem = onRenderSuggestionsItem || defaultRenderSuggestionItem(getText, classes);
+  const renderSuggestionsItem = onRenderSuggestionsItem
+  || defaultRenderSuggestionItem(getText, classes);
 
   const handleFilter = (filter, suggestions) => {
     if (filter === '') return suggestions;

@@ -61,7 +61,7 @@ const defaultRenderHeaderFold = (item, isOpen, classes) => (
   </span>
 );
 
-const defaultRenderHeaderText = (item, isOpen, classes) => <Text variant="medium">{item.text}</Text>;
+const defaultRenderHeaderText = (item) => <Text variant="medium">{item.text}</Text>;
 
 const defaultRenderItemContent = (item) => (
   <p>

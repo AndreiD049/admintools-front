@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
   DefaultButton, Modal, Stack, StackItem,
 } from '@fluentui/react';
@@ -34,5 +35,10 @@ const ChooseThemeModal = ({ isOpen, setOpen }) => (
     </Stack>
   </Modal>
 );
+
+ChooseThemeModal.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  setOpen: PropTypes.func.isRequired,
+};
 
 export default ChooseThemeModal;

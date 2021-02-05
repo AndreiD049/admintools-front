@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import UserService from '../../../services/UserService';
 import SinglePicker from '../single-picker/SinglePicker';
 
-const TeamMatesAutocomplete = ({ onUserSelect, defaultValue, className }) => {
+const TeamMatesAutocomplete = ({ onUserSelect }) => {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {

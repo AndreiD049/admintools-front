@@ -14,9 +14,14 @@ const LoginService = {
       return null;
     } catch (err) {
       NotificationService.notify(`Not logged in. ${(err.response.data && err.response.data.error) || err.message}`,
-        'error',
-        (<DefaultButton as="a" href="/api/login">Log in</DefaultButton>)
-        );
+        'error', (
+          // eslint-disable-next-line react/jsx-filename-extension
+          <DefaultButton
+            as="a"
+            href="/api/login"
+          >
+            Log in
+          </DefaultButton>));
       return null;
     }
   },

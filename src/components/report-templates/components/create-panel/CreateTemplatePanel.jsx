@@ -9,7 +9,7 @@ import { downloadBlob } from 'download.js';
 import ReportingService from '../../../../services/ReportingService';
 import Accordion from '../../../shared/accordion';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     '& > * + *': {
       marginTop: '16px',
