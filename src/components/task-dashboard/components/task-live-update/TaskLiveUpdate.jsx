@@ -26,7 +26,7 @@ const TaskLiveUpdate = ({ setTasks }) => {
     }
     return () => {
       if (global.connection) {
-        global.connection?.removeEventListener('message', handleMessage);
+        global.connection.removeEventListener('message', handleMessage);
       }
     };
   }, [global.connection]);

@@ -79,7 +79,9 @@ const TaskDashboard = () => {
 
   useEffect(() => {
     async function run() {
-      const result = await ConnectionService.subscribe({ to: selectedUsers, topic: 'dailytasks', connectionId: global.connectionId });
+      if (global.connectionId) {
+        await ConnectionService.subscribe({ to: selectedUsers, topic: 'dailytasks', connectionId: global.connectionId });
+      }
     }
     run();
   }, [selectedUsers, global.connectionId]);
@@ -104,7 +106,7 @@ const TaskDashboard = () => {
   };
 
   const handleStatusChange = async (task, status) => {
-    if (status === constants.tasks.status.InProgress) {
+    if (status === constants.tasks.status.InProgress && !task.isBackgroundTask) {
       // If status to be updated is in progress:
       // 1. Check for conflicts first,
       const conflicts = await TaskService.getBusyTasks({ user: global.user.id });
