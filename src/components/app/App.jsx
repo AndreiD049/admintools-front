@@ -23,6 +23,7 @@ import LoginPage from '../../routes/login';
 import { selectTheme } from '../../themes';
 import NotificationContainer from '../notification/NotificationContainer';
 import Tasks from '../../routes/tasks';
+import ConnectionManager from '../shared/connection-manager/ConnectionManager';
 
 const App = () => {
   const [context, setContext] = useState({
@@ -49,6 +50,7 @@ const App = () => {
   return (
     <GlobalContext.Provider value={context}>
       <ThemeProvider applyTo="body" theme={theme}>
+        <ConnectionManager />
         <NotificationContainer timeout={10000} />
         <KeytipLayer
           keytipStartSequences={[{

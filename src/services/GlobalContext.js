@@ -6,6 +6,8 @@ import Emitter from '../components/shared/Emitter';
 // components but i don't want to pass it around as props.
 const GlobalContext = React.createContext({
   user: null,
+  connection: null,
+  connectionId: null,
   // eslint-disable-next-line no-unused-vars
   Authorize: (code, grant, notification) => false,
   setContext: () => null,

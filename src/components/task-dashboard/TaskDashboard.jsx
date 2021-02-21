@@ -20,6 +20,8 @@ import constants from '../../utils/constants';
 import TaskBusyConflict from './components/task-busy-conflict/TaskBusyConflict';
 import UserService from '../../services/UserService';
 import useLocalStorageState from '../ui-hooks/useLocalStorage';
+import ConnectionService from '../../services/ConnectionService';
+import TaskLiveUpdate from './components/task-live-update/TaskLiveUpdate';
 
 const useStyles = makeStyles((theme) => ({
   searchIcon: {
@@ -75,6 +77,13 @@ const TaskDashboard = () => {
     },
   );
 
+  useEffect(() => {
+    async function run() {
+      const result = await ConnectionService.subscribe({ to: selectedUsers, topic: 'dailytasks', connectionId: global.connectionId });
+    }
+    run();
+  }, [selectedUsers, global.connectionId]);
+
   /**
    * Update user options
    */
@@ -125,6 +134,7 @@ const TaskDashboard = () => {
 
   return (
     <>
+      <TaskLiveUpdate setTasks={setTasks} />
       <Container lg>
         <PageHeader text="Daily tasks" />
         <Row>
