@@ -1,18 +1,18 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const useFetch = (url, options = null, mounted = true, initialData = []) => {
+const useFetch = (url, options = null, initialData = [], dependencies = []) => {
   const [data, setData] = useState(initialData);
 
   useEffect(() => {
     async function run() {
-      const result = await axios.get(url, options?.config);
-      if (mounted && result.status === 200) {
+      const result = await axios.get(url, options);
+      if (result.status === 200) {
         setData(result.data);
       }
     }
     run();
-  }, [options]);
+  }, dependencies);
 
   return [data, setData];
 };

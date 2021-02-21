@@ -1,9 +1,12 @@
 import {
-  CommandBar, PrimaryButton, Separator,
+  ComboBox,
+  CommandBar, DefaultButton, Icon, PrimaryButton, Separator, Stack,
 } from '@fluentui/react';
-import React, { useEffect, useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Col, Container, Row } from 'react-grid-system';
+import { makeStyles } from '@fluentui/react-theme-provider';
 import { useFetch } from '../../services/hooks';
+import DU from '../../utils/date';
 import TaskService from '../../services/tasks/TaskService';
 import PageHeader from '../shared/page-header';
 import usePanel from '../ui-hooks/usePanel';
@@ -11,21 +14,45 @@ import AddTask from './components/add-task';
 import CurrentDate from './components/current-date/CurrentDate';
 import TaskContainer from './components/task-container/TaskContainer';
 import WorkingHours from './components/working-hours/WorkingHours';
+import GlobalContext from '../../services/GlobalContext';
+import useDialog from '../ui-hooks/useDialog';
+import constants from '../../utils/constants';
+import TaskBusyConflict from './components/task-busy-conflict/TaskBusyConflict';
+import UserService from '../../services/UserService';
+import useLocalStorageState from '../ui-hooks/useLocalStorage';
+
+const useStyles = makeStyles((theme) => ({
+  searchIcon: {
+    color: theme.palette.themePrimary,
+    marginLeft: theme.spacing.s1,
+    marginRight: theme.spacing.s1,
+  },
+}));
 
 const TaskDashboard = () => {
+  const classes = useStyles();
+  const global = useContext(GlobalContext);
+  const [users] = useFetch(UserService.teamUsersPath);
+  const [userOptions, setUserOptions] = useState([]);
+  const [selectedUsers, setSelectedUsers] = useLocalStorageState('DTSelectedUsers', [global.user.id]);
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [hours, setHours] = useState({
+  const [hours, setHours] = useLocalStorageState('DTWorkingHours', {
     from: '09:00',
     to: '18:00',
   });
-  const [options, setOptions] = useState({
-    config: {
-      params: {
-        dateFrom: currentDate.toISOString(),
-      },
+  const options = {
+    params: {
+      fromDate: DU.combineDateHours(currentDate, DU.getHoursFromText(hours.from)),
+      toDate: DU.combineDateHours(currentDate, DU.getHoursFromText(hours.to)),
+      users: selectedUsers,
     },
-  });
-  const [tasks, setTasks] = useFetch(TaskService.baseUrl, options);
+  };
+  const [tasks, setTasks] = useFetch(
+    TaskService.baseUrl,
+    options,
+    [],
+    [currentDate, hours, selectedUsers],
+  );
   const newPanel = usePanel(
     ((setOpen) => <AddTask setTasks={setTasks} setOpen={setOpen} />), {
       headerText: 'Create new task',
@@ -34,32 +61,67 @@ const TaskDashboard = () => {
       ),
     },
   );
+  const resolveBusyConflictDialog = useDialog(
+    null,
+    {
+      isBlocking: true,
+      title: 'Busy task found',
+      dialogFooter: (setVisible) => (
+        <>
+          <DefaultButton onClick={() => setVisible(false)}>Cancel</DefaultButton>
+          <PrimaryButton style={{ marginLeft: '5px' }} form="task-busy-resolve" type="submit">Continue</PrimaryButton>
+        </>
+      ),
+    },
+  );
 
+  /**
+   * Update user options
+   */
   useEffect(() => {
-    const hoursFrom = hours.from.split(':').map((h) => +h);
-    const hoursTo = hours.to.split(':').map((h) => +h);
-    setOptions((prev) => ({
-      ...prev,
-      config: {
-        ...prev.config,
-        params: {
-          ...prev.config.params,
-          dateFrom: new Date(
-            currentDate.getFullYear(),
-            currentDate.getMonth(),
-            currentDate.getDate(),
-            hoursFrom[0], hoursFrom[1], 0,
-          ),
-          dateTo: new Date(
-            currentDate.getFullYear(),
-            currentDate.getMonth(),
-            hoursTo[0] < hoursFrom[0] ? currentDate.getDate() + 1 : currentDate.getDate(),
-            hoursTo[0], hoursTo[1], 0,
-          ),
-        },
-      },
-    }));
-  }, [currentDate, hours]);
+    setUserOptions(users.map((user) => ({
+      key: user.id,
+      text: user.username,
+      data: user,
+    })));
+  }, [users]);
+
+  const handleUserSelect = (ev, option) => {
+    if (option.selected) {
+      setSelectedUsers((prev) => prev.concat(option.key));
+    } else {
+      setSelectedUsers((prev) => prev.filter((user) => user !== option.key));
+    }
+  };
+
+  const handleStatusChange = async (task, status) => {
+    if (status === constants.tasks.status.InProgress) {
+      // If status to be updated is in progress:
+      // 1. Check for conflicts first,
+      const conflicts = await TaskService.getBusyTasks({ user: global.user.id });
+      // if found, show the dialog
+      if (conflicts.length > 0) {
+        resolveBusyConflictDialog.setOnRender(() => (
+          (setVisible) => (
+            <TaskBusyConflict
+              setTasks={setTasks}
+              setVisible={setVisible}
+              currentTask={task}
+              conflictTasks={conflicts}
+            />
+          )
+        ));
+        resolveBusyConflictDialog.setVisible(true);
+        return;
+      }
+    }
+    const updated = await TaskService.updateTaskStatus(task.id, { status });
+    setTasks((ts) => (ts.map((t) => (t.id === task.id ? updated.result : t))));
+    // if task was unpaused, update it too
+    if (updated.unpaused?.id) {
+      setTasks((ts) => (ts.map((t) => (t.id === updated.unpaused.id ? updated.unpaused : t))));
+    }
+  };
 
   return (
     <>
@@ -72,7 +134,7 @@ const TaskDashboard = () => {
         </Row>
         <Row>
           <Col>
-            <WorkingHours hours={hours} setHours={setHours} />
+            <WorkingHours hours={hours} date={currentDate} setHours={setHours} />
           </Col>
         </Row>
         <Separator />
@@ -88,18 +150,55 @@ const TaskDashboard = () => {
                   },
                   onClick: () => { newPanel.setOpen(true); },
                 },
+                {
+                  key: 'users',
+                  text: 'Users',
+                  iconProps: {
+                    iconName: 'ProfileSearch',
+                  },
+                  onRender: (item) => (
+                    <Stack horizontal horizontalAlign="center" verticalAlign="center">
+                      <Icon className={classes.searchIcon} iconName="ProfileSearch" />
+                      <ComboBox
+                        autoComplete="on"
+                        options={userOptions}
+                        multiSelect
+                        selectedKey={selectedUsers}
+                        openOnKeyboardFocus
+                        onChange={handleUserSelect}
+                        calloutProps={{
+                          calloutMaxHeight: 500,
+                        }}
+                      />
+                    </Stack>
+                  ),
+                },
               ]}
             />
           </Col>
         </Row>
         <Separator />
-        <Row>
-          <Col xs={12}>
-            <TaskContainer tasks={tasks} />
-          </Col>
+        <Row justify="around">
+          {
+              selectedUsers.map((selUser) => (
+                <TaskContainer
+                  tasks={
+                    tasks
+                      .filter((task) => task
+                        .assignedTo
+                        .find((user) => user.id === selUser) !== undefined)
+                      .sort((t1, t2) => (t1.expectedStartDate < t2.expectedStartDate ? -1 : 1))
+                    }
+                  user={users.find((u) => u.id === selUser)}
+                  setTasks={setTasks}
+                  handleStatusChange={handleStatusChange}
+                />
+              ))
+            }
         </Row>
       </Container>
       {newPanel.render}
+      {resolveBusyConflictDialog.render}
     </>
   );
 };

@@ -44,6 +44,14 @@ const useStyles = makeStyles(() => ({
 
 const WorkingHours = ({ hours, setHours }) => {
   const classes = useStyles();
+
+  const handleChange = (type) => (evt, option) => {
+    setHours((prev) => ({
+      ...prev,
+      [type]: option.key,
+    }));
+  };
+
   return (
     <>
       <Stack horizontalAlign="center">
@@ -58,10 +66,7 @@ const WorkingHours = ({ hours, setHours }) => {
             calloutProps={{
               calloutMaxHeight: 500,
             }}
-            onChange={(evt, option) => setHours((prev) => ({
-              ...prev,
-              from: option.key,
-            }))}
+            onChange={handleChange('from')}
           />
           <span className={classes.space}>-</span>
           <ComboBox
@@ -73,10 +78,7 @@ const WorkingHours = ({ hours, setHours }) => {
             calloutProps={{
               calloutMaxHeight: 500,
             }}
-            onChange={(evt, option) => setHours((prev) => ({
-              ...prev,
-              to: option.key,
-            }))}
+            onChange={handleChange('to')}
           />
         </Stack>
       </Stack>

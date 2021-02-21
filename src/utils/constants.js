@@ -1,4 +1,46 @@
 const constants = {
+  timeOptions: (() => {
+    const options = [];
+    for (let h = 0; h < 24; h += 1) {
+      for (let m = 0; m < 60; m += 10) {
+        const str = `${`0${h}`.slice(-2)}:${`0${m}`.slice(-2)}`;
+        options.push({
+          key: str,
+          text: str,
+        });
+      }
+    }
+    return options;
+  })(),
+  tasks: {
+    status: {
+      New: 'New',
+      InProgress: 'InProgress',
+      Paused: 'Paused',
+      Finished: 'Finished',
+      Cancelled: 'Cancelled',
+    },
+    types: {
+      Daily: 'Daily',
+      Weekly: 'Weekly',
+      Monthly: 'Monthly',
+    },
+    DayTypes: {
+      Workday: 'Work',
+      Calendar: 'Calendar',
+    },
+    MonthlyOnType: {
+      Day: 'Day',
+      Workday: 'Workday',
+      Monday: 'Monday',
+      Tuesday: 'Tuesday',
+      Wednesday: 'Wednesday',
+      Thursday: 'Thursday',
+      Friday: 'Friday',
+      Saturday: 'Saturday',
+      Sunday: 'Sunday',
+    },
+  },
   securities: {
     REPORTS: {
       code: 'REPORTS',

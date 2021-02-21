@@ -79,14 +79,16 @@ const Autocomplete = ({
         className={classes.root}
         componentRef={input}
         onEmptyResolveSuggestions={() => options}
-        onRenderItem={(itemProps) => (
-          itemProps.index !== (selected.length - 1)
-            ? `${itemProps.item.text}, `
-            : itemProps.item.text
-        )}
+        onRenderItem={(itemProps) => {
+          if (selected.length > 1) {
+            if (itemProps.index === 0) return `${selected.length} selected`;
+            return '';
+          }
+          return itemProps.item.text;
+        }}
         selectedItems={selected}
         onChange={(items) => {
-          if (items.indexOf(undefined) === -1) onItemSelected(items);
+          if (items.indexOf(undefined) === -1) onItemSelected(() => items);
         }}
         inputProps={{
           placeholder: selected?.length ? '' : 'Search...',

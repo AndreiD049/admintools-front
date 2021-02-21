@@ -6,28 +6,15 @@ import {
 } from '@fluentui/react';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
-import { useFetch } from '../../../../services/hooks';
 import TaskService from '../../../../services/tasks/TaskService';
 import UserService from '../../../../services/UserService';
 import Autocomplete from '../../../shared/autocomplete/Autocomplete';
 import DatePicker from '../../../shared/date-picker';
-
-const getTimeOptions = () => {
-  const options = [];
-  for (let h = 0; h < 24; h += 1) {
-    for (let m = 0; m < 60; m += 10) {
-      const str = `${`0${h}`.slice(-2)}:${`0${m}`.slice(-2)}`;
-      options.push({
-        key: str,
-        text: str,
-      });
-    }
-  }
-  return options;
-};
+import constants from '../../../../utils/constants';
+import { useFetch } from '../../../../services/hooks';
 
 const AddTask = ({ setOpen, setTasks }) => {
-  const [options] = useState(getTimeOptions());
+  const [options] = useState(constants.timeOptions);
   const [users] = useFetch(UserService.teamUsersPath);
   const [userOptions, setUserOptions] = useState([]);
   const [values, setValues] = useState({
@@ -37,6 +24,7 @@ const AddTask = ({ setOpen, setTasks }) => {
     expectedStartDate: new Date(),
     expectedStartTime: '00:00',
     duration: 60,
+    isBackgroundTask: false,
     selectedUsers: [],
   });
 
@@ -65,6 +53,7 @@ const AddTask = ({ setOpen, setTasks }) => {
       expectedStartDate: expDate,
       expectedFinishDate: new Date(expDate.getTime() + values.duration * 60000),
       assignedTo: values.selectedUsers.map((u) => u.data.id),
+      isBackgroundTask: values.isBackgroundTask,
     });
     if (result) {
       setTasks((prev) => {
@@ -141,7 +130,7 @@ const AddTask = ({ setOpen, setTasks }) => {
           selected={values.selectedUsers}
           onItemSelected={(data) => setValues((prev) => ({
             ...prev,
-            selectedUsers: data instanceof Function ? data(prev.selectedUsers) : data,
+            selectedUsers: data(prev.selectedUsers),
           }))}
           required
         />

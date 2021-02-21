@@ -4,6 +4,7 @@ import { Container } from 'react-grid-system';
 import { useRouteMatch, Switch, Route } from 'react-router-dom';
 import AuthorizationRedirectComponent from '../../components/shared/authorization-redirect-component';
 import TaskDashboard from '../../components/task-dashboard/TaskDashboard';
+import TaskRules from '../../components/task-rules';
 import constants from '../../utils/constants';
 
 const Tasks = () => {
@@ -22,7 +23,7 @@ const Tasks = () => {
               content: 'No permission to access this page. Please contact your administrator.',
             }}
           >
-            <DocumentTitle title="Reporting Templates">
+            <DocumentTitle title="Task Dashboard">
               <TaskDashboard />
             </DocumentTitle>
           </AuthorizationRedirectComponent>
@@ -53,7 +54,7 @@ const Tasks = () => {
             }}
           >
             <DocumentTitle title="Planning">
-              <h1>Task Rules</h1>
+              <TaskRules />
             </DocumentTitle>
           </AuthorizationRedirectComponent>
         </Route>
@@ -69,6 +70,21 @@ const Tasks = () => {
           >
             <DocumentTitle title="Planning">
               <h1>Task Flows</h1>
+            </DocumentTitle>
+          </AuthorizationRedirectComponent>
+        </Route>
+        <Route exact path={`${path}/:id`}>
+          <AuthorizationRedirectComponent
+            code={constants.securities.TASK.code}
+            grant={constants.securities.TASK.grants.read}
+            to="/"
+            failureNotification={{
+              header: 'No Access',
+              content: 'No permission to access this page. Please contact your administrator.',
+            }}
+          >
+            <DocumentTitle title="Task">
+              <div>Task</div>
             </DocumentTitle>
           </AuthorizationRedirectComponent>
         </Route>
