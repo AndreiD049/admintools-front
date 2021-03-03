@@ -19,6 +19,7 @@ const CurrentDate = ({ currentDate, setCurrentDate }) => (
       <DatePicker
         value={currentDate}
         onSelectDate={(date) => setCurrentDate(date)}
+        firstDayOfWeek={1}
       />
       <ActionButton
         onClick={() => setCurrentDate((prev) => {

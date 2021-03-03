@@ -4,6 +4,7 @@ import { Container } from 'react-grid-system';
 import { useRouteMatch, Switch, Route } from 'react-router-dom';
 import AuthorizationRedirectComponent from '../../components/shared/authorization-redirect-component';
 import TaskDashboard from '../../components/task-dashboard/TaskDashboard';
+import TaskPlanning from '../../components/task-planning/TaskPlanning';
 import TaskRules from '../../components/task-rules';
 import constants from '../../utils/constants';
 
@@ -39,7 +40,7 @@ const Tasks = () => {
             }}
           >
             <DocumentTitle title="Planning">
-              <h1>Task Planning</h1>
+              <TaskPlanning />
             </DocumentTitle>
           </AuthorizationRedirectComponent>
         </Route>
@@ -53,7 +54,7 @@ const Tasks = () => {
               content: 'No permission to access this page. Please contact your administrator.',
             }}
           >
-            <DocumentTitle title="Planning">
+            <DocumentTitle title="Task Rules">
               <TaskRules />
             </DocumentTitle>
           </AuthorizationRedirectComponent>
@@ -68,7 +69,7 @@ const Tasks = () => {
               content: 'No permission to access this page. Please contact your administrator.',
             }}
           >
-            <DocumentTitle title="Planning">
+            <DocumentTitle title="Flows">
               <h1>Task Flows</h1>
             </DocumentTitle>
           </AuthorizationRedirectComponent>

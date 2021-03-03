@@ -1,28 +1,57 @@
-import React, { useState } from 'react';
+import React, { useState, createContext } from 'react';
 import {
   Panel, PanelType,
 } from '@fluentui/react';
 
-const usePanel = (onRenderComponent, options = {}) => {
+const PanelContext = createContext({
+  isPanel: false,
+  isOpen: null,
+  setOpen: null,
+  onRenderFooter: null,
+  setOnRenderFooter: null,
+});
+
+/**
+ * @param {Object} onRenderComponent
+ * @param {Object} options
+ * @param {Function} options.onDismiss
+ * @param {Number} options.type
+ * @param {String} options.headerText
+ * @param {Boolean} options.isLightDismiss
+ * @param {Function} options.onRenderFooterContent
+ * @param {Boolean} options.isFooterAtBottom
+ */
+const usePanel = (Component, options = {}, componentProps = {}) => {
   const [isOpen, setOpen] = useState(false);
+  const [onRenderFooter, setOnRenderFooter] = useState(() => options.onRenderFooterContent);
+  const [ctx] = useState({
+    isPanel: true,
+    isOpen,
+    setOpen,
+    onRenderFooter,
+    setOnRenderFooter,
+  });
 
   const render = (
-    <Panel
-      isOpen={isOpen}
-      onDismiss={(options?.onDismiss && options.onDismiss(isOpen, setOpen))
+    <PanelContext.Provider value={ctx}>
+      <Panel
+        isOpen={isOpen}
+        onDismiss={(options?.onDismiss && options.onDismiss(isOpen, setOpen))
         ?? (() => setOpen(false))}
-      type={options.type ?? PanelType.smallFixedFar}
-      headerText={options.headerText ?? 'Panel'}
-      isLightDismiss={options.isLightDismiss ?? false}
-      onRenderFooterContent={options.onRenderFooterContent ?? (() => null)}
-      isFooterAtBottom={options.isFooterAtBottom ?? false}
-    >
-      {
+        type={options.type ?? PanelType.smallFixedFar}
+        headerText={options.headerText ?? 'Panel'}
+        isLightDismiss={options.isLightDismiss ?? false}
+        onRenderFooterContent={onRenderFooter}
+        isFooterAtBottom={options.isFooterAtBottom ?? false}
+      >
+        {
         isOpen
-          ? onRenderComponent(setOpen)
+          // eslint-disable-next-line react/jsx-props-no-spreading
+          ? <Component isOpen={isOpen} setOpen={setOpen} {...componentProps} />
           : null
       }
-    </Panel>
+      </Panel>
+    </PanelContext.Provider>
   );
 
   return {
@@ -31,3 +60,7 @@ const usePanel = (onRenderComponent, options = {}) => {
 };
 
 export default usePanel;
+
+export {
+  PanelContext,
+};

@@ -11,8 +11,10 @@ const useFetch = (url, options = null, initialData = [], dependencies = []) => {
         setData(result.data);
       }
     }
-    run();
-  }, dependencies);
+    if (url) {
+      run();
+    }
+  }, [url, ...dependencies]);
 
   return [data, setData];
 };

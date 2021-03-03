@@ -1,4 +1,10 @@
 const constants = {
+  dialogAnswers: {
+    Yes: 1,
+    No: 0,
+    Cancel: 2,
+    Ok: 3,
+  },
   timeOptions: (() => {
     const options = [];
     for (let h = 0; h < 24; h += 1) {

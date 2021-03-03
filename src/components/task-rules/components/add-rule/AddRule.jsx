@@ -13,6 +13,7 @@ import AddRuleType from '../add-rule-type/AddRuleType';
 import TaskRuleService from '../../../../services/tasks/TaskRuleService';
 import NotificationService from '../../../../services/NotificationService';
 import { useFetch } from '../../../../services/hooks';
+import DateUtils from '../../../../utils/date';
 
 const { tasks } = constants;
 
@@ -92,8 +93,6 @@ const AddRule = ({ setRules, setOpen }) => {
     }
   };
 
-  const getNearestTime = (date) => `${(`0${date.getHours()}`).slice(-2)}:${(`0${Math.round(date.getMinutes() / 10) * 10}`).slice(-2)}`;
-
   const handleSubmit = async (evt) => {
     evt.preventDefault();
     if (data.validFrom && data.validTo && data.validTo < data.validFrom) {
@@ -135,7 +134,7 @@ const AddRule = ({ setRules, setOpen }) => {
       <ComboBox
         label="Start time"
         options={timeOptions.current}
-        selectedKey={getNearestTime(data.taskStartTime)}
+        selectedKey={DateUtils.getNearestTime(data.taskStartTime ?? new Date())}
         autoComplete="on"
         onChange={handleSelectTime}
         calloutProps={{

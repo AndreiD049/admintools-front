@@ -56,25 +56,28 @@ const TaskDashboard = () => {
     [currentDate, hours, selectedUsers],
   );
   const newPanel = usePanel(
-    ((setOpen) => <AddTask setTasks={setTasks} setOpen={setOpen} />), {
+    AddTask, {
       headerText: 'Create new task',
       onRenderFooterContent: () => (
         <PrimaryButton text="Create" type="submit" form="create-task-form" />
       ),
+    }, {
+      setTasks,
     },
   );
+  const [dialogProps, setDialogProps] = useState({});
   const resolveBusyConflictDialog = useDialog(
-    null,
+    TaskBusyConflict,
     {
       isBlocking: true,
       title: 'Busy task found',
-      dialogFooter: (setVisible) => (
+      dialogFooter: (_accept, cancel) => (
         <>
-          <DefaultButton onClick={() => setVisible(false)}>Cancel</DefaultButton>
+          <DefaultButton onClick={cancel}>Cancel</DefaultButton>
           <PrimaryButton style={{ marginLeft: '5px' }} form="task-busy-resolve" type="submit">Continue</PrimaryButton>
         </>
       ),
-    },
+    }, dialogProps,
   );
 
   useEffect(() => {
@@ -112,18 +115,12 @@ const TaskDashboard = () => {
       const conflicts = await TaskService.getBusyTasks({ user: global.user.id });
       // if found, show the dialog
       if (conflicts.length > 0) {
-        resolveBusyConflictDialog.setOnRender(() => (
-          (setVisible) => (
-            <TaskBusyConflict
-              setTasks={setTasks}
-              setVisible={setVisible}
-              currentTask={task}
-              conflictTasks={conflicts}
-            />
-          )
-        ));
-        resolveBusyConflictDialog.setVisible(true);
-        return;
+        setDialogProps({
+          setTasks,
+          conflictTasks: conflicts,
+        });
+        const answer = await resolveBusyConflictDialog.show();
+        if (answer === constants.dialogAnswers.No) return;
       }
     }
     const updated = await TaskService.updateTaskStatus(task.id, { status });

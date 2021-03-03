@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { makeStyles } from '@fluentui/react-theme-provider';
+import React, { useEffect, useState } from 'react';
+import { makeStyles, useTheme } from '@fluentui/react-theme-provider';
 import { Col, Container, Row } from 'react-grid-system';
 import {
-  DetailsListLayoutMode, PrimaryButton, SelectionMode, Separator,
+  DetailsListLayoutMode, PanelType, PrimaryButton, SelectionMode, Separator,
 } from '@fluentui/react';
 import PageHeader from '../shared/page-header';
 import CommandTable from '../shared/command-table/CommandTable';
@@ -10,6 +10,7 @@ import TaskRuleService from '../../services/tasks/TaskRuleService';
 import usePanel from '../ui-hooks/usePanel';
 import AddRule from './components/add-rule/AddRule';
 import { useFetch } from '../../services/hooks';
+import RuleDetails from './components/rule-details/RuleDetails';
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -24,11 +25,31 @@ const TaskRules = () => {
     items: [],
   });
   const newPanel = usePanel(
-    (setOpen) => (<AddRule setRules={setRules} setOpen={setOpen} />), {
+    AddRule, {
       headerText: 'Create new rule',
       onRenderFooterContent: () => (
         <PrimaryButton text="Create" type="submit" form="add-task-rule-form" />
       ),
+    }, {
+      setRules,
+    },
+  );
+  const [editing, setEditing] = useState(false);
+
+  const detailsPanel = usePanel(
+    RuleDetails, {
+      headerText: 'Rule Details',
+      isLightDismiss: !editing,
+      type: PanelType.medium,
+      isFooterAtBottom: true,
+      onDismiss: (_isOpen, setOpen) => () => {
+        setEditing(false);
+        setOpen(false);
+      },
+    }, {
+      id: selectionDetails.items.length > 0 ? selectionDetails.items[0].id : null,
+      editing,
+      setEditing,
     },
   );
 
@@ -123,7 +144,7 @@ const TaskRules = () => {
               columns,
               setSelectionDetails,
               selectionMode: SelectionMode.single,
-              onItemInvoked: () => alert('invoke'),
+              onItemInvoked: () => detailsPanel.setOpen(true),
               layoutMode: DetailsListLayoutMode.justified,
               sortedCol: sortedColumn,
             }}
@@ -131,6 +152,7 @@ const TaskRules = () => {
         </Col>
       </Row>
       {newPanel.render}
+      {detailsPanel.render}
     </Container>
   );
 };

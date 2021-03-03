@@ -30,7 +30,7 @@ module.exports = {
   rules: {
     'linebreak-style': [0, (os.EOL === '\r\n' ? 'windows' : '\n')],
     'no-unused-expressions': ['error', { allowShortCircuit: true }],
-    'no-unused-vars': 'warn'
+    'no-unused-vars': 'warn',
   },
 
 };

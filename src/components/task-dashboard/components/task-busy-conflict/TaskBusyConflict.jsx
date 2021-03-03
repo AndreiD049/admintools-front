@@ -6,7 +6,7 @@ import TaskService from '../../../../services/tasks/TaskService';
 import constants from '../../../../utils/constants';
 
 const TaskBusyConflict = ({
-  setTasks, setVisible, currentTask, conflictTasks = [],
+  accept, setTasks, conflictTasks = [],
 }) => {
   const handleSubmit = async (e) => {
     try {
@@ -22,16 +22,8 @@ const TaskBusyConflict = ({
       (await Promise.all(paused)).map(
         (task) => setTasks((prev) => prev.map((t) => (t.id === task.result.id ? task.result : t))),
       );
-      // Update the current task to InProgress
-      const updated = await TaskService.updateTaskStatus(
-        currentTask.id,
-        {
-          status: constants.tasks.status.InProgress,
-        },
-      );
-      setTasks((ts) => (ts.map((t) => (t.id === currentTask.id ? updated.result : t))));
     } finally {
-      setVisible(false);
+      accept();
     }
   };
 
@@ -57,8 +49,8 @@ const TaskBusyConflict = ({
 };
 
 TaskBusyConflict.propTypes = {
+  accept: PropTypes.func.isRequired,
   setTasks: PropTypes.func.isRequired,
-  setVisible: PropTypes.func.isRequired,
   currentTask: PropTypes.shape({
     id: PropTypes.string,
   }).isRequired,
