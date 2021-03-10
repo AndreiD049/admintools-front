@@ -83,7 +83,7 @@ const TaskDashboard = () => {
   useEffect(() => {
     async function run() {
       if (global.connectionId) {
-        await ConnectionService.subscribe({ to: selectedUsers, topic: 'dailytasks', connectionId: global.connectionId });
+        await ConnectionService.subscribe({ to: selectedUsers, connectionId: global.connectionId });
       }
     }
     run();

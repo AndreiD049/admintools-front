@@ -9,6 +9,7 @@ const UserEditPanel = ({
   isOpen, user, setOpen, handleEdit, teams, organizations, roles,
 }) => {
   const [selTeams, setSelTeams] = useState([]);
+  const [selPrimaryTeam, setSelPrimaryTeam] = useState(null);
   const [selOrganizations, setSelOrganizations] = useState([]);
   const [selRole, setSelRole] = useState(null);
 
@@ -17,6 +18,7 @@ const UserEditPanel = ({
     handleEdit({
       ...user,
       teams: selTeams,
+      team: selPrimaryTeam,
       organizations: selOrganizations,
       role: selRole,
     }).finally(() => {
@@ -47,12 +49,19 @@ const UserEditPanel = ({
   useEffect(() => {
     if (user) {
       setSelTeams(user.teams);
+      setSelPrimaryTeam(user.team);
       setSelOrganizations(user.organizations);
       if (user.role) {
         setSelRole(user.role);
       }
     }
   }, [user]);
+
+  useEffect(() => {
+    if (selPrimaryTeam?.id && !selTeams.find((t) => t.id === selPrimaryTeam?.id)) {
+      setSelPrimaryTeam(null);
+    }
+  }, [selTeams]);
 
   return (
     <>
@@ -76,6 +85,18 @@ const UserEditPanel = ({
                 selectedKey={selTeams.map((t) => t.id)}
                 onChange={handleMultiCombobox(setSelTeams)}
                 options={teams.map((t) => ({
+                  key: t.id,
+                  text: t.name,
+                  data: t,
+                }))}
+              />
+              <ComboBox
+                label="Primary team"
+                id="user-edit-select-primary-team"
+                useComboBoxAsMenuWidth
+                selectedKey={selPrimaryTeam?.id}
+                onChange={(evt, option) => setSelPrimaryTeam(option.data)}
+                options={selTeams.map((t) => ({
                   key: t.id,
                   text: t.name,
                   data: t,
@@ -122,6 +143,10 @@ UserEditPanel.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   user: PropTypes.shape({
     teams: PropTypes.arrayOf(PropTypes.shape({})),
+    team: PropTypes.shape({
+      id: PropTypes.string,
+      name: PropTypes.string,
+    }),
     organizations: PropTypes.arrayOf(PropTypes.shape({})),
     role: PropTypes.shape({}),
   }),

@@ -2,13 +2,12 @@ import axios from 'axios';
 import NotificationService from './NotificationService';
 
 const ConnectionService = {
-  baseUrl: '/api/connection',
-  streamPath: '/api/connection/stream',
-  subscribePath: '/api/connection/subscribe',
+  baseUrl: '/stream',
+  subscribePath: '/stream/subscribe',
 
   async connectSSE() {
     try {
-      const es = new EventSource(this.streamPath);
+      const es = new EventSource(this.baseUrl);
       return es;
     } catch (err) {
       return null;

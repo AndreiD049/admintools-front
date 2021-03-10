@@ -100,7 +100,7 @@ const UserInfo = () => {
                   <Stack className={classes.callout}>
                     <Stack horizontalAlign="space-between" horizontal>
                       <Text variant="medium">Admin Tools</Text>
-                      <FluidLink href="/api/logout">
+                      <FluidLink href="/auth/logout">
                         <Text variant="medium">Sign Out</Text>
                       </FluidLink>
                     </Stack>
@@ -134,7 +134,7 @@ const UserInfo = () => {
               {
                 global.userLoaded
                   ? (
-                    <FluidLink className={classes.link} href="/api/login">
+                    <FluidLink className={classes.link} href="/auth/login">
                       <Text variant="mediumPlus">
                         Login
                       </Text>

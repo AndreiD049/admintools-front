@@ -18,7 +18,7 @@ const UserSecuritiesProvider = () => {
       }
     }
     run();
-  }, [global]);
+  }, [global.user, global.security, global.setContext]);
 
   return null;
 };

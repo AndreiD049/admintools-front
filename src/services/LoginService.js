@@ -18,7 +18,7 @@ const LoginService = {
           // eslint-disable-next-line react/jsx-filename-extension
           <DefaultButton
             as="a"
-            href="/api/login"
+            href="/auth/login"
           >
             Log in
           </DefaultButton>));
