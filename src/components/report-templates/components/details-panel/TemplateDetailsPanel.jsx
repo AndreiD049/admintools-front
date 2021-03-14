@@ -2,10 +2,9 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   ActionButton,
-  DefaultButton, Panel, PanelType, PrimaryButton, Separator, Stack, TextField,
+  DefaultButton, makeStyles, Panel, PanelType, PrimaryButton, Separator, Stack, TextField,
 } from '@fluentui/react';
 import { Col, Container, Row } from 'react-grid-system';
-import { makeStyles } from '@fluentui/react-theme-provider';
 import ReportingService from '../../../../services/ReportingService';
 
 const useStyles = makeStyles(() => ({

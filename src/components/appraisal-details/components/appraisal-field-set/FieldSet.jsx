@@ -1,8 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useParams } from 'react-router-dom';
-import { makeStyles } from '@fluentui/react-theme-provider';
-import { Stack, Text } from '@fluentui/react';
+import { makeStyles, Stack, Text } from '@fluentui/react';
 import AppraisalInput from '../appraisal-input';
 import AppraisalService from '../../../../services/AppraisalService';
 import Box from '../../../shared/box';

@@ -1,11 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@fluentui/react-theme-provider';
 import {
-  Facepile, OverflowButtonType, Persona, PersonaSize,
+  Facepile, makeStyles, OverflowButtonType, PersonaSize,
 } from '@fluentui/react';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     display: 'inline-block',
   },

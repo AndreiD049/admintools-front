@@ -1,5 +1,5 @@
 import {
-  KeytipLayer, KeyCodes,
+  KeytipLayer, KeyCodes, ThemeProvider,
 } from '@fluentui/react';
 import DocumentTitle from 'react-document-title';
 import {
@@ -7,7 +7,6 @@ import {
   Route,
   Switch,
 } from 'react-router-dom';
-import { ThemeProvider } from '@fluentui/react-theme-provider';
 import React, { useState, useEffect, useContext } from 'react';
 import GlobalContext from '../../services/GlobalContext';
 import AuthorizationService from '../../services/AuthorizationService';
@@ -52,17 +51,17 @@ const App = () => {
       <ThemeProvider applyTo="body" theme={theme}>
         <ConnectionManager />
         <NotificationContainer timeout={10000} />
-        <KeytipLayer
-          keytipStartSequences={[{
-            key: 'a',
-            modifierKeys: [KeyCodes.alt],
-          }]}
-        />
         <Router>
           <UserInfoProvider ctx={context} setCtx={setContext} />
           <UserSecuritiesProvider />
           <Navigation />
           <LoginRequired />
+          <KeytipLayer
+            keytipStartSequences={[{
+              key: 'a',
+              modifierKeys: [KeyCodes.alt],
+            }]}
+          />
           {/* The page switch */}
           <Switch>
             <div style={{ marginTop: '40px' }}>

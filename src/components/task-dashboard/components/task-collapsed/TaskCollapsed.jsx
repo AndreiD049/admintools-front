@@ -1,14 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@fluentui/react-theme-provider';
 import { Collapse } from 'react-collapse';
 import {
-  ButtonGrid, DefaultButton, Separator, Text,
+  ButtonGrid, DefaultButton, makeStyles, Separator, Text,
 } from '@fluentui/react';
-import TaskService from '../../../../services/tasks/TaskService';
 import TaskPersonas from '../task-personas/TaskPersonas';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     '& table': {
       margin: 'auto',
@@ -21,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const TaskCollapsed = ({
-  task, setTasks, collapsed, setCollapsed, handleStatusChange,
+  task, collapsed, setCollapsed, handleStatusChange,
 }) => {
   const classes = useStyles();
 
@@ -92,7 +90,6 @@ TaskCollapsed.propTypes = {
     id: PropTypes.string,
     status: PropTypes.string,
   }).isRequired,
-  setTasks: PropTypes.func.isRequired,
   collapsed: PropTypes.bool.isRequired,
   setCollapsed: PropTypes.func.isRequired,
 };

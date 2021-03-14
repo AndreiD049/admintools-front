@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@fluentui/react-theme-provider';
 import {
+  makeStyles,
   Persona, PersonaSize, Separator, Stack, StackItem,
 } from '@fluentui/react';
 import TaskItem from '../task-item';
@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
     maxHeight: '600px',
     padding: '5px',
     overflow: 'auto',
-    backgroundColor: theme.palette.neutralLighterAlt,
+    backgroundColor: theme.semanticColors.bodyBackground,
     border: `2px solid ${theme.palette.neutralLight}`,
     '& > * + *': {
       marginTop: '2px',
@@ -58,10 +58,14 @@ const TaskContainer = ({
 TaskContainer.propTypes = {
   user: PropTypes.shape({
     username: PropTypes.string,
-  }).isRequired,
+  }),
   handleStatusChange: PropTypes.func.isRequired,
   tasks: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   setTasks: PropTypes.func.isRequired,
+};
+
+TaskContainer.defaultProps = {
+  user: null,
 };
 
 export default TaskContainer;

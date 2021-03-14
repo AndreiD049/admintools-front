@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { makeStyles } from '@fluentui/react-theme-provider';
 import {
-  ActionButton, Separator, Text,
+  ActionButton, makeStyles, Separator, Text,
 } from '@fluentui/react';
 import TaskCollapsed from '../task-collapsed/TaskCollapsed';
 
@@ -204,8 +203,8 @@ TaskItem.propTypes = {
     status: PropTypes.string,
     title: PropTypes.string,
     description: PropTypes.string,
-    expectedStartDate: PropTypes.oneOf(PropTypes.string, PropTypes.instanceOf(Date)),
-    expectedFinishDate: PropTypes.oneOf(PropTypes.string, PropTypes.instanceOf(Date)),
+    expectedStartDate: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
+    expectedFinishDate: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
   }).isRequired,
   setTasks: PropTypes.func.isRequired,
 };

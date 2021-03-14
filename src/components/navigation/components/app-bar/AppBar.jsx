@@ -1,9 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  Icon, IconButton, Text,
+  Icon, IconButton, makeStyles, Text, useTheme,
 } from '@fluentui/react';
-import { useTheme, makeStyles } from '@fluentui/react-theme-provider';
 import UserInfo from '../user-info/UserInfo';
 import keytipStyles from '../../../../styles/keytipStyles';
 
@@ -38,15 +37,11 @@ const useStyles = makeStyles((theme) => ({
 const AppBar = ({ toggleDrawer }) => {
   const theme = useTheme();
   const classes = useStyles();
+
   return (
     <div className={classes.root}>
       <div className={classes.flex}>
         <IconButton
-          className={classes.icon}
-          iconProps={{ iconName: 'GlobalNavButton' }}
-          title="Global Nav"
-          ariaLabel="Global Navigation"
-          onClick={toggleDrawer}
           keytipProps={{
             styles: keytipStyles,
             content: 'M',
@@ -54,6 +49,11 @@ const AppBar = ({ toggleDrawer }) => {
             onExecute: toggleDrawer,
             hasMenu: true,
           }}
+          className={classes.icon}
+          iconProps={{ iconName: 'GlobalNavButton' }}
+          title="Global Nav"
+          ariaLabel="Global Navigation"
+          onClick={toggleDrawer}
         />
         <Text className={classes.text} variant="large" block nowrap>
           <Icon

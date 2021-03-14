@@ -1,5 +1,6 @@
-import { ComboBox, Stack, Text } from '@fluentui/react';
-import { makeStyles } from '@fluentui/react-theme-provider';
+import {
+  ComboBox, makeStyles, Stack, Text,
+} from '@fluentui/react';
 import PropTypes from 'prop-types';
 import React from 'react';
 

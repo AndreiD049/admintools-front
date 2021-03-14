@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
-import { BasePickerListBelow, Text } from '@fluentui/react';
-import { makeStyles } from '@fluentui/react-theme-provider';
+import { BasePickerListBelow, makeStyles, Text } from '@fluentui/react';
 import { useScreenClass } from 'react-grid-system';
 
 const useStyles = makeStyles((theme) => ({

@@ -1,4 +1,4 @@
-import React, { useState, createContext } from 'react';
+import React, { useState, createContext, useRef } from 'react';
 import {
   Panel, PanelType,
 } from '@fluentui/react';
@@ -20,10 +20,12 @@ const PanelContext = createContext({
  * @param {Boolean} options.isLightDismiss
  * @param {Function} options.onRenderFooterContent
  * @param {Boolean} options.isFooterAtBottom
+ * @param {String} options.id
  */
 const usePanel = (Component, options = {}, componentProps = {}) => {
   const [isOpen, setOpen] = useState(false);
   const [onRenderFooter, setOnRenderFooter] = useState(() => options.onRenderFooterContent);
+  const componentRef = useRef(null);
   const [ctx] = useState({
     isPanel: true,
     isOpen,
@@ -35,6 +37,8 @@ const usePanel = (Component, options = {}, componentProps = {}) => {
   const render = (
     <PanelContext.Provider value={ctx}>
       <Panel
+        id={options.id ?? 'use-panel'}
+        componentRef={componentRef}
         isOpen={isOpen}
         onDismiss={(options?.onDismiss && options.onDismiss(isOpen, setOpen))
         ?? (() => setOpen(false))}
@@ -55,7 +59,7 @@ const usePanel = (Component, options = {}, componentProps = {}) => {
   );
 
   return {
-    isOpen, setOpen, render,
+    isOpen, setOpen, render, componentRef,
   };
 };
 

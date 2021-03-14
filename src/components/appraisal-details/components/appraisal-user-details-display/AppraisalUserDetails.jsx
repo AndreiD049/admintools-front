@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Col, Container, Row } from 'react-grid-system';
-import { makeStyles } from '@fluentui/react-theme-provider';
 import {
-  Icon, Persona, PersonaSize, PrimaryButton, Separator, Text,
+  Icon, makeStyles, Persona, PersonaSize, PrimaryButton, Separator, Text,
 } from '@fluentui/react';
 import FieldSet from '../appraisal-field-set';
 import AppraisalUserRedirect from '../appraisal-user-redirect';

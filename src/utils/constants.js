@@ -54,6 +54,14 @@ const constants = {
       Sunday: 'Sunday',
     },
   },
+  colors: [
+    '#FFB900', '#FF8C00', '#E74856', '#E81123',
+    '#0078D7', '#0063B1', '#0099BC', '#2D7D9A',
+    '#EA005E', '#C30052', '#8E8CD8', '#6B69D6',
+    '#00B7C3', '#038387', '#7A7574', '#5D5A58',
+    '#68768A', '#515C6B', '#B146C2', '#881798',
+    '#00CC6A', '#10893E', '#498205', '#107C10',
+  ],
   securities: {
     REPORTS: {
       code: 'REPORTS',
@@ -158,6 +166,16 @@ const constants = {
     TASK_FLOW: {
       code: 'TASK-FLOW',
       description: 'Access to read, update, create or delete task flows',
+      grants: {
+        read: 'read',
+        create: 'create',
+        update: 'update',
+        delete: 'delete',
+      },
+    },
+    TASK_PLANNING: {
+      code: 'TASK-PLANNING',
+      description: 'Access to read, update, create or delete task planning items',
       grants: {
         read: 'read',
         create: 'create',

@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Row, Col } from 'react-grid-system';
 import {
-  PrimaryButton, Separator, Dropdown,
+  PrimaryButton, Separator, Dropdown, makeStyles, DatePicker,
 } from '@fluentui/react';
-import { makeStyles } from '@fluentui/react-theme-provider';
 import { downloadBlob } from 'download.js';
 import PageHeader from '../shared/page-header';
 import AppraisalService from '../../services/AppraisalService';
-import DatePicker from '../shared/date-picker/DatePicker';
 import NotificationService from '../../services/NotificationService';
 import ReportingService from '../../services/ReportingService';
 

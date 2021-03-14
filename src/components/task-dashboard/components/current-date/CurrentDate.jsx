@@ -1,7 +1,6 @@
-import { ActionButton, Stack } from '@fluentui/react';
+import { ActionButton, DatePicker, Stack } from '@fluentui/react';
 import PropTypes from 'prop-types';
 import React from 'react';
-import DatePicker from '../../../shared/date-picker';
 
 const CurrentDate = ({ currentDate, setCurrentDate }) => (
   <>

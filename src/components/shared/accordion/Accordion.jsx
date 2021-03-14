@@ -3,8 +3,9 @@ import React, {
   useState,
 } from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@fluentui/react-theme-provider';
-import { Icon, Text, concatStyleSets } from '@fluentui/react';
+import {
+  Icon, Text, concatStyleSets, makeStyles,
+} from '@fluentui/react';
 import { Collapse } from 'react-collapse';
 import clsx from 'clsx';
 import './styles.css';

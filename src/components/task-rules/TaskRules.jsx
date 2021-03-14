@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import { makeStyles, useTheme } from '@fluentui/react-theme-provider';
+import React, { useState } from 'react';
 import { Col, Container, Row } from 'react-grid-system';
 import {
   DetailsListLayoutMode, PanelType, PrimaryButton, SelectionMode, Separator,
@@ -12,12 +11,7 @@ import AddRule from './components/add-rule/AddRule';
 import { useFetch } from '../../services/hooks';
 import RuleDetails from './components/rule-details/RuleDetails';
 
-const useStyles = makeStyles((theme) => ({
-  root: {},
-}));
-
 const TaskRules = () => {
-  const classes = useStyles();
   // TODO: later add options to retrieve only tasks of active teams
   const [rules, setRules] = useFetch(TaskRuleService.baseUrl);
   const [selectionDetails, setSelectionDetails] = useState({
@@ -50,6 +44,7 @@ const TaskRules = () => {
       id: selectionDetails.items.length > 0 ? selectionDetails.items[0].id : null,
       editing,
       setEditing,
+      setRules,
     },
   );
 

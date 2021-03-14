@@ -5,7 +5,6 @@ import React, {
 import {
   Switch, Route, useRouteMatch, useHistory,
 } from 'react-router-dom';
-import { useTheme } from '@fluentui/react-theme-provider';
 import {
   Checkbox,
   CommandBar,
@@ -14,6 +13,7 @@ import {
   Separator,
   Stack,
   Text,
+  useTheme,
 } from '@fluentui/react';
 import {
   Col, Container, Row, useScreenClass,

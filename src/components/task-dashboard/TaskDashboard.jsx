@@ -1,10 +1,9 @@
 import {
   ComboBox,
-  CommandBar, DefaultButton, Icon, PrimaryButton, Separator, Stack,
+  CommandBar, DefaultButton, Icon, makeStyles, PrimaryButton, Separator, Stack,
 } from '@fluentui/react';
 import React, { useState, useContext, useEffect } from 'react';
 import { Col, Container, Row } from 'react-grid-system';
-import { makeStyles } from '@fluentui/react-theme-provider';
 import { useFetch } from '../../services/hooks';
 import DU from '../../utils/date';
 import TaskService from '../../services/tasks/TaskService';
@@ -165,7 +164,7 @@ const TaskDashboard = () => {
                   iconProps: {
                     iconName: 'ProfileSearch',
                   },
-                  onRender: (item) => (
+                  onRender: () => (
                     <Stack horizontal horizontalAlign="center" verticalAlign="center">
                       <Icon className={classes.searchIcon} iconName="ProfileSearch" />
                       <ComboBox
@@ -191,6 +190,7 @@ const TaskDashboard = () => {
           {
               selectedUsers.map((selUser) => (
                 <TaskContainer
+                  key={selUser}
                   tasks={
                     tasks
                       .filter((task) => task

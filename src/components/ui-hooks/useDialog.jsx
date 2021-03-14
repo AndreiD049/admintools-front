@@ -1,9 +1,22 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { useEffect, useState } from 'react';
+import React, { createContext, useEffect, useState } from 'react';
 import {
   Dialog, DialogFooter, DialogType,
 } from '@fluentui/react';
 import constants from '../../utils/constants';
+
+const DialogContext = createContext({
+  isDialog: false,
+  isVisible: false,
+  setVisible: null,
+  show: null,
+  accept: null,
+  cancel: null,
+  resolve: null,
+  setResolve: null,
+  dialogFooter: null,
+  setDialogFooter: null,
+});
 
 /**
  * @param {Object} Component
@@ -19,6 +32,7 @@ import constants from '../../utils/constants';
 const useDialog = (Component, options = {}, componentProps = {}) => {
   const [visible, setVisible] = useState(false);
   const [resolve, setResolve] = useState(null);
+  const [dialogFooter, setDialogFooter] = useState(() => options.dialogFooter);
 
   useEffect(() => {
     if (resolve && !visible) {
@@ -43,32 +57,47 @@ const useDialog = (Component, options = {}, componentProps = {}) => {
     setVisible(false);
   };
 
+  const [ctx] = useState({
+    isDialog: true,
+    isVisible: visible,
+    setVisible,
+    show,
+    accept,
+    cancel,
+    resolve,
+    setResolve,
+    dialogFooter,
+    setDialogFooter,
+  });
+
   const render = (
     visible
       ? (
-        <Dialog
-          hidden={!visible}
-          onDismiss={options.onDismiss ?? (() => setVisible(false))}
-          modalProps={{
-            isBlocking: options.isBlocking ?? false,
-          }}
-          dialogContentProps={{
-            type: options.type ?? DialogType.normal,
-            title: options.title ?? 'Title',
-            subText: options.subText ?? '',
-          }}
-        >
-          <Component accept={accept} cancel={cancel} {...componentProps} />
-          {
-          options.dialogFooter
-            ? (
-              <DialogFooter>
-                { options.dialogFooter(accept, cancel) }
-              </DialogFooter>
-            )
-            : null
-      }
-        </Dialog>
+        <DialogContext.Provider value={ctx}>
+          <Dialog
+            hidden={!visible}
+            onDismiss={options.onDismiss ?? (() => setVisible(false))}
+            modalProps={{
+              isBlocking: options.isBlocking ?? false,
+            }}
+            dialogContentProps={{
+              type: options.type ?? DialogType.normal,
+              title: options.title ?? 'Title',
+              subText: options.subText ?? '',
+            }}
+          >
+            <Component accept={accept} cancel={cancel} {...componentProps} />
+            {
+              dialogFooter
+                ? (
+                  <DialogFooter>
+                    { dialogFooter(accept, cancel) }
+                  </DialogFooter>
+                )
+                : null
+            }
+          </Dialog>
+        </DialogContext.Provider>
       )
       : null
   );
@@ -79,3 +108,7 @@ const useDialog = (Component, options = {}, componentProps = {}) => {
 };
 
 export default useDialog;
+
+export {
+  DialogContext,
+};

@@ -2,9 +2,8 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {
   ActionButton,
-  DefaultButton, Panel, PanelType, PrimaryButton, Separator, Stack, TextField,
+  DefaultButton, makeStyles, Panel, PanelType, PrimaryButton, Separator, Stack, TextField,
 } from '@fluentui/react';
-import { makeStyles } from '@fluentui/react-theme-provider';
 import { Col, Container, Row } from 'react-grid-system';
 import ReportingService from '../../../../services/ReportingService';
 import Box from '../../../shared/box';

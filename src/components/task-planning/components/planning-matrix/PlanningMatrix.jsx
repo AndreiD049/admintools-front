@@ -1,9 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles, useTheme } from '@fluentui/react-theme-provider';
 import { Container } from 'react-grid-system';
 import {
-  DetailsList, DetailsListLayoutMode, DetailsRow, Icon, Persona, PersonaSize, SelectionMode,
+  DetailsList,
+  DetailsListLayoutMode,
+  DetailsRow,
+  makeStyles,
+  Persona,
+  PersonaSize,
+  SelectionMode,
+  useTheme,
 } from '@fluentui/react';
 import PlanningCell from '../planning-cell/PlanningCell';
 
@@ -13,7 +19,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const PlanningMatrix = ({ data, selectedCell, setSelectedCell }) => {
+const PlanningMatrix = ({
+  userFlowMap, dates, users, selectedCell, setSelectedCell, handleInvoke,
+}) => {
   const classes = useStyles();
   const theme = useTheme();
   const today = new Date().toLocaleDateString();
@@ -26,18 +34,15 @@ const PlanningMatrix = ({ data, selectedCell, setSelectedCell }) => {
     isResizable: true,
   };
 
-  const isSelected = (date, userId) => selectedCell?.date
+  const isSelected = (date, userId) => Boolean(selectedCell?.date
       && selectedCell.date === date
       && selectedCell?.user
-      && selectedCell.user === userId;
+      && selectedCell.user === userId);
 
   const handleSelectCell = (date, user) => () => {
-    if (isSelected(date, user)) setSelectedCell(null);
-    else {
-      setSelectedCell({
-        date, user,
-      });
-    }
+    setSelectedCell({
+      date, user,
+    });
   };
 
   return (
@@ -58,11 +63,10 @@ const PlanningMatrix = ({ data, selectedCell, setSelectedCell }) => {
             }}
           />
         )}
-        columns={[userCol].concat(data.dates.map((date) => ({
+        columns={[userCol].concat(dates.map((date) => ({
           key: date.toLocaleDateString(),
           name: date.toLocaleDateString(),
           minWidth: 100,
-          data,
           styles: {
             root: {
               backgroundColor: date.toLocaleDateString() === today ? theme.palette.themeLighter : '',
@@ -70,15 +74,15 @@ const PlanningMatrix = ({ data, selectedCell, setSelectedCell }) => {
           },
           onRender: (item, idx, col) => (
             <PlanningCell
-              flows={col.data.flows}
-              userinfo={item}
-              date={col.key}
+              // eslint-disable-next-line react/prop-types
+              userFlows={userFlowMap.get(item.id)?.get(col.key)}
               handleClick={handleSelectCell(col.key, item.id)}
+              handleInvoke={handleInvoke}
               isSelected={isSelected(col.key, item.id)}
             />
           ),
         })))}
-        items={data.users}
+        items={users}
         selectionMode={SelectionMode.none}
       />
     </Container>
@@ -86,19 +90,22 @@ const PlanningMatrix = ({ data, selectedCell, setSelectedCell }) => {
 };
 
 PlanningMatrix.propTypes = {
-  data: PropTypes.shape({
-    dates: PropTypes.arrayOf(PropTypes.instanceOf(Date)),
-    users: PropTypes.arrayOf(PropTypes.shape({
-      id: PropTypes.string,
-      username: PropTypes.string,
-    })),
-    flows: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  }).isRequired,
+  userFlowMap: PropTypes.instanceOf(Map).isRequired,
+  dates: PropTypes.arrayOf(PropTypes.instanceOf(Date)).isRequired,
+  users: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.string,
+    username: PropTypes.string,
+  })).isRequired,
   selectedCell: PropTypes.shape({
     date: PropTypes.string,
     user: PropTypes.string,
-  }).isRequired,
+  }),
   setSelectedCell: PropTypes.func.isRequired,
+  handleInvoke: PropTypes.func.isRequired,
+};
+
+PlanningMatrix.defaultProps = {
+  selectedCell: null,
 };
 
 export default PlanningMatrix;

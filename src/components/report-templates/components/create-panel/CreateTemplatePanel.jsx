@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
-  DefaultButton, Panel, PanelType, PrimaryButton, Separator, Stack, Text, TextField,
+  DefaultButton, makeStyles, Panel, PanelType, PrimaryButton, Separator, Stack, Text, TextField,
 } from '@fluentui/react';
 import { Col, Container, Row } from 'react-grid-system';
-import { makeStyles } from '@fluentui/react-theme-provider';
 import { downloadBlob } from 'download.js';
 import ReportingService from '../../../../services/ReportingService';
 import Accordion from '../../../shared/accordion';

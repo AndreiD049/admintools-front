@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import {
   BasePicker,
   Checkbox,
+  makeStyles,
   Text,
 } from '@fluentui/react';
-import { makeStyles } from '@fluentui/react-theme-provider';
 
 const useStyles = makeStyles((theme) => ({
   root: {

@@ -2,8 +2,7 @@ import axios from 'axios';
 import NotificationService from './NotificationService';
 
 const TeamService = {
-  getTeamsPath: '/api/teams/',
-  addTeamPath: '/api/teams',
+  baseUrl: '/api/teams',
 
   validate(team) {
     if (!team) throw new Error('Team name missing');
@@ -12,7 +11,7 @@ const TeamService = {
 
   async getTeams() {
     try {
-      const response = await axios.get(this.getTeamsPath);
+      const response = await axios.get(this.baseUrl);
       if (response.status === 200) {
         return response.data;
       }
@@ -27,7 +26,7 @@ const TeamService = {
   async addTeam(team) {
     try {
       this.validate(team);
-      const response = await axios.post(this.addTeamPath, { team });
+      const response = await axios.post(this.baseUrl, { team });
       if (response.status === 200) {
         return response.data;
       }

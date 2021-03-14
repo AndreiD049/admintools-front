@@ -4,6 +4,7 @@ import { Container } from 'react-grid-system';
 import { useRouteMatch, Switch, Route } from 'react-router-dom';
 import AuthorizationRedirectComponent from '../../components/shared/authorization-redirect-component';
 import TaskDashboard from '../../components/task-dashboard/TaskDashboard';
+import TaskFlows from '../../components/task-flows';
 import TaskPlanning from '../../components/task-planning/TaskPlanning';
 import TaskRules from '../../components/task-rules';
 import constants from '../../utils/constants';
@@ -31,8 +32,8 @@ const Tasks = () => {
         </Route>
         <Route path={`${path}/planning`}>
           <AuthorizationRedirectComponent
-            code={constants.securities.TASK_RULE.code}
-            grant={constants.securities.TASK_RULE.grants.read}
+            code={constants.securities.TASK_PLANNING.code}
+            grant={constants.securities.TASK_PLANNING.grants.read}
             to="/"
             failureNotification={{
               header: 'No Access',
@@ -70,7 +71,7 @@ const Tasks = () => {
             }}
           >
             <DocumentTitle title="Flows">
-              <h1>Task Flows</h1>
+              <TaskFlows />
             </DocumentTitle>
           </AuthorizationRedirectComponent>
         </Route>

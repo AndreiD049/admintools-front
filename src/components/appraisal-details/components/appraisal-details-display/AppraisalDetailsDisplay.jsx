@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {
   Icon,
+  makeStyles,
   Persona,
   PersonaSize,
   Separator,
   Text,
 } from '@fluentui/react';
 import { Col, Container, Row } from 'react-grid-system';
-import { makeStyles } from '@fluentui/react-theme-provider';
 import AppraisalUserRedirect from '../appraisal-user-redirect';
 import AuthorizationComponent from '../../../shared/authorization-component';
 import { validate } from '../../../../services/validators';

@@ -2,10 +2,9 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import {
-  Panel, PrimaryButton, DefaultButton, PanelType, Stack, TextField, Separator, Label,
+  Panel, PrimaryButton, DefaultButton, PanelType, Stack, TextField, Separator, Label, makeStyles,
 } from '@fluentui/react';
 import { Col, Container, Row } from 'react-grid-system';
-import { makeStyles } from '@fluentui/react-theme-provider';
 import ReportingService from '../../../../services/ReportingService';
 import NotificationService from '../../../../services/NotificationService';
 import SinglePicker from '../../../shared/single-picker/SinglePicker';

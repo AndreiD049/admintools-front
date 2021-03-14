@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@fluentui/react-theme-provider';
-import { Text } from '@fluentui/react';
+import { makeStyles, Text } from '@fluentui/react';
 import clsx from 'clsx';
 import Chip from '../../../shared/chip/Chip';
 
@@ -24,16 +23,15 @@ const useStyles = makeStyles((theme) => ({
   flowItem: {
     padding: 3,
   },
+  noSelect: {
+    userSelect: 'none',
+  },
 }));
 
 const PlanningCell = ({
-  userinfo, date, flows, handleClick, isSelected,
+  userFlows, handleClick, handleInvoke, isSelected,
 }) => {
   const classes = useStyles();
-  const [userFlows, setUserFlows] = useState([]);
-  useEffect(() => {
-    setUserFlows(flows.filter((flow) => flow.user === userinfo.id && flow.date === date));
-  }, [userinfo, date, flows]);
 
   return (
     <div
@@ -42,21 +40,24 @@ const PlanningCell = ({
       className={clsx([classes.root, isSelected && classes.selected])}
       onClick={handleClick}
       onKeyDown={(evt) => evt.code === 'Enter' && handleClick()}
+      onDoubleClick={handleInvoke}
     >
       {
-        userFlows.length === 0
-          ? <Text variant="medium">-</Text>
+        !userFlows?.flows || userFlows?.flows?.length === 0
+          ? <Text className={classes.noSelect} variant="medium">-</Text>
           : (
             <ul>
-              {userFlows.map((f) => (
+              {Array.from(userFlows?.flows)?.map((f) => (
                 <li className={classes.flowItem} key={f.id}>
                   <Chip
+                    className={classes.noSelect}
                     style={{
                       backgroundColor: f.color ?? 'transparent',
                       padding: 3,
+                      whiteSpace: 'pre-wrap',
                     }}
                   >
-                    <Text variant="medium">{f.title}</Text>
+                    <Text variant="medium">{f.name}</Text>
                   </Chip>
                 </li>
               ))}
@@ -68,14 +69,16 @@ const PlanningCell = ({
 };
 
 PlanningCell.propTypes = {
-  userinfo: PropTypes.shape({
-    id: PropTypes.string,
-    username: PropTypes.string,
-  }).isRequired,
-  date: PropTypes.string.isRequired,
-  flows: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  userFlows: PropTypes.shape({
+    flows: PropTypes.arrayOf(PropTypes.shape({})),
+  }),
   handleClick: PropTypes.func.isRequired,
+  handleInvoke: PropTypes.func.isRequired,
   isSelected: PropTypes.bool.isRequired,
+};
+
+PlanningCell.defaultProps = {
+  userFlows: null,
 };
 
 export default PlanningCell;

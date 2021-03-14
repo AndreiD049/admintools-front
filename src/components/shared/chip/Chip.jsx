@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@fluentui/react-theme-provider';
+import { makeStyles } from '@fluentui/react';
 
 const useStyles = makeStyles(() => ({
   chip: {

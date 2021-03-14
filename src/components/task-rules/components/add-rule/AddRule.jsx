@@ -1,12 +1,16 @@
 import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@fluentui/react-theme-provider';
 import {
   Checkbox,
-  ComboBox, Dropdown, Position, SpinButton, TextField,
+  ComboBox,
+  Dropdown,
+  makeStyles,
+  Position,
+  SpinButton,
+  TextField,
+  DatePicker,
 } from '@fluentui/react';
 import constants from '../../../../utils/constants';
-import DatePicker from '../../../shared/date-picker';
 import UserService from '../../../../services/UserService';
 import Autocomplete from '../../../shared/autocomplete/Autocomplete';
 import AddRuleType from '../add-rule-type/AddRuleType';

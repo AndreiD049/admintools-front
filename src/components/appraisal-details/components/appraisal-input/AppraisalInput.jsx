@@ -4,6 +4,7 @@ import {
   ActionButton,
   Callout,
   DefaultButton,
+  makeStyles,
   Separator,
   Stack,
   Text,
@@ -11,7 +12,6 @@ import {
 } from '@fluentui/react';
 import { useScreenClass } from 'react-grid-system';
 import { useParams } from 'react-router-dom';
-import { makeStyles } from '@fluentui/react-theme-provider';
 import {
   validate, perform, not, and, or,
 } from '../../../../services/validators';

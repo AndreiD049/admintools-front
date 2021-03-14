@@ -3,13 +3,13 @@ import {
   Position,
   SpinButton,
   TextField,
+  DatePicker,
 } from '@fluentui/react';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import TaskService from '../../../../services/tasks/TaskService';
 import UserService from '../../../../services/UserService';
 import Autocomplete from '../../../shared/autocomplete/Autocomplete';
-import DatePicker from '../../../shared/date-picker';
 import constants from '../../../../utils/constants';
 import { useFetch } from '../../../../services/hooks';
 

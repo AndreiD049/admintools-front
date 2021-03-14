@@ -2,23 +2,28 @@ import React, {
   useCallback, useContext, useEffect, useState,
 } from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@fluentui/react-theme-provider';
 import {
   Checkbox,
   ComboBox,
   DefaultButton,
   Icon,
   Label,
+  makeStyles,
   Persona,
   PersonaSize,
   Position,
   PrimaryButton,
-  Separator, SpinButton, Stack, StackItem, Text, TextField,
+  Separator,
+  SpinButton,
+  Stack,
+  StackItem,
+  Text,
+  TextField,
+  DatePicker,
 } from '@fluentui/react';
 import { useFetch } from '../../../../services/hooks';
 import TaskRuleService from '../../../../services/tasks/TaskRuleService';
 import constants from '../../../../utils/constants';
-import DatePicker from '../../../shared/date-picker';
 import { PanelContext } from '../../../ui-hooks/usePanel';
 import DateUtils from '../../../../utils/date';
 
@@ -135,7 +140,9 @@ RuleTypeDetails.propTypes = {
   }).isRequired,
 };
 
-const RuleDetails = ({ id, editing, setEditing }) => {
+const RuleDetails = ({
+  id, editing, setEditing, setRules,
+}) => {
   const classes = useStyles();
   const [rule] = useFetch(id && TaskRuleService.taskRulePath(id), null, null);
   const panel = useContext(PanelContext);
@@ -143,6 +150,7 @@ const RuleDetails = ({ id, editing, setEditing }) => {
 
   const handleUpdate = useCallback(async () => {
     const result = await TaskRuleService.updateTaskRule(rule.id, data);
+    setRules((prev) => prev.map((r) => (r.id === result.id ? result : r)));
     panel.setOpen(false);
     setEditing(false);
   }, [rule, data]);
@@ -316,6 +324,7 @@ RuleDetails.propTypes = {
   id: PropTypes.string.isRequired,
   editing: PropTypes.bool.isRequired,
   setEditing: PropTypes.bool.isRequired,
+  setRules: PropTypes.bool.isRequired,
 };
 
 export default RuleDetails;

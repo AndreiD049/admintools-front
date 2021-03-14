@@ -2,8 +2,8 @@ import axios from 'axios';
 import NotificationService from './NotificationService';
 
 const UserService = {
+  baseUrl: '/api/users',
   teamUsersPath: '/api/users/team-users',
-  getUsersPath: '/api/users',
   updateUsersPath: (id) => `/api/users/${id}`,
   getUserPath: (id) => `/api/users/user/${id}`,
   getUserOrganizationsPath: '/api/users/organizations',
@@ -21,20 +21,6 @@ const UserService = {
     }
     u.organizations = u.organizations.map((o) => o.id || o);
     return u;
-  },
-
-  async getUsers() {
-    try {
-      const response = await axios.get(this.getUsersPath);
-      if (response.status === 200) {
-        return response.data;
-      }
-      throw new Error(`Server response: ${response.status} - ${response.statusText}`);
-    } catch (err) {
-      NotificationService
-        .notifyError((err.response.data && err.response.data.error) || err.message);
-      throw err;
-    }
   },
 
   async getSettingsUsers() {

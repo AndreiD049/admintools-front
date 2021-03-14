@@ -4,12 +4,12 @@ import {
   Checkbox,
   CommandButton,
   List,
+  makeStyles,
   Separator,
   Stack,
   Text,
   TextField,
 } from '@fluentui/react';
-import { makeStyles } from '@fluentui/react-theme-provider';
 import AppraisalService from '../../../../../services/AppraisalService';
 
 const useStyles = makeStyles((theme) => ({

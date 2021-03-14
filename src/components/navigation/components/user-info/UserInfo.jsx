@@ -8,8 +8,9 @@ import {
   Callout,
   Separator,
   ActionButton,
+  makeStyles,
+  useKeytipRef,
 } from '@fluentui/react';
-import { makeStyles } from '@fluentui/react-theme-provider';
 import keytipStyles from '../../../../styles/keytipStyles';
 import GlobalContext from '../../../../services/GlobalContext';
 import ChooseThemeModal from '../choose-theme-modal/ChooseThemeModal';
@@ -49,6 +50,14 @@ const UserInfo = () => {
   const [calloutVisible, setCalloutVisible] = useState(false);
   const [themeModalOpen, setThemeModalOpen] = useState(false);
   const global = useContext(GlobalContext);
+  const userLinkRef = useKeytipRef({
+    keytipProps: {
+      styles: keytipStyles,
+      content: 'I',
+      keySequences: ['i'],
+      onExecute: (el) => el.click(),
+    },
+  });
   const displayName = global.user
     ? (global.user.displayName || global.user.username)
     : 'Unknown';
@@ -61,17 +70,12 @@ const UserInfo = () => {
         global.user
           ? (
             <FluidLink
+              ref={userLinkRef}
               onClick={handleCalloutToggle}
               style={{
                 textDecoration: 'none',
               }}
               id="persona"
-              keytipProps={{
-                styles: keytipStyles,
-                content: 'I',
-                keySequences: ['i'],
-                onExecute: (el) => el.click(),
-              }}
             >
               <Stack verticalAlign="center" wrap={false} horizontal>
                 <Text className={classes.usernameText}>{global.user.username}</Text>
