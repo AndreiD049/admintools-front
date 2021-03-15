@@ -26,6 +26,9 @@ import TaskRuleService from '../../../../services/tasks/TaskRuleService';
 import constants from '../../../../utils/constants';
 import { PanelContext } from '../../../ui-hooks/usePanel';
 import DateUtils from '../../../../utils/date';
+import PeoplePicker from '../../../shared/people-picker/PeoplePicker';
+import UserService from '../../../../services/UserService';
+import GlobalContext from '../../../../services/GlobalContext';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -144,12 +147,29 @@ const RuleDetails = ({
   id, editing, setEditing, setRules,
 }) => {
   const classes = useStyles();
+  const global = useContext(GlobalContext);
   const [rule] = useFetch(id && TaskRuleService.taskRulePath(id), null, null);
   const panel = useContext(PanelContext);
   const [data, setData] = useState({});
+  const [users, setUsers] = useFetch(UserService.baseUrl,
+    {
+      params: {
+        teams: global.user.teams.map((t) => t.id),
+      },
+    },
+    [], [],
+    (dt) => dt.map((u) => ({
+      key: u.id,
+      data: u,
+    })));
 
   const handleUpdate = useCallback(async () => {
-    const result = await TaskRuleService.updateTaskRule(rule.id, data);
+    const update = { ...data };
+    // If we changed users, map them to their id's
+    if (data.users) {
+      update.users = data.users.map((u) => u.id);
+    }
+    const result = await TaskRuleService.updateTaskRule(rule.id, update);
     setRules((prev) => prev.map((r) => (r.id === result.id ? result : r)));
     panel.setOpen(false);
     setEditing(false);
@@ -285,11 +305,53 @@ const RuleDetails = ({
         <StackItem className={classes.userColumn} grow={1}>
           <Stack horizontalAlign="center">
             <Label>Users</Label>
-            { rule.users?.map((user) => (
-              <StackItem align="start" key={user.id}>
-                <Persona text={user.username} size={PersonaSize.size24} />
-              </StackItem>
-            )) }
+            {
+              editing
+                ? (
+                  <PeoplePicker
+                    style={{
+                      width: '100%',
+                    }}
+                    options={users}
+                    onSelect={(item) => setData((prev) => {
+                      if (prev.users) {
+                        return ({
+                          ...prev,
+                          users: prev.users.concat(item.data),
+                        });
+                      }
+                      return ({
+                        ...prev,
+                        users: rule.users.concat(item.data),
+                      });
+                    })}
+                    onRemove={(item) => setData((prev) => {
+                      if (prev.users) {
+                        return ({
+                          ...prev,
+                          users: prev.users.filter((u) => u.id !== item.data.id),
+                        });
+                      }
+                      return ({
+                        ...prev,
+                        users: rule.users.filter((u) => u.id !== item.data.id),
+                      });
+                    })}
+                    selected={
+                      data.users
+                        ? data.users.map((u) => ({ key: u.id, data: u }))
+                        : rule.users.map((u) => ({ key: u.id, data: u }))
+                    }
+                  />
+                )
+                : (
+                  rule.users?.map((user) => (
+                    <StackItem align="start" key={user.id}>
+                      <Persona text={user.username} size={PersonaSize.size24} />
+                    </StackItem>
+                  ))
+                )
+            }
           </Stack>
         </StackItem>
         <Separator vertical />
@@ -323,8 +385,8 @@ const RuleDetails = ({
 RuleDetails.propTypes = {
   id: PropTypes.string.isRequired,
   editing: PropTypes.bool.isRequired,
-  setEditing: PropTypes.bool.isRequired,
-  setRules: PropTypes.bool.isRequired,
+  setEditing: PropTypes.func.isRequired,
+  setRules: PropTypes.func.isRequired,
 };
 
 export default RuleDetails;
