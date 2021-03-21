@@ -23,12 +23,15 @@ import {
 } from '@fluentui/react';
 import { useFetch } from '../../../../services/hooks';
 import TaskRuleService from '../../../../services/tasks/TaskRuleService';
+import TaskFlowService from '../../../../services/tasks/TaskFlowService';
 import constants from '../../../../utils/constants';
 import { PanelContext } from '../../../ui-hooks/usePanel';
 import DateUtils from '../../../../utils/date';
 import PeoplePicker from '../../../shared/people-picker/PeoplePicker';
 import UserService from '../../../../services/UserService';
 import GlobalContext from '../../../../services/GlobalContext';
+import FlowPicker from '../../../task-planning/components/flow-picker';
+import Chip from '../../../shared/chip';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -70,7 +73,41 @@ const useStyles = makeStyles((theme) => ({
       minWidth: 60,
     },
   },
+  weekDay: {
+    backgroundColor: theme.palette.themePrimary,
+    color: theme.palette.black,
+    padding: '5px 10px',
+    marginRight: theme.spacing.s2,
+  },
+  month: {
+    backgroundColor: theme.palette.themePrimary,
+    color: theme.palette.black,
+    padding: '5px 10px',
+    marginRight: theme.spacing.s2,
+    marginTop: theme.spacing.s2,
+  },
 }));
+
+const weekDays = [null, 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+const months = [
+  null,
+  'January', 'February', 'March', 'April',
+  'May', 'June', 'July', 'August',
+  'September', 'October', 'November', 'December',
+];
+
+const getOrdinalSuffix = (number) => {
+  switch (number) {
+    case 1:
+      return 'st';
+    case 2:
+      return 'nd';
+    case 3:
+      return 'rd';
+    default:
+      return 'th';
+  }
+};
 
 const RuleTypeDetails = ({ rule }) => {
   const classes = useStyles();
@@ -101,20 +138,43 @@ const RuleTypeDetails = ({ rule }) => {
         );
       case constants.tasks.types.Weekly:
         return (
-          <Stack horizontal horizontalAlign="center" verticalAlign="center">
-            <Label>Day type: </Label>
-            <Text block className={classes.paddingLeft} variant="medium">
-              {rule.dailyType}
-            </Text>
+          <Stack horizontalAlign="center" verticalAlign="center">
+            <Label style={{ display: 'block' }}>Days: </Label>
+            <Stack horizontal horizontalAlign="center">
+              {
+                rule.weeklyDays.map((day) => (
+                  <Chip className={classes.weekDay}>
+                    <Text variant="medium">{weekDays[new Date(day).getDay()]}</Text>
+                  </Chip>
+                ))
+              }
+            </Stack>
           </Stack>
         );
       case constants.tasks.types.Monthly:
         return (
-          <Stack horizontal horizontalAlign="center" verticalAlign="center">
-            <Label>Day type: </Label>
-            <Text block className={classes.paddingLeft} variant="medium">
-              {rule.dailyType}
+          <Stack horizontalAlign="center" verticalAlign="center">
+            <Label>Occurs on: </Label>
+            <Text variant="medium">
+              {`${rule.monthlyOn}${getOrdinalSuffix(rule.monthlyOn)} ${rule.monthlyOnType} of the month`}
             </Text>
+            <Label>Months:</Label>
+            <Stack
+              horizontal
+              horizontalAlign="center"
+              wrap
+              tokens={{
+                childrenGap: 4,
+              }}
+            >
+              {
+                rule.monthlyMonths.map((month) => (
+                  <Chip className={classes.month}>
+                    <Text variant="medium">{months[month]}</Text>
+                  </Chip>
+                ))
+              }
+            </Stack>
           </Stack>
         );
       default:
@@ -140,6 +200,10 @@ RuleTypeDetails.propTypes = {
   rule: PropTypes.shape({
     type: PropTypes.string,
     dailyType: PropTypes.string,
+    weeklyDays: PropTypes.arrayOf(PropTypes.number),
+    monthlyOn: PropTypes.number,
+    monthlyOnType: PropTypes.string,
+    monthlyMonths: PropTypes.arrayOf(PropTypes.number),
   }).isRequired,
 };
 
@@ -151,7 +215,7 @@ const RuleDetails = ({
   const [rule] = useFetch(id && TaskRuleService.taskRulePath(id), null, null);
   const panel = useContext(PanelContext);
   const [data, setData] = useState({});
-  const [users, setUsers] = useFetch(UserService.baseUrl,
+  const [users] = useFetch(UserService.baseUrl,
     {
       params: {
         teams: global.user.teams.map((t) => t.id),
@@ -162,12 +226,22 @@ const RuleDetails = ({
       key: u.id,
       data: u,
     })));
+  const [flows] = useFetch(TaskFlowService.baseUrl,
+    null, [], [],
+    (flowsData) => flowsData.map((flow) => ({
+      key: flow.id,
+      data: flow,
+    })));
 
   const handleUpdate = useCallback(async () => {
     const update = { ...data };
     // If we changed users, map them to their id's
     if (data.users) {
       update.users = data.users.map((u) => u.id);
+    }
+    // If we changed flows, map them to the ids
+    if (data.flows) {
+      update.flows = data.flows.map((f) => f.id);
     }
     const result = await TaskRuleService.updateTaskRule(rule.id, update);
     setRules((prev) => prev.map((r) => (r.id === result.id ? result : r)));
@@ -310,7 +384,7 @@ const RuleDetails = ({
                 ? (
                   <PeoplePicker
                     style={{
-                      width: '100%',
+                      width: '90%',
                     }}
                     options={users}
                     onSelect={(item) => setData((prev) => {
@@ -358,6 +432,62 @@ const RuleDetails = ({
         <StackItem className={classes.userColumn} grow={1}>
           <Stack horizontalAlign="center">
             <Label>Flows</Label>
+            {
+              editing
+                ? (
+                  <FlowPicker
+                    style={{ width: '90%' }}
+                    options={flows}
+                    showCheckboxes
+                    showDeleteIcon={false}
+                    onSelect={(item) => setData((prev) => {
+                      if (prev.flows) {
+                        return ({
+                          ...prev,
+                          flows: prev.flows.concat(item.data),
+                        });
+                      }
+                      return ({
+                        ...prev,
+                        flows: rule.flows.concat(item.data),
+                      });
+                    })}
+                    onRemove={(item) => setData((prev) => {
+                      if (prev.flows) {
+                        return ({
+                          ...prev,
+                          flows: prev.flows.filter((u) => u.id !== item.data.id),
+                        });
+                      }
+                      return ({
+                        ...prev,
+                        flows: rule.flows.filter((u) => u.id !== item.data.id),
+                      });
+                    })}
+                    selected={
+                      data.flows
+                        ? data.flows.map((u) => ({ key: u.id, data: u }))
+                        : rule.flows.map((u) => ({ key: u.id, data: u }))
+                    }
+                  />
+                )
+                : (
+                  rule.flows.map((f) => (
+                    <Chip
+                      style={{
+                        backgroundColor: f.color ?? 'transparent',
+                        padding: 3,
+                        whiteSpace: 'pre-wrap',
+                        width: '50%',
+                        marginLeft: 32,
+                        marginTop: 4,
+                      }}
+                    >
+                      <Text variant="medium">{f.name}</Text>
+                    </Chip>
+                  ))
+                )
+            }
           </Stack>
         </StackItem>
       </Stack>

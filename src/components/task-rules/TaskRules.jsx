@@ -99,7 +99,7 @@ const TaskRules = () => {
       maxWidth: 400,
       onRender: (item) => item.users.map((u) => u.username).join(', '),
       sort: (a, b) => (
-        a.users[0].username.toLowerCase() < b.users[0].username.toLowerCase()
+        a.users[0]?.username?.toLowerCase() < b.users[0]?.username?.toLowerCase()
           ? -1
           : 1
       ),

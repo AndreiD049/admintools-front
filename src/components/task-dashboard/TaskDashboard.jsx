@@ -4,6 +4,7 @@ import {
 } from '@fluentui/react';
 import React, { useState, useContext, useEffect } from 'react';
 import { Col, Container, Row } from 'react-grid-system';
+import { DateTime } from 'luxon';
 import { useFetch } from '../../services/hooks';
 import DU from '../../utils/date';
 import TaskService from '../../services/tasks/TaskService';
@@ -43,8 +44,16 @@ const TaskDashboard = () => {
   });
   const options = {
     params: {
-      fromDate: DU.combineDateHours(currentDate, DU.getHoursFromText(hours.from)),
-      toDate: DU.combineDateHours(currentDate, DU.getHoursFromText(hours.to)),
+      fromDate: DateTime.fromJSDate(currentDate).toUTC().set({
+        hour: DU.getHoursFromText(hours.from).h,
+        minute: DU.getHoursFromText(hours.from).m,
+        second: 0,
+      }).toJSDate(),
+      toDate: DateTime.fromJSDate(currentDate).toUTC().set({
+        hour: DU.getHoursFromText(hours.to).h,
+        minute: DU.getHoursFromText(hours.to).m,
+        second: 0,
+      }).toJSDate(),
       users: selectedUsers,
     },
   };
@@ -53,6 +62,7 @@ const TaskDashboard = () => {
     options,
     [],
     [currentDate, hours, selectedUsers],
+    (data) => data.map((task) => TaskService.createTaskObject(task)),
   );
   const newPanel = usePanel(
     AddTask, {

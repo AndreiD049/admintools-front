@@ -12,6 +12,7 @@
     "clsx": "^1.1.1",
     "download.js": "^1.0.0",
     "eventemitter3": "^4.0.7",
+    "luxon": "^1.26.0",
     "prop-types": "^15.7.2",
     "react": "^17.0.1",
     "react-collapse": "^5.1.0",

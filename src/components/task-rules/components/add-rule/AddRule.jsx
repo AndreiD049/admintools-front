@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   Checkbox,
@@ -9,15 +9,19 @@ import {
   SpinButton,
   TextField,
   DatePicker,
+  Separator,
 } from '@fluentui/react';
+import { DateTime } from 'luxon';
 import constants from '../../../../utils/constants';
 import UserService from '../../../../services/UserService';
-import Autocomplete from '../../../shared/autocomplete/Autocomplete';
 import AddRuleType from '../add-rule-type/AddRuleType';
 import TaskRuleService from '../../../../services/tasks/TaskRuleService';
 import NotificationService from '../../../../services/NotificationService';
 import { useFetch } from '../../../../services/hooks';
 import DateUtils from '../../../../utils/date';
+import PeoplePicker from '../../../shared/people-picker/PeoplePicker';
+import FlowPicker from '../../../task-planning/components/flow-picker';
+import TaskFlowService from '../../../../services/tasks/TaskFlowService';
 
 const { tasks } = constants;
 
@@ -31,8 +35,18 @@ const useStyles = makeStyles((theme) => ({
 
 const AddRule = ({ setRules, setOpen }) => {
   const classes = useStyles();
-  const [users] = useFetch(UserService.teamUsersPath);
-  const [userOptions, setUserOptions] = useState([]);
+  const [users] = useFetch(UserService.teamUsersPath,
+    null, [], [],
+    (dt) => dt.map((user) => ({
+      key: user.id,
+      data: user,
+    })));
+  const [flows] = useFetch(TaskFlowService.baseUrl,
+    null, [], [],
+    (dt) => dt.map((flow) => ({
+      key: flow.id,
+      data: flow,
+    })));
   const [data, setData] = useState({
     title: '',
     description: '',
@@ -45,20 +59,13 @@ const AddRule = ({ setRules, setOpen }) => {
     taskDuration: 60,
     users: [],
     flows: [],
+    zone: DateTime.local().zoneName,
   });
   const typeOptions = useRef(Object.keys(tasks.types).map((t) => ({
     key: t,
     text: t,
   })));
   const timeOptions = useRef(constants.timeOptions);
-
-  useEffect(() => {
-    setUserOptions(users.map((user) => ({
-      key: user.id,
-      text: user.username,
-      data: user,
-    })));
-  }, [users]);
 
   const setValue = (field) => (evt) => {
     setData((prev) => ({
@@ -82,18 +89,16 @@ const AddRule = ({ setRules, setOpen }) => {
   };
 
   const handleSelectTime = (evt, option) => {
-    const [hours, minutes] = option.text.split(':').map((e) => +e);
-    if (hours !== undefined && minutes !== undefined) {
-      setData((prev) => {
-        const copy = new Date(prev.taskStartTime);
-        copy.setHours(hours);
-        copy.setMinutes(minutes);
-        copy.setSeconds(0);
-        return {
-          ...prev,
-          taskStartTime: copy,
-        };
-      });
+    const [hour, minute] = option.text.split(':').map((e) => +e);
+    if (hour !== undefined && minute !== undefined) {
+      setData((prev) => ({
+        ...prev,
+        taskStartTime: DateTime.local().set({
+          hour,
+          minute,
+          second: 0,
+        }).toJSDate(),
+      }));
     }
   };
 
@@ -103,9 +108,31 @@ const AddRule = ({ setRules, setOpen }) => {
       await NotificationService.notifyError("'Valid From' cannot be bigger than 'Valid To'");
       return;
     }
+    // Send weeklyDays as an Array of dates instead of numbers
+    if (data.weeklyDays && data.weeklyDays.length) {
+      data.weeklyDays = data.weeklyDays.map((day) => {
+        const date = DateTime.local().toUTC().set({
+          weekday: day,
+        });
+        return date;
+      });
+    }
+    if (data.monthlyMonths && data.monthlyMonths.length) {
+      data.monthlyMonths = data.monthlyMonths.map((month) => {
+        const date = new Date(2020, 1, 1);
+        date.setMonth(month);
+        date.setHours(data.taskStartTime.getHours());
+        date.setMinutes(data.taskStartTime.getMinutes());
+        return date;
+      });
+    }
+    const exp = DateTime.fromJSDate(data.taskStartTime);
+    const utcExpected = DateTime.utc(exp.year, exp.month, exp.day, exp.hour, exp.minute, 0);
     const result = await TaskRuleService.createTaskRule({
       ...data,
-      users: data.users.map((u) => u.data.id),
+      taskStartTime: utcExpected.toJSDate(),
+      users: data.users.map((u) => u.id),
+      flows: data.flows.map((f) => f.id),
     });
     setRules((prev) => [...prev, result]);
     setOpen(false);
@@ -193,15 +220,32 @@ const AddRule = ({ setRules, setOpen }) => {
           isSharedTask: checked,
         }))}
       />
-      <Autocomplete
-        label="Assigned to (users)"
-        options={userOptions}
-        selected={data.users}
-        onItemSelected={(user) => setData((prev) => ({
+      <PeoplePicker
+        label="Assigned to (Users)"
+        options={users}
+        onSelect={(u) => setData((prev) => ({
           ...prev,
-          users: user(prev.users),
+          users: prev.users.concat(u.data),
         }))}
-        required
+        onRemove={(u) => setData((prev) => ({
+          ...prev,
+          users: prev.users.filter((user) => user.id !== u.data.id),
+        }))}
+        selected={data.users?.map((u) => ({ key: u.id, data: u }))}
+      />
+      <Separator />
+      <FlowPicker
+        label="Assigned to (Flows)"
+        options={flows}
+        onSelect={(f) => setData((prev) => ({
+          ...prev,
+          flows: prev.flows?.concat(f.data),
+        }))}
+        onRemove={(u) => setData((prev) => ({
+          ...prev,
+          flows: prev.flows?.filter((flow) => flow.id !== u.data.id),
+        }))}
+        selected={data.flows?.map((f) => ({ key: f.id, data: f }))}
       />
     </form>
   );

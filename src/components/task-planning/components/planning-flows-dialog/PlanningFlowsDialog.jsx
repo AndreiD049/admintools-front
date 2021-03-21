@@ -1,9 +1,7 @@
 import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
-import {
-  BasePickerListBelow, IconButton, Label, makeStyles, Stack, Text,
-} from '@fluentui/react';
-import Chip from '../../../shared/chip';
+import { makeStyles } from '@fluentui/react';
+import FlowPicker from '../flow-picker';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -61,67 +59,24 @@ const PlanningFlowsDialog = ({
     return teamFlows.filter((o) => !selected.has(o.data.id));
   }, [options, planning, users, user]);
 
-  const renderSuggestionsItem = (item) => (
-    <Stack key={item.key} className={classes.suggestion} horizontal verticalAlign="center">
-      <div
-        className={classes.colorBox}
-        style={{
-          backgroundColor: item?.data?.color ?? 'transparent',
-        }}
-      />
-      <Stack horizontalAlign="start">
-        <Text variant="mediumPlus">{item.data.name}</Text>
-        <Text className={classes.secondaryText} variant="xSmall">{item.data.teams.map((t) => t.name).join(', ')}</Text>
-      </Stack>
-    </Stack>
-  );
-
-  const renderItem = (details) => (
-    <Stack
-      key={details.item.id}
-      className={classes.item}
-      horizontalAlign="center"
-      verticalAlign="center"
-      horizontal
-    >
-      <Chip
-        style={{
-          backgroundColor: details.item.color ?? 'transparent',
-          padding: 3,
-          whiteSpace: 'pre-wrap',
-          width: '50%',
-          marginLeft: 32,
-        }}
-      >
-        <Text variant="medium">{details.item.name}</Text>
-      </Chip>
-      <IconButton
-        className={classes.removeIcon}
-        iconProps={{
-          iconName: 'Delete',
-        }}
-        onClick={() => removeFlow(planning, details.item)}
-      />
-    </Stack>
-  );
-
   const handleSelect = (item) => {
     addFlow(planning, item.data);
+  };
+
+  const handleRemove = (item) => {
+    removeFlow(planning, item.data);
   };
 
   return (
     <div className={classes.root}>
       <input className={classes.focusPoint} />
-      <Label>Select flows</Label>
-      <BasePickerListBelow
-        className={classes.picker}
-        onRenderSuggestionsItem={renderSuggestionsItem}
-        onResolveSuggestions={(filter) => validOptions
-          .filter((o) => o.data.name.toLowerCase().indexOf(filter.toLowerCase()) !== -1)}
-        onRenderItem={renderItem}
-        selectedItems={planning ? planning?.flows : []}
-        onEmptyResolveSuggestions={() => validOptions}
-        onItemSelected={handleSelect}
+      <FlowPicker
+        options={validOptions}
+        showCheckboxes={false}
+        showDeleteIcon
+        onSelect={handleSelect}
+        onRemove={handleRemove}
+        selected={planning ? planning?.flows?.map((f) => ({ key: f.id, data: f })) : []}
       />
     </div>
   );
