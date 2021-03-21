@@ -7,14 +7,15 @@ import {
   Route,
   Switch,
 } from 'react-router-dom';
-import React, { useState, useEffect, useContext } from 'react';
+import React, {
+  useState, useEffect, useContext, Suspense,
+} from 'react';
 import GlobalContext from '../../services/GlobalContext';
 import AuthorizationService from '../../services/AuthorizationService';
 import UserInfoProvider from '../shared/user-info-provider';
 import UserSecuritiesProvider from '../shared/user-securities-provider';
 import Navigation from '../navigation/Navigation';
 import AppraisalsPage from '../../routes/appraisals';
-import HomePage from '../../routes/home';
 import SettingsPage from '../../routes/settings';
 import ReportingPage from '../../routes/reporting';
 import LoginRequired from '../shared/login-required';
@@ -23,6 +24,8 @@ import { selectTheme } from '../../themes';
 import NotificationContainer from '../notification/NotificationContainer';
 import Tasks from '../../routes/tasks';
 import ConnectionManager from '../shared/connection-manager/ConnectionManager';
+
+const HomePage = React.lazy(() => import('../../routes/home'));
 
 const App = () => {
   const [context, setContext] = useState({
@@ -96,7 +99,9 @@ const App = () => {
                 </DocumentTitle>
               </Route>
               <Route exact path="/">
-                <HomePage ctx={context} setCtx={setContext} />
+                <Suspense fallback={<div>Loading...</div>}>
+                  <HomePage ctx={context} setCtx={setContext} />
+                </Suspense>
               </Route>
             </div>
           </Switch>

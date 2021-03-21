@@ -14,7 +14,6 @@ import AppraisalService from '../../../../../services/AppraisalService';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    border: `1px solid ${theme.palette.themeDarkAlt}`,
     padding: theme.spacing.m,
   },
   header: {
