@@ -20,7 +20,9 @@ const useStyles = makeStyles(() => ({
 }));
 
 const json = {
-  global: { tabEnableClose: false },
+  global: {
+    tabEnableFloat: true,
+  },
   borders: [
     {
       type: 'border',
@@ -58,19 +60,42 @@ const json = {
         ],
       },
       {
-        type: 'tabset',
+        type: 'row',
         weight: 50,
-        selected: 0,
         children: [
           {
-            type: 'tab',
-            name: 'Two',
-            component: 'text',
+            type: 'tabset',
+            weight: 50,
+            selected: 0,
+            children: [
+              {
+                type: 'tab',
+                name: 'Two',
+                component: 'text',
+              },
+              {
+                type: 'tab',
+                name: 'Three',
+                component: 'text',
+              },
+            ],
           },
           {
-            type: 'tab',
-            name: 'Three',
-            component: 'text',
+            type: 'tabset',
+            weight: 50,
+            selected: 0,
+            children: [
+              {
+                type: 'tab',
+                name: 'Two',
+                component: 'text',
+              },
+              {
+                type: 'tab',
+                name: 'Three',
+                component: 'text',
+              },
+            ],
           },
         ],
       },

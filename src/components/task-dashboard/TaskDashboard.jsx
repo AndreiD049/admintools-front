@@ -48,11 +48,13 @@ const TaskDashboard = () => {
         hour: DU.getHoursFromText(hours.from).h,
         minute: DU.getHoursFromText(hours.from).m,
         second: 0,
+        millisecond: 0,
       }).toJSDate(),
       toDate: DateTime.fromJSDate(currentDate).toUTC().set({
         hour: DU.getHoursFromText(hours.to).h,
         minute: DU.getHoursFromText(hours.to).m,
         second: 0,
+        millisecond: 0,
       }).toJSDate(),
       users: selectedUsers,
     },
@@ -133,10 +135,14 @@ const TaskDashboard = () => {
       }
     }
     const updated = await TaskService.updateTaskStatus(task.id, { status });
-    setTasks((ts) => (ts.map((t) => (t.id === task.id ? updated.result : t))));
+    setTasks((ts) => (ts.map((t) => (t.id === task.id
+      ? TaskService.createTaskObject(updated.result)
+      : t))));
     // if task was unpaused, update it too
     if (updated.unpaused?.id) {
-      setTasks((ts) => (ts.map((t) => (t.id === updated.unpaused.id ? updated.unpaused : t))));
+      setTasks((ts) => (ts.map((t) => (t.id === updated.unpaused.id
+        ? TaskService.createTaskObject(updated.unpaused)
+        : t))));
     }
   };
 
