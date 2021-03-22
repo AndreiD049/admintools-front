@@ -12,6 +12,7 @@ import {
   Separator,
   Stack,
 } from '@fluentui/react';
+import { DateTime } from 'luxon';
 import PageHeader from '../shared/page-header';
 import PlanningMatrix from './components/planning-matrix/PlanningMatrix';
 import { useFetch } from '../../services/hooks';
@@ -76,7 +77,7 @@ const TaskPlanning = () => {
     // For each planning item, assign info to the appropriate user
     data.forEach((item) => {
       if (result.has(item.user?.id)) {
-        result.get(item.user.id).set(new Date(item.date).toLocaleDateString(), item);
+        result.get(item.user.id).set(DateTime.fromISO(item.date).toUTC().toISODate(), item);
       }
     });
     return result;

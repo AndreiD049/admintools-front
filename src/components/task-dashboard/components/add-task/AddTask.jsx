@@ -7,6 +7,7 @@ import {
 } from '@fluentui/react';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
+import { DateTime } from 'luxon';
 import TaskService from '../../../../services/tasks/TaskService';
 import UserService from '../../../../services/UserService';
 import Autocomplete from '../../../shared/autocomplete/Autocomplete';
@@ -43,22 +44,23 @@ const AddTask = ({ setOpen, setTasks }) => {
   const handleSubmit = async (evt) => {
     evt.persist();
     evt.preventDefault();
-    const dt = values.expectedStartDate;
+    const dt = DateTime.fromJSDate(values.expectedStartDate);
     const [hr, min] = values.expectedStartTime.split(':');
-    const expDate = new Date(dt.getFullYear(), dt.getMonth(), dt.getDate(), +hr, +min);
+    const expDate = DateTime.utc(dt.year, dt.month, dt.day, +hr, +min, 0, 0);
     const result = await TaskService.createTask({
       title: values.title,
       description: values.description,
       remarks: values.remarks,
-      expectedStartDate: expDate,
-      expectedFinishDate: new Date(expDate.getTime() + values.duration * 60000),
+      expectedStartDate: expDate.toJSDate(),
+      expectedFinishDate: expDate.plus({ minute: values.duration }).toJSDate(),
       assignedTo: values.selectedUsers.map((u) => u.data.id),
       isBackgroundTask: values.isBackgroundTask,
+      zone: DateTime.local().zoneName,
     });
     if (result) {
       setTasks((prev) => {
         if (prev.length) {
-          return prev.concat(result);
+          return prev.concat(TaskService.createTaskObject(result));
         }
         return prev;
       });

@@ -11,6 +11,7 @@ import {
   SelectionMode,
   useTheme,
 } from '@fluentui/react';
+import { DateTime } from 'luxon';
 import PlanningCell from '../planning-cell/PlanningCell';
 
 const useStyles = makeStyles((theme) => ({
@@ -24,7 +25,7 @@ const PlanningMatrix = ({
 }) => {
   const classes = useStyles();
   const theme = useTheme();
-  const today = new Date().toLocaleDateString();
+  const today = DateTime.now().toISODate();
   const userCol = {
     key: 'username',
     name: 'Username',
@@ -64,12 +65,12 @@ const PlanningMatrix = ({
           />
         )}
         columns={[userCol].concat(dates.map((date) => ({
-          key: date.toLocaleDateString(),
-          name: date.toLocaleDateString(),
+          key: DateTime.fromJSDate(date).toISODate(),
+          name: DateTime.fromJSDate(date).toISODate(),
           minWidth: 100,
           styles: {
             root: {
-              backgroundColor: date.toLocaleDateString() === today ? theme.palette.themeLighter : '',
+              border: `1px solid ${DateTime.fromJSDate(date).toISODate() === today ? theme.palette.themePrimary : 'transparent'}`,
             },
           },
           onRender: (item, idx, col) => (
