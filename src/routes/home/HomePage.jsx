@@ -15,7 +15,6 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     backgroundColor: theme.palette.white,
     color: theme.palette.black,
-    border: '1px solid #555',
     boxSizing: 'border-box',
   },
   layoutSplitter: {
@@ -109,14 +108,17 @@ const useStyles = makeStyles((theme) => ({
     borderTop: `1px solid ${theme.palette.neutralLighterAlt}`,
   },
   layoutTabsetSelected: {
-    backgroundImage: `linear-gradient(${theme.palette.white}, ${theme.palette.neutralLight})`,
+    backgroundColor: theme.palette.themeLight,
   },
   layoutTabsetMaximized: {
     backgroundImage: `linear-gradient(${theme.palette.neutralLighterAlt}, ${theme.palette.neutralLight})`,
   },
   layoutTabButtonSelected: {
-    backgroundColor: theme.palette.neutralTertiaryAlt,
-    color: theme.palette.black,
+    backgroundColor: theme.palette.themePrimary,
+    color: theme.palette.accent,
+    ':hover': {
+      backgroundColor: `${theme.palette.themePrimary} !important`,
+    },
   },
   layoutTabButton: {
     display: 'inline-flex',
@@ -127,20 +129,26 @@ const useStyles = makeStyles((theme) => ({
     cursor: 'pointer',
     '&:hover': {
       backgroundColor: theme.palette.neutralTertiaryAlt,
-      color: theme.palette.black,
+      color: theme.palette.accent,
     },
   },
+  layoutTabButtonTop: {
+    boxShadow: 'none',
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0,
+  },
   layoutTabButtonUnselected: {
-    color: theme.palette.neutralSecondaryAlt,
+    backgroundColor: theme.palette.neutralSecondaryAlt,
+    color: theme.palette.accent,
   },
   layoutBorderButtonContent: {
     display: 'inline-block',
-    color: theme.palette.neutralPrimaryAlt,
+    color: theme.palette.accent,
   },
   layoutTabButtonTextBox: {
     border: 'none',
     color: theme.palette.neutralPrimary,
-    backgroundColor: theme.palette.neutralTertiaryAlt,
+    backgroundColor: theme.palette.neutralQuaternaryAlt,
     '&:focus': {
       outline: 'none',
     },
@@ -150,6 +158,7 @@ const useStyles = makeStyles((theme) => ({
     height: 10,
     marginLeft: theme.spacing.s2,
     background: 'transparent url("./images/close.png") no-repeat center',
+    filter: 'brightness(2)',
   },
   layoutBorder: {
     boxSizing: 'border-box',
@@ -157,7 +166,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     fontSize: theme.fonts.medium,
     fontFamily: 'inherit',
-    backgroundColor: theme.palette.white,
+    backgroundColor: theme.palette.neutralLight,
   },
   layoutBorderTop: {
     borderBottom: `1px solid ${theme.palette.neutralTertiaryAlt}`,
@@ -178,8 +187,11 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
   },
   layoutBorderButtonSelected: {
-    backgroundColor: theme.palette.neutralTertiaryAlt,
-    color: theme.palette.black,
+    backgroundColor: `${theme.palette.themePrimary} !important`,
+    color: theme.palette.accent,
+    '&:hover': {
+      backgroundColor: `${theme.palette.themePrimary} !important`,
+    },
   },
   layoutBorderButton: {
     display: 'flxe',
@@ -189,7 +201,7 @@ const useStyles = makeStyles((theme) => ({
     margin: 2,
     boxSizing: 'border-box',
     whiteSpace: 'nowrap',
-    boxShadow: 'inset 0 0 5px rgba(0, 0, 0, 0.15)',
+    backgroundColor: theme.palette.neutralSecondaryAlt,
     '&:hover': {
       backgroundColor: theme.palette.neutralTertiaryAlt,
       color: theme.palette.black,
@@ -201,6 +213,36 @@ const useStyles = makeStyles((theme) => ({
     minWidth: 8,
     minHeight: 8,
     background: 'transparent url("./images/close.png") no-repeat center',
+    filter: 'brightness(2)',
+  },
+  layoutBorderToolbarButtonFloat: {
+    background: 'transparent url("./images/popout.png") no-repeat center',
+    filter: 'brightness(2)',
+  },
+  layoutBorderToolbarButtonOverflow: {
+    background: 'transparent url("./images/more2.png") no-repeat center',
+    filter: 'brightness(2)',
+  },
+  layoutTabToolbarButtonMin: {
+    background: 'transparent url("../images/maximize.png") no-repeat center',
+    filter: 'brightness(2)',
+  },
+  layoutTabToolbarButtonMax: {
+    background: 'transparent url("../images/restore.png") no-repeat center',
+    filter: 'brightness(2)',
+  },
+  layoutTabToolbarButtonFloat: {
+    background: 'transparent url("../images/popout.png") no-repeat center',
+    filter: 'brightness(2)',
+  },
+  layoutTabButtonOverflow: {
+    marginLeft: 10,
+    paddingLeft: 12,
+    border: 'none',
+    color: theme.palette.accent,
+    fontSize: theme.fonts.medium,
+    background: 'transparent url("./images/more2.png") no-repeat left',
+    filter: 'brightness(2)',
   },
   layoutPopUpMenu: {
     fontSize: theme.fonts.medium,
@@ -261,6 +303,7 @@ const useStyles = makeStyles((theme) => ({
     boxSizing: 'border-box',
     color: theme.palette.black,
     backgroundColor: theme.palette.white,
+    border: `1px solid ${theme.palette.neutralLighter}`,
   },
   layoutTabFloating: {
     overflow: 'auto',
@@ -400,6 +443,7 @@ const HomePage = () => {
       'flexlayout__tab_button--selected': classes.layoutTabButtonSelected,
       flexlayout__tab_button: classes.layoutTabButton,
       'flexlayout__tab_button--unselected': classes.layoutTabButtonUnselected,
+      flexlayout__tab_button_top: classes.layoutTabButtonTop,
       flexlayout__tab_button_textbox: classes.layoutTabButtonTextBox,
       flexlayout__tab_button_trailing: classes.layoutTabButtonTrailing,
       flexlayout__border: classes.layoutBorder,
@@ -410,6 +454,12 @@ const HomePage = () => {
       'flexlayout__border_button--selected': classes.layoutBorderButtonSelected,
       flexlayout__border_button: classes.layoutBorderButton,
       flexlayout__border_button_trailing: classes.layoutBorderButtonTrailing,
+      'flexlayout__border_toolbar_button-float': classes.layoutBorderToolbarButtonFloat,
+      flexlayout__border_toolbar_button_overflow: classes.layoutBorderToolbarButtonOverflow,
+      'flexlayout__tab_toolbar_button-min': classes.layoutTabToolbarButtonMin,
+      'flexlayout__tab_toolbar_button-max': classes.layoutTabToolbarButtonMax,
+      'flexlayout__tab_toolbar_button-float': classes.layoutTabToolbarButtonFloat,
+      flexlayout__tab_button_overflow: classes.layoutTabButtonOverflow,
       flexlayout__border_button_content: classes.layoutBorderButtonContent,
       flexlayout__popup_menu: classes.layoutPopUpMenu,
       flexlayout__popup_menu_item: classes.layoutPopUpMenuItem,
