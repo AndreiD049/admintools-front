@@ -4,7 +4,6 @@ import React, {
 import PropTypes from 'prop-types';
 import {
   Checkbox,
-  ComboBox,
   DefaultButton,
   Icon,
   Label,
@@ -20,7 +19,9 @@ import {
   Text,
   TextField,
   DatePicker,
+  MaskedTextField,
 } from '@fluentui/react';
+import { DateTime } from 'luxon';
 import { useFetch } from '../../../../services/hooks';
 import TaskRuleService from '../../../../services/tasks/TaskRuleService';
 import TaskFlowService from '../../../../services/tasks/TaskFlowService';
@@ -305,27 +306,41 @@ const RuleDetails = ({
         value={data.description ?? rule.description ?? '-'}
         onChange={handleDataChange('description')}
       />
-      <ComboBox
+      <MaskedTextField
         label="Start time"
-        options={constants.timeOptions}
-        selectedKey={DateUtils.getNearestTime(
-          data.taskStartTime
-            ? new Date(data.taskStartTime)
-            : new Date(rule.taskStartTime),
-        )}
-        autoComplete="on"
         disabled={!editing}
-        onChange={handleDataChange('taskStartTime', (args) => {
-          const time = DateUtils.getHoursFromText(args[1].text);
-          const result = new Date();
-          result.setHours(time.h);
-          result.setMinutes(time.m);
-          return result;
-        })}
-        calloutProps={{
-          calloutMaxHeight: 400,
-        }}
-        useComboBoxAsMenuWidth
+        mask="99:99"
+        maskChar="0"
+        value={DateUtils.getTimeText(data.taskStartTime ?? new Date(rule.taskStartTime))}
+        onChange={
+          editing
+            ? handleDataChange('taskStartTime', (args) => new Date(DateUtils.getValidTimeStringUTC(args[1])))
+            : null
+        }
+      />
+      <MaskedTextField
+        label="End time"
+        disabled={!editing}
+        mask="99:99"
+        maskChar="0"
+        value={DateUtils.getEndTimeTextUTC(
+          data.taskStartTime ?? new Date(rule.taskStartTime),
+          (data.taskDuration ?? rule.taskDuration),
+        )}
+        onChange={
+          editing
+            ? handleDataChange('taskDuration', (args) => {
+              const validTime = DateUtils.getValidTimeStringUTC(args[1]);
+              // Check if end time is after start time
+              const startDT = DateTime.fromJSDate(
+                data.taskStartTime ?? new Date(rule.taskStartTime),
+              );
+              const endDT = DateTime.fromISO(validTime);
+              if (endDT < startDT) return 0;
+              return endDT.diff(startDT, 'minute').values.minutes;
+            })
+            : null
+        }
       />
       {
         editing
@@ -347,9 +362,8 @@ const RuleDetails = ({
           )
           : (
             <TextField
-              borderless={!editing}
               label="Duration"
-              readOnly={!editing}
+              disabled={!editing}
               value={data.taskDuration ?? rule.taskDuration}
               onChange={handleDataChange('taskDuration')}
               min="1"

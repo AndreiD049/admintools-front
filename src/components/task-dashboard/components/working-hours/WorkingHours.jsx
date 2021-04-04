@@ -3,6 +3,8 @@ import {
 } from '@fluentui/react';
 import PropTypes from 'prop-types';
 import React from 'react';
+import constants from '../../../../utils/constants';
+import DateUtils from '../../../../utils/date';
 
 const hourOptions = [
   { key: '00:00', text: '00:00' },
@@ -47,9 +49,10 @@ const WorkingHours = ({ hours, setHours }) => {
   const classes = useStyles();
 
   const handleChange = (type) => (evt, option) => {
+    const [hour, minute] = option.key.split(':').map((o) => +o);
     setHours((prev) => ({
       ...prev,
-      [type]: option.key,
+      [type]: prev[type].set({ hour, minute }),
     }));
   };
 
@@ -60,8 +63,8 @@ const WorkingHours = ({ hours, setHours }) => {
         <Stack horizontalAlign="center" horizontal verticalAlign="center">
           <ComboBox
             className={classes.combo}
-            options={hourOptions}
-            selectedKey={hours.from}
+            options={constants.timeOptions}
+            selectedKey={DateUtils.getNearestTimeUTC(hours.from.toJSDate()).toFormat('HH:mm')}
             autoComplete="on"
             useComboBoxAsMenuWidth
             calloutProps={{
@@ -73,7 +76,7 @@ const WorkingHours = ({ hours, setHours }) => {
           <ComboBox
             className={classes.combo}
             options={hourOptions}
-            selectedKey={hours.to}
+            selectedKey={DateUtils.getNearestTimeUTC(hours.to.toJSDate()).toFormat('HH:mm')}
             autoComplete="on"
             useComboBoxAsMenuWidth
             calloutProps={{

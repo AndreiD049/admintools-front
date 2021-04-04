@@ -6,7 +6,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import { Col, Container, Row } from 'react-grid-system';
 import { DateTime } from 'luxon';
 import { useFetch } from '../../services/hooks';
-import DU from '../../utils/date';
+import DateUtils from '../../utils/date';
 import TaskService from '../../services/tasks/TaskService';
 import PageHeader from '../shared/page-header';
 import usePanel from '../ui-hooks/usePanel';
@@ -39,20 +39,27 @@ const TaskDashboard = () => {
   const [selectedUsers, setSelectedUsers] = useLocalStorageState('DTSelectedUsers', [global.user.id]);
   const [currentDate, setCurrentDate] = useState(new Date());
   const [hours, setHours] = useLocalStorageState('DTWorkingHours', {
-    from: '09:00',
-    to: '18:00',
-  });
+    from: DateTime.utc().set({
+      hour: 9, minute: 0, second: 0, millisecond: 0,
+    }).toISO(),
+    to: DateTime.utc().set({
+      hour: 18, minute: 0, second: 0, millisecond: 0,
+    }).toISO(),
+  }, (h) => ({
+    from: DateTime.fromISO(h.from).toUTC(),
+    to: DateTime.fromISO(h.to).toUTC(),
+  }));
   const options = {
     params: {
       fromDate: DateTime.fromJSDate(currentDate).toUTC().set({
-        hour: DU.getHoursFromText(hours.from).h,
-        minute: DU.getHoursFromText(hours.from).m,
+        hour: hours.from.hour,
+        minute: hours.from.minute,
         second: 0,
         millisecond: 0,
       }).toJSDate(),
       toDate: DateTime.fromJSDate(currentDate).toUTC().set({
-        hour: DU.getHoursFromText(hours.to).h,
-        minute: DU.getHoursFromText(hours.to).m,
+        hour: hours.to.hour,
+        minute: hours.to.minute,
         second: 0,
         millisecond: 0,
       }).toJSDate(),
@@ -66,6 +73,14 @@ const TaskDashboard = () => {
     [currentDate, hours, selectedUsers],
     (data) => data.map((task) => TaskService.createTaskObject(task)),
   );
+
+  const handleTaskAdd = (task) => {
+    const expectedStart = DateTime.fromISO(task.expectedStartDate);
+    if (expectedStart >= hours.from && expectedStart <= hours.to) {
+      setTasks((prev) => prev.concat(TaskService.createTaskObject(task)));
+    }
+  };
+
   const newPanel = usePanel(
     AddTask, {
       headerText: 'Create new task',
@@ -73,7 +88,7 @@ const TaskDashboard = () => {
         <PrimaryButton text="Create" type="submit" form="create-task-form" />
       ),
     }, {
-      setTasks,
+      handleAdd: handleTaskAdd,
     },
   );
   const [dialogProps, setDialogProps] = useState({});
@@ -99,6 +114,14 @@ const TaskDashboard = () => {
     }
     run();
   }, [selectedUsers, global.connectionId]);
+
+  // Update working hours when date is updated
+  useEffect(() => {
+    setHours((prev) => ({
+      from: DateTime.fromJSDate(DateUtils.setDateFromTo(currentDate, prev.from.toJSDate())).toUTC(),
+      to: DateTime.fromJSDate(DateUtils.setDateFromTo(currentDate, prev.to.toJSDate())).toUTC(),
+    }));
+  }, [currentDate]);
 
   /**
    * Update user options

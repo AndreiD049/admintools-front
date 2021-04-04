@@ -2,7 +2,6 @@ import React, { useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   Checkbox,
-  ComboBox,
   Dropdown,
   makeStyles,
   Position,
@@ -10,6 +9,7 @@ import {
   TextField,
   DatePicker,
   Separator,
+  MaskedTextField,
 } from '@fluentui/react';
 import { DateTime } from 'luxon';
 import constants from '../../../../utils/constants';
@@ -54,7 +54,7 @@ const AddRule = ({ setRules, setOpen }) => {
     dailyType: tasks.DayTypes.Workday,
     isBackgroundTask: false,
     isSharedTask: false,
-    taskStartTime: new Date(),
+    taskStartTime: DateUtils.getNearestTimeUTC(DateUtils.transform2UTCDate(new Date())).toJSDate(),
     validFrom: new Date(),
     taskDuration: 60,
     users: [],
@@ -65,14 +65,6 @@ const AddRule = ({ setRules, setOpen }) => {
     key: t,
     text: t,
   })));
-  const timeOptions = useRef(constants.timeOptions);
-
-  const setValue = (field) => (evt) => {
-    setData((prev) => ({
-      ...prev,
-      [field]: evt.target.value,
-    }));
-  };
 
   const handleTypeChange = (evt, item) => {
     setData((prev) => ({
@@ -88,18 +80,11 @@ const AddRule = ({ setRules, setOpen }) => {
     }));
   };
 
-  const handleSelectTime = (evt, option) => {
-    const [hour, minute] = option.text.split(':').map((e) => +e);
-    if (hour !== undefined && minute !== undefined) {
-      setData((prev) => ({
-        ...prev,
-        taskStartTime: DateTime.local().set({
-          hour,
-          minute,
-          second: 0,
-        }).toJSDate(),
-      }));
-    }
+  const handleDataChange = (field, func = (args) => args[0].target.value) => (...args) => {
+    setData((prev) => ({
+      ...prev,
+      [field]: func(args),
+    }));
   };
 
   const handleSubmit = async (evt) => {
@@ -126,11 +111,8 @@ const AddRule = ({ setRules, setOpen }) => {
         return date;
       });
     }
-    const exp = DateTime.fromJSDate(data.taskStartTime);
-    const utcExpected = DateTime.utc(exp.year, exp.month, exp.day, exp.hour, exp.minute, 0);
     const result = await TaskRuleService.createTaskRule({
       ...data,
-      taskStartTime: utcExpected.toJSDate(),
       users: data.users.map((u) => u.id),
       flows: data.flows.map((f) => f.id),
     });
@@ -144,14 +126,14 @@ const AddRule = ({ setRules, setOpen }) => {
         required
         label="Title"
         value={data.title}
-        onChange={setValue('title')}
+        onChange={handleDataChange('title')}
         name="task-rule-title"
       />
       <TextField
         label="Description"
         multiline
         name="task-rule-description"
-        onChange={setValue('description')}
+        onChange={handleDataChange('description')}
         value={data.description}
       />
       <Dropdown
@@ -162,16 +144,31 @@ const AddRule = ({ setRules, setOpen }) => {
         name="task-rule-type"
       />
       <AddRuleType data={data} setData={setData} />
-      <ComboBox
+      <MaskedTextField
         label="Start time"
-        options={timeOptions.current}
-        selectedKey={DateUtils.getNearestTime(data.taskStartTime ?? new Date())}
-        autoComplete="on"
-        onChange={handleSelectTime}
-        calloutProps={{
-          calloutMaxHeight: 400,
-        }}
-        useComboBoxAsMenuWidth
+        mask="99:99"
+        maskChar="0"
+        value={DateTime.fromJSDate(data.taskStartTime).toUTC().toFormat('HH:mm')}
+        onChange={handleDataChange('taskStartTime', (args) => DateTime.fromISO(DateUtils.getValidTimeStringUTC(args[1])).toJSDate())}
+      />
+      <MaskedTextField
+        label="End time"
+        mask="99:99"
+        maskChar="0"
+        value={DateUtils.getEndTimeTextUTC(
+          data.taskStartTime,
+          data.taskDuration,
+        )}
+        onChange={
+              handleDataChange('taskDuration', (args) => {
+                const validTime = DateUtils.getValidTimeStringUTC(args[1]);
+                // Check if end time is after start time
+                const startDT = DateTime.fromJSDate(data.taskStartTime);
+                const endDT = DateTime.fromISO(validTime);
+                if (endDT < startDT) return 0;
+                return endDT.diff(startDT, 'minute')?.values?.minutes ?? 0;
+              })
+        }
       />
       <SpinButton
         label="Duration (min)"
