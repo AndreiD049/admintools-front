@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import {
   ActionButton, makeStyles, Separator, Text,
 } from '@fluentui/react';
+import { DateTime } from 'luxon';
 import TaskCollapsed from '../task-collapsed/TaskCollapsed';
 
 const useStyles = makeStyles((theme) => ({
@@ -124,17 +125,11 @@ const TaskItem = ({ task, setTasks, handleStatusChange }) => {
 
   useEffect(() => {
     if (task) {
-      const startDate = new Date(task.expectedStartDate);
-      const finishDate = new Date(task.expectedFinishDate);
-      const [fromHours, fromMinutes, toHours, toMinutes] = [
-        `0${startDate.getHours()}`.slice(-2),
-        `0${startDate.getMinutes()}`.slice(-2),
-        `0${finishDate.getHours()}`.slice(-2),
-        `0${finishDate.getMinutes()}`.slice(-2),
-      ];
+      const startDate = DateTime.fromISO(task.expectedStartDate);
+      const finishDate = DateTime.fromISO(task.expectedFinishDate);
       setTime(() => ({
-        from: `${fromHours}:${fromMinutes}`,
-        to: `${toHours}:${toMinutes}`,
+        from: startDate.toFormat('HH:mm'),
+        to: finishDate.toFormat('HH:mm'),
       }));
     }
   }, [task]);
@@ -203,6 +198,7 @@ TaskItem.propTypes = {
     status: PropTypes.string,
     title: PropTypes.string,
     description: PropTypes.string,
+    duration: PropTypes.number,
     expectedStartDate: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
     expectedFinishDate: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
   }).isRequired,

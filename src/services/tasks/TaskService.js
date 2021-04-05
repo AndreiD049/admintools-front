@@ -99,8 +99,7 @@ const TaskService = {
     const copy = { ...task };
     const startRaw = DateTime
       .fromISO(task.expectedStartDate).toUTC();
-    const endRaw = DateTime
-      .fromISO(task.expectedFinishDate).toUTC();
+    const endRaw = startRaw.plus({ minute: task.duration });
     copy.expectedStartDate = DateTime.fromObject({
       year: startRaw.year,
       month: startRaw.month,
