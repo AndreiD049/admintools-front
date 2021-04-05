@@ -20,6 +20,8 @@ import {
   TextField,
   DatePicker,
   MaskedTextField,
+  Tooltip,
+  TooltipHost,
 } from '@fluentui/react';
 import { DateTime } from 'luxon';
 import { useFetch } from '../../../../services/hooks';
@@ -396,41 +398,52 @@ const RuleDetails = ({
             {
               editing
                 ? (
-                  <PeoplePicker
-                    style={{
-                      width: '90%',
+                  <TooltipHost
+                    styles={{
+                      root: {
+                        width: '90%',
+                      },
                     }}
-                    options={users}
-                    onSelect={(item) => setData((prev) => {
-                      if (prev.users) {
+                    content={
+                      (data.flows ? data.flows?.length > 0 : rule.flows?.length > 0)
+                        ? 'Rule can be assigned to users or flows, but not both'
+                        : ''
+                      }
+                  >
+                    <PeoplePicker
+                      options={users}
+                      disabled={data.flows ? data.flows?.length > 0 : rule.flows?.length > 0}
+                      onSelect={(item) => setData((prev) => {
+                        if (prev.users) {
+                          return ({
+                            ...prev,
+                            users: prev.users.concat(item.data),
+                          });
+                        }
                         return ({
                           ...prev,
-                          users: prev.users.concat(item.data),
+                          users: rule.users.concat(item.data),
                         });
-                      }
-                      return ({
-                        ...prev,
-                        users: rule.users.concat(item.data),
-                      });
-                    })}
-                    onRemove={(item) => setData((prev) => {
-                      if (prev.users) {
+                      })}
+                      onRemove={(item) => setData((prev) => {
+                        if (prev.users) {
+                          return ({
+                            ...prev,
+                            users: prev.users.filter((u) => u.id !== item.data.id),
+                          });
+                        }
                         return ({
                           ...prev,
-                          users: prev.users.filter((u) => u.id !== item.data.id),
+                          users: rule.users.filter((u) => u.id !== item.data.id),
                         });
-                      }
-                      return ({
-                        ...prev,
-                        users: rule.users.filter((u) => u.id !== item.data.id),
-                      });
-                    })}
-                    selected={
+                      })}
+                      selected={
                       data.users
                         ? data.users.map((u) => ({ key: u.id, data: u }))
                         : rule.users.map((u) => ({ key: u.id, data: u }))
                     }
-                  />
+                    />
+                  </TooltipHost>
                 )
                 : (
                   rule.users?.map((user) => (
@@ -449,41 +462,55 @@ const RuleDetails = ({
             {
               editing
                 ? (
-                  <FlowPicker
-                    style={{ width: '90%' }}
-                    options={flows}
-                    showCheckboxes
-                    showDeleteIcon={false}
-                    onSelect={(item) => setData((prev) => {
-                      if (prev.flows) {
+                  <TooltipHost
+                    styles={{
+                      root: {
+                        width: '90%',
+                      },
+                    }}
+                    content={
+                      (data.users ? data.users?.length > 0 : rule.users?.length > 0)
+                        ? 'Rule can be assigned to users or flows, but not both'
+                        : ''
+                      }
+                  >
+                    <FlowPicker
+                      style={{ width: '90%' }}
+                      options={flows}
+                      disabled={data.users ? data.users?.length > 0 : rule.users?.length > 0}
+                      showCheckboxes
+                      showDeleteIcon={false}
+                      onSelect={(item) => setData((prev) => {
+                        if (prev.flows) {
+                          return ({
+                            ...prev,
+                            flows: prev.flows.concat(item.data),
+                          });
+                        }
                         return ({
                           ...prev,
-                          flows: prev.flows.concat(item.data),
+                          flows: rule.flows.concat(item.data),
                         });
-                      }
-                      return ({
-                        ...prev,
-                        flows: rule.flows.concat(item.data),
-                      });
-                    })}
-                    onRemove={(item) => setData((prev) => {
-                      if (prev.flows) {
+                      })}
+                      onRemove={(item) => setData((prev) => {
+                        if (prev.flows) {
+                          return ({
+                            ...prev,
+                            flows: prev.flows.filter((u) => u.id !== item.data.id),
+                          });
+                        }
                         return ({
                           ...prev,
-                          flows: prev.flows.filter((u) => u.id !== item.data.id),
+                          flows: rule.flows.filter((u) => u.id !== item.data.id),
                         });
-                      }
-                      return ({
-                        ...prev,
-                        flows: rule.flows.filter((u) => u.id !== item.data.id),
-                      });
-                    })}
-                    selected={
+                      })}
+                      selected={
                       data.flows
                         ? data.flows.map((u) => ({ key: u.id, data: u }))
                         : rule.flows.map((u) => ({ key: u.id, data: u }))
                     }
-                  />
+                    />
+                  </TooltipHost>
                 )
                 : (
                   rule.flows.map((f) => (

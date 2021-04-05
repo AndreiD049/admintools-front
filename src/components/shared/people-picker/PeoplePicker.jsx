@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const PeoplePicker = ({
-  label, options, onSelect, onRemove, selected, ...props
+  label, options, onSelect, onRemove, selected, disabled, ...props
 }) => {
   const classes = useStyles();
   const selectedSet = useMemo(() => new Set(selected.map((s) => s.key)), [selected]);
@@ -98,6 +98,7 @@ const PeoplePicker = ({
         inputProps={{
           placeholder: 'Select...',
         }}
+        disabled={disabled}
         className={classes.picker}
         onRenderSuggestionsItem={renderSuggestionsItem}
         onResolveSuggestions={(filter) => options
@@ -121,6 +122,7 @@ PeoplePicker.propTypes = {
   selected: PropTypes.arrayOf(String).isRequired,
   onSelect: PropTypes.func.isRequired,
   onRemove: PropTypes.func.isRequired,
+  disabled: PropTypes.bool,
   props: PropTypes.shape({
     style: PropTypes.shape({}),
   }),
@@ -129,6 +131,7 @@ PeoplePicker.propTypes = {
 PeoplePicker.defaultProps = {
   label: null,
   props: null,
+  disabled: false,
 };
 
 export default PeoplePicker;

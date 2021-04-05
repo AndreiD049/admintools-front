@@ -10,6 +10,7 @@ import {
   DatePicker,
   Separator,
   MaskedTextField,
+  TooltipHost,
 } from '@fluentui/react';
 import { DateTime } from 'luxon';
 import constants from '../../../../utils/constants';
@@ -111,11 +112,14 @@ const AddRule = ({ setRules, setOpen }) => {
         return date;
       });
     }
-    const result = await TaskRuleService.createTaskRule({
+    const payload = {
       ...data,
-      users: data.users.map((u) => u.id),
-      flows: data.flows.map((f) => f.id),
-    });
+    };
+    delete payload.flows;
+    delete payload.users;
+    if (data.users.length > 0) payload.users = data.users.map((u) => u.id);
+    if (data.flows.length > 0) payload.flows = data.flows.map((f) => f.id);
+    const result = await TaskRuleService.createTaskRule(payload);
     setRules((prev) => [...prev, result]);
     setOpen(false);
   };
@@ -217,33 +221,61 @@ const AddRule = ({ setRules, setOpen }) => {
           isSharedTask: checked,
         }))}
       />
-      <PeoplePicker
-        label="Assigned to (Users)"
-        options={users}
-        onSelect={(u) => setData((prev) => ({
-          ...prev,
-          users: prev.users.concat(u.data),
-        }))}
-        onRemove={(u) => setData((prev) => ({
-          ...prev,
-          users: prev.users.filter((user) => user.id !== u.data.id),
-        }))}
-        selected={data.users?.map((u) => ({ key: u.id, data: u }))}
-      />
+      <TooltipHost
+        styles={{
+          root: {
+            width: '90%',
+          },
+        }}
+        content={
+          data.flows?.length > 0
+            ? 'Rule can be assigned to users or flows, but not both'
+            : ''
+          }
+      >
+        <PeoplePicker
+          label="Assigned to (Users)"
+          options={users}
+          disabled={data.flows?.length > 0}
+          onSelect={(u) => setData((prev) => ({
+            ...prev,
+            users: prev.users.concat(u.data),
+          }))}
+          onRemove={(u) => setData((prev) => ({
+            ...prev,
+            users: prev.users.filter((user) => user.id !== u.data.id),
+          }))}
+          selected={data.users?.map((u) => ({ key: u.id, data: u }))}
+        />
+      </TooltipHost>
       <Separator />
-      <FlowPicker
-        label="Assigned to (Flows)"
-        options={flows}
-        onSelect={(f) => setData((prev) => ({
-          ...prev,
-          flows: prev.flows?.concat(f.data),
-        }))}
-        onRemove={(u) => setData((prev) => ({
-          ...prev,
-          flows: prev.flows?.filter((flow) => flow.id !== u.data.id),
-        }))}
-        selected={data.flows?.map((f) => ({ key: f.id, data: f }))}
-      />
+      <TooltipHost
+        styles={{
+          root: {
+            width: '90%',
+          },
+        }}
+        content={
+          data.users?.length > 0
+            ? 'Rule can be assigned to users or flows, but not both'
+            : ''
+          }
+      >
+        <FlowPicker
+          label="Assigned to (Flows)"
+          options={flows}
+          disabled={data.users?.length > 0}
+          onSelect={(f) => setData((prev) => ({
+            ...prev,
+            flows: prev.flows?.concat(f.data),
+          }))}
+          onRemove={(u) => setData((prev) => ({
+            ...prev,
+            flows: prev.flows?.filter((flow) => flow.id !== u.data.id),
+          }))}
+          selected={data.flows?.map((f) => ({ key: f.id, data: f }))}
+        />
+      </TooltipHost>
     </form>
   );
 };

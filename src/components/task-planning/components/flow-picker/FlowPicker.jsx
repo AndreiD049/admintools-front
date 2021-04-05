@@ -46,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const FlowPicker = ({
-  label, options, onSelect, onRemove, selected, showDeleteIcon, showCheckboxes, ...props
+  label, options, onSelect, disabled, onRemove, selected, showDeleteIcon, showCheckboxes, ...props
 }) => {
   const classes = useStyles();
   const selectedSet = useMemo(() => new Set(selected.map((s) => s.key)), [selected]);
@@ -148,6 +148,7 @@ const FlowPicker = ({
           placeholder: 'Select...',
         }}
         className={classes.picker}
+        disabled={disabled}
         onRenderSuggestionsItem={renderSuggestionsItem}
         onResolveSuggestions={(filter) => options
           .filter((o) => o.data.name.toLowerCase().indexOf(filter.toLowerCase()) !== -1)}
@@ -172,6 +173,7 @@ FlowPicker.propTypes = {
   onRemove: PropTypes.func.isRequired,
   showDeleteIcon: PropTypes.bool,
   showCheckboxes: PropTypes.bool,
+  disabled: PropTypes.bool,
   props: PropTypes.shape({
     style: PropTypes.shape({}),
   }),
@@ -180,6 +182,7 @@ FlowPicker.propTypes = {
 FlowPicker.defaultProps = {
   label: null,
   props: null,
+  disabled: false,
   showCheckboxes: true,
   showDeleteIcon: false,
 };
