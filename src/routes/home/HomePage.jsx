@@ -4,6 +4,7 @@ import FlexLayout from 'flexlayout-react';
 import { makeStyles } from '@fluentui/react';
 import '../../../node_modules/flexlayout-react/style/dark.css';
 import PageHeader from '../../components/shared/page-header';
+import LoginRequired from '../../components/shared/login-required';
 
 const HomePlannedItems = React.lazy(() => import('../../components/widgets/home-planned-items'));
 
@@ -476,6 +477,7 @@ const HomePage = () => {
 
   return (
     <>
+      <LoginRequired />
       <PageHeader text="Home Page" />
       <Container
         fluid

@@ -138,8 +138,8 @@ const UserInfo = () => {
               {
                 global.userLoaded
                   ? (
-                    <FluidLink className={classes.link} href="/auth/login">
-                      <Text variant="mediumPlus">
+                    <FluidLink href="/auth/login">
+                      <Text className={classes.link} variant="mediumPlus">
                         Login
                       </Text>
                     </FluidLink>

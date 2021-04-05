@@ -26,4 +26,6 @@ export default createTheme({
     white: '#2b2f30',
     accent: '#000000',
   },
+  type: 'dark',
+  isInverted: true,
 });
