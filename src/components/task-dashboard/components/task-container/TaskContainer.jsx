@@ -13,6 +13,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexFlow: 'column nowrap',
     alignContent: 'center',
+    width: '400px',
     minWidth: '400px',
     minHeight: '400px',
     maxHeight: '600px',
