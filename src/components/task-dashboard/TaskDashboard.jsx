@@ -1,4 +1,5 @@
 import {
+  Checkbox,
   ComboBox,
   CommandBar, DefaultButton, Icon, makeStyles, PrimaryButton, Separator, Stack,
 } from '@fluentui/react';
@@ -41,14 +42,16 @@ const TaskDashboard = () => {
   const [hours, setHours] = useLocalStorageState('DTWorkingHours', {
     from: DateTime.utc().set({
       hour: 9, minute: 0, second: 0, millisecond: 0,
-    }).toISO(),
+    }),
     to: DateTime.utc().set({
       hour: 18, minute: 0, second: 0, millisecond: 0,
-    }).toISO(),
-  }, (h) => ({
-    from: DateTime.fromISO(h.from).toUTC(),
-    to: DateTime.fromISO(h.to).toUTC(),
+    }),
+  }, (h) => h && ({
+    from: DateTime.fromISO(h?.from).toUTC(),
+    to: DateTime.fromISO(h?.to).toUTC(),
   }));
+  const [showFinsihed, setShowFinished] = useLocalStorageState('DTShowFinished', false);
+  const [showCancelled, setShowCancelled] = useLocalStorageState('DTShowFinished', false);
   const options = {
     params: {
       fromDate: DateTime.fromJSDate(currentDate).toUTC().set({
@@ -123,6 +126,18 @@ const TaskDashboard = () => {
     }));
   }, [currentDate]);
 
+  // Adjust hours if to is less than from
+  useEffect(() => {
+    if (hours.to < hours.from) {
+      setHours((prev) => ({
+        ...prev,
+        to: hours.to.set({
+          day: hours.from.day + 1,
+        }),
+      }));
+    }
+  }, [hours]);
+
   /**
    * Update user options
    */
@@ -158,15 +173,15 @@ const TaskDashboard = () => {
       }
     }
     const updated = await TaskService.updateTaskStatus(task.id, { status });
-    setTasks((ts) => (ts.map((t) => (t.id === task.id
-      ? TaskService.createTaskObject(updated.result)
-      : t))));
     // if task was unpaused, update it too
     if (updated.unpaused?.id) {
       setTasks((ts) => (ts.map((t) => (t.id === updated.unpaused.id
         ? TaskService.createTaskObject(updated.unpaused)
         : t))));
     }
+    setTasks((ts) => (ts.map((t) => (t.id === task.id
+      ? TaskService.createTaskObject(updated.result)
+      : t))));
   };
 
   return (
@@ -221,6 +236,20 @@ const TaskDashboard = () => {
                   ),
                 },
               ]}
+              farItems={[
+                {
+                  key: 'showFinished',
+                  iconProps: {
+                    iconName: 'RedEye',
+                  },
+                  onRender: () => (
+                    <Stack tokens={{ childrenGap: 4 }} horizontalAlign="start" verticalAlign="center">
+                      <Checkbox label="Show Finished" checked={showFinsihed} onChange={(ev, checked) => setShowFinished(checked)} />
+                      <Checkbox label="Show Cancelled" checked={showCancelled} onChange={(ev, checked) => setShowCancelled(checked)} />
+                    </Stack>
+                  ),
+                },
+              ]}
             />
           </Col>
         </Row>
@@ -240,6 +269,8 @@ const TaskDashboard = () => {
                   user={users.find((u) => u.id === selUser)}
                   setTasks={setTasks}
                   handleStatusChange={handleStatusChange}
+                  showFinished={showFinsihed}
+                  showCancelled={showCancelled}
                 />
               ))
             }

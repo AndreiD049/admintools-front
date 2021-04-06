@@ -1,11 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React, {
+  useEffect, useRef, useState,
+} from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {
-  ActionButton, makeStyles, Separator, Text,
+  ActionButton, makeStyles, Separator, Text, TooltipHost,
 } from '@fluentui/react';
 import { DateTime } from 'luxon';
+import { Transition } from 'react-transition-group';
 import TaskCollapsed from '../task-collapsed/TaskCollapsed';
+import { ReactComponent as ExpiredIcon } from './assets/expired.svg';
+import { ReactComponent as PausedIcon } from './assets/paused.svg';
+import constants from '../../../../utils/constants';
+
+const { status } = constants.tasks;
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -45,10 +53,10 @@ const useStyles = makeStyles((theme) => ({
     },
     '& .task-paused': {
       minHeight: 'inherit',
-      border: `1px solid ${theme.palette.neutralLight}`,
-      borderLeft: `10px solid ${theme.palette.neutralLight}`,
+      border: '1px solid #66aee8',
+      borderLeft: '10px solid #66aee8',
       '& .task-paused-status': {
-        backgroundColor: theme.palette.neutralLight,
+        backgroundColor: '#66aee8',
       },
     },
   },
@@ -101,6 +109,28 @@ const useStyles = makeStyles((theme) => ({
   title: {
     paddingLeft: theme.spacing.s1,
   },
+  icons: {
+    paddingLeft: theme.spacing.s1,
+    paddingBottom: theme.spacing.s1,
+    display: 'flex',
+    flexFlow: 'row nowrap',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+  },
+  icon_expired: {
+    '& #expired_clock_border': {
+      fill: theme.palette.themePrimary,
+    },
+    '& #expired_warning': {
+      fill: theme.palette.orange,
+    },
+  },
+  icon_paused: {
+    marginLeft: theme.spacing.s2,
+    '& .main': {
+      fill: theme.palette.themePrimary,
+    },
+  },
   description: {
     color: theme.palette.neutralSecondaryAlt,
     paddingLeft: theme.spacing.s1,
@@ -115,13 +145,50 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const TaskItem = ({ task, setTasks, handleStatusChange }) => {
+const TaskItem = ({ task, handleStatusChange }) => {
   const classes = useStyles();
   const [time, setTime] = useState({
-    from: '00:00',
-    to: '00:00',
+    from: '',
+    to: '',
+  });
+  const [icons, setIcons] = useState({
+    paused: false,
+    expired: false,
   });
   const [collapsed, setCollapsed] = useState(true);
+  const timerRef = useRef(null);
+
+  const setIcon = (icon, state) => setIcons((prev) => ({
+    ...prev,
+    [icon]: state,
+  }));
+
+  const performChecks = () => {
+    const expectedFinishDate = DateTime.fromISO(task.expectedFinishDate);
+    // check paused
+    if (task.status === status.Paused && !icons.paused) {
+      setIcon('paused', true);
+    } else if (task.status !== status.Paused && icons.paused) {
+      setIcon('paused', false);
+    }
+    // Check expired
+    if (task.status !== status.Finished && task.status !== status.Cancelled) {
+      if (!icons.expired && expectedFinishDate < DateTime.utc()) {
+        setIcon('expired', true);
+      }
+    } else if (icons.expired) {
+      setIcon('expired', false);
+    }
+  };
+
+  // Register task timer, perform checks every minute
+  useEffect(() => {
+    performChecks();
+    timerRef.current = setInterval(performChecks, 30000);
+    return () => {
+      clearInterval(timerRef.current);
+    };
+  }, [task]);
 
   useEffect(() => {
     if (task) {
@@ -150,6 +217,18 @@ const TaskItem = ({ task, setTasks, handleStatusChange }) => {
         >
           <div className={classes.rows}>
             <div className={classes.taskDescription}>
+              <div className={classes.icons}>
+                { icons.expired && (
+                <TooltipHost content="This task is expired">
+                  <ExpiredIcon className={classes.icon_expired} />
+                </TooltipHost>
+                )}
+                { icons.paused && (
+                <TooltipHost content="This task is paused">
+                  <PausedIcon className={classes.icon_paused} />
+                </TooltipHost>
+                )}
+              </div>
               <Text variant="medium" className={clsx([classes.title, collapsed && classes.nowrap])}>{task.title}</Text>
               <Text variant="smallPlus" className={clsx([classes.description, collapsed ? classes.nowrap : classes.prewrap])}>{task.description}</Text>
             </div>
@@ -167,7 +246,6 @@ const TaskItem = ({ task, setTasks, handleStatusChange }) => {
         </div>
         <TaskCollapsed
           task={task}
-          setTasks={setTasks}
           collapsed={collapsed}
           setCollapsed={setCollapsed}
           handleStatusChange={handleStatusChange}
@@ -195,6 +273,7 @@ const TaskItem = ({ task, setTasks, handleStatusChange }) => {
 TaskItem.propTypes = {
   handleStatusChange: PropTypes.func.isRequired,
   task: PropTypes.shape({
+    id: PropTypes.string,
     status: PropTypes.string,
     title: PropTypes.string,
     description: PropTypes.string,

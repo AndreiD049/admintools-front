@@ -4,15 +4,16 @@ import {
   makeStyles,
   Persona, PersonaSize, Separator, Stack, StackItem,
 } from '@fluentui/react';
+import { Transition } from 'react-transition-group';
 import TaskItem from '../task-item';
+import constants from '../../../../utils/constants';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
     flexFlow: 'column nowrap',
     alignContent: 'center',
-    width: '300px',
-    minWidth: '300px',
+    minWidth: '400px',
     minHeight: '400px',
     maxHeight: '600px',
     padding: '5px',
@@ -31,8 +32,28 @@ const TaskContainer = ({
   setTasks,
   handleStatusChange,
   user,
+  showFinished,
+  showCancelled,
 }) => {
   const classes = useStyles();
+  const handleIn = (status) => {
+    if (status === constants.tasks.status.Finished && !showFinished) return false;
+    if (status === constants.tasks.status.Cancelled && !showCancelled) return false;
+    return true;
+  };
+
+  const defaultStyle = {
+    transition: 'opacity 300ms ease-in-out',
+    opacity: 0,
+  };
+
+  const transitionStyles = {
+    entering: { opacity: 1 },
+    entered: { opacity: 1 },
+    exiting: { opacity: 0 },
+    exited: { opacity: 0 },
+  };
+
   return (
     <div className={classes.root}>
       <Stack horizontalAlign="stretch" verticalAlign="stretch">
@@ -42,12 +63,26 @@ const TaskContainer = ({
         <Separator />
         {
           tasks.map((task) => (
-            <TaskItem
+            <Transition
               key={task.id}
-              task={task}
-              setTasks={setTasks}
-              handleStatusChange={handleStatusChange}
-            />
+              in={handleIn(task.status)}
+              timeout={300}
+              unmountOnExit
+            >
+              {(state) => (
+                <div style={{
+                  ...defaultStyle,
+                  ...transitionStyles[state],
+                }}
+                >
+                  <TaskItem
+                    task={task}
+                    setTasks={setTasks}
+                    handleStatusChange={handleStatusChange}
+                  />
+                </div>
+              )}
+            </Transition>
           ))
         }
       </Stack>
@@ -62,6 +97,8 @@ TaskContainer.propTypes = {
   handleStatusChange: PropTypes.func.isRequired,
   tasks: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   setTasks: PropTypes.func.isRequired,
+  showFinished: PropTypes.bool.isRequired,
+  showCancelled: PropTypes.bool.isRequired,
 };
 
 TaskContainer.defaultProps = {

@@ -20,7 +20,11 @@ const TaskBusyConflict = ({
       );
       // Update paused tasks
       (await Promise.all(paused)).map(
-        (task) => setTasks((prev) => prev.map((t) => (t.id === task.result.id ? task.result : t))),
+        (task) => setTasks(
+          (prev) => prev.map(
+            (t) => (t.id === task.result.id ? TaskService.createTaskObject(task.result) : t),
+          ),
+        ),
       );
     } finally {
       accept();
@@ -43,7 +47,7 @@ const TaskBusyConflict = ({
         </RLink>
       )) }
       <Separator />
-      <Text block variant="medium">If you continue, above tasks will be paused.</Text>
+      <Text block variant="medium">If you continue, tasks will be paused.</Text>
     </form>
   );
 };

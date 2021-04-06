@@ -52,7 +52,7 @@ const WorkingHours = ({ hours, setHours }) => {
     const [hour, minute] = option.key.split(':').map((o) => +o);
     setHours((prev) => ({
       ...prev,
-      [type]: prev[type].set({ hour, minute }),
+      [type]: prev.from.set({ hour, minute }),
     }));
   };
 

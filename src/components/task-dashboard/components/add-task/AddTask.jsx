@@ -43,7 +43,6 @@ const AddTask = ({ setOpen, handleAdd }) => {
   const handleSubmit = async (evt) => {
     evt.persist();
     evt.preventDefault();
-    const expDate = DateTime.fromJSDate(data.expectedStartDate);
     const result = await TaskService.createTask({
       title: data.title,
       description: data.description,
