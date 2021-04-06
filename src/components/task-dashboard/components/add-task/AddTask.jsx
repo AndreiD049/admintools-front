@@ -49,7 +49,7 @@ const AddTask = ({ setOpen, handleAdd }) => {
       description: data.description,
       remarks: data.remarks,
       expectedStartDate: data.expectedStartDate,
-      expectedFinishDate: expDate.plus({ minute: data.duration }).toJSDate(),
+      duration: data.duration,
       assignedTo: data.assignedTo.map((u) => u.id),
       isBackgroundTask: data.isBackgroundTask,
       zone: DateTime.local().zoneName,
