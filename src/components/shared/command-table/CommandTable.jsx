@@ -28,7 +28,7 @@ const CommandTable = ({ commandItems, tableProps }) => {
                 <SearchBox
                   placeholder="Search"
                   value={searchValue}
-                  onChange={(e) => setSearchValue(e && e.target ? e.target.value : '')}
+                  onChange={(e, newVal) => setSearchValue(newVal)}
                 />
               </Col>
             </Row>

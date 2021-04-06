@@ -56,10 +56,8 @@ const SecurityDetailsRoleDisplay = ({
     }
   };
 
-  const handleFilterInputChange = (e) => {
-    if (e && e.target) {
-      setFilter(e.target.value);
-    }
+  const handleFilterInputChange = (e, newVal) => {
+    setFilter(newVal);
   };
 
   const handleSetPermission = (role, code, permission) => {

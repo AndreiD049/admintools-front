@@ -275,7 +275,7 @@ const AppraisalsPage = () => {
                               },
                             }}
                             value={searchValue}
-                            onChange={(e) => setSearchValue(e && e.target ? e.target.value : '')}
+                            onChange={(e, newVal) => setSearchValue(newVal)}
                           />
                           <Checkbox
                             label="Show closed"

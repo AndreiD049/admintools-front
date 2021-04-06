@@ -55,10 +55,8 @@ const SecurityDetailsUserDisplay = ({
     }
   };
 
-  const handleFilterInputChange = (e) => {
-    if (e && e.target) {
-      setFilter(e.target.value);
-    }
+  const handleFilterInputChange = (e, newVal) => {
+    setFilter(newVal);
   };
 
   const handleSetPermission = (user, code, permission) => {
