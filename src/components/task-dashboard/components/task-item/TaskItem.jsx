@@ -281,7 +281,6 @@ TaskItem.propTypes = {
     expectedStartDate: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
     expectedFinishDate: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
   }).isRequired,
-  setTasks: PropTypes.func.isRequired,
 };
 
 export default TaskItem;
