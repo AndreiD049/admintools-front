@@ -11,12 +11,15 @@ import { PanelContext } from '../../../ui-hooks/usePanel';
 import constants from '../../../../utils/constants';
 
 const EditFlow = ({ id, setFlows }) => {
-  const [flow, setFlow] = useFetch(TaskFlowService.singleUrl(id), null, null, [], (data) => ({
-    name: data.name,
-    color: data.color,
-    isActive: data.isActive,
-    teams: data.teams.map((team) => team.id),
-  }));
+  const [flow, setFlow] = useFetch(TaskFlowService.singleUrl(id), null, {
+    initialData: null,
+    callback: (data) => ({
+      name: data.name,
+      color: data.color,
+      isActive: data.isActive,
+      teams: data.teams.map((team) => team.id),
+    }),
+  });
   const [teams] = useFetch(TeamService.baseUrl);
   const panel = useContext(PanelContext);
 

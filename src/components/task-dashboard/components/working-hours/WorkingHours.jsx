@@ -48,11 +48,30 @@ const useStyles = makeStyles(() => ({
 const WorkingHours = ({ hours, setHours }) => {
   const classes = useStyles();
 
-  const handleChange = (type) => (evt, option) => {
+  const handleChangeFrom = (evt, option) => {
+    // Change from hours
+    // It's always the same day so just update hours
     const [hour, minute] = option.key.split(':').map((o) => +o);
+    if (Number.isNaN(hour) || Number.isNaN(minute)) throw new Error('Option key is not in correct format. Supposed to be hh:mm.', option.key);
     setHours((prev) => ({
-      ...prev,
-      [type]: prev.from.set({ hour, minute }),
+      to: prev.to,
+      from: prev.from.set({ hour, minute }),
+    }));
+  };
+
+  const handleChangeTo = (evt, option) => {
+    // Change to hours
+    // if new to hours are before from hours - add 24 hours to it
+    // if difference between from and to is more than 24 hours, substract 24 hours from to
+    const [hour, minute] = option.key.split(':').map((o) => +o);
+    if (Number.isNaN(hour) || Number.isNaN(minute)) throw new Error('Option key is not in correct format. Supposed to be hh:mm.', option.key);
+    let updatedToHours = hours.to.set({ hour, minute });
+    if (updatedToHours <= hours.from) updatedToHours = updatedToHours.plus({ hour: 24 });
+    const diff = updatedToHours.diff(hours.from, 'hour');
+    if (diff.values.hours > 24) updatedToHours = updatedToHours.minus({ hour: 24 });
+    setHours((prev) => ({
+      from: prev.from,
+      to: updatedToHours,
     }));
   };
 
@@ -70,7 +89,7 @@ const WorkingHours = ({ hours, setHours }) => {
             calloutProps={{
               calloutMaxHeight: 500,
             }}
-            onChange={handleChange('from')}
+            onChange={handleChangeFrom}
           />
           <span className={classes.space}>-</span>
           <ComboBox
@@ -82,7 +101,7 @@ const WorkingHours = ({ hours, setHours }) => {
             calloutProps={{
               calloutMaxHeight: 500,
             }}
-            onChange={handleChange('to')}
+            onChange={handleChangeTo}
           />
         </Stack>
       </Stack>

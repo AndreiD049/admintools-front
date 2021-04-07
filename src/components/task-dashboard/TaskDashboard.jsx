@@ -37,6 +37,7 @@ const TaskDashboard = () => {
   const global = useContext(GlobalContext);
   const [users] = useFetch(UserService.teamUsersPath);
   const [userOptions, setUserOptions] = useState([]);
+  const [reload, setReload] = useState(true);
   const [selectedUsers, setSelectedUsers] = useLocalStorageState('DTSelectedUsers', [global.user.id]);
   const [currentDate, setCurrentDate] = useState(new Date());
   const [hours, setHours] = useLocalStorageState('DTWorkingHours', {
@@ -54,33 +55,28 @@ const TaskDashboard = () => {
   const [showCancelled, setShowCancelled] = useLocalStorageState('DTShowFinished', false);
   const options = {
     params: {
-      fromDate: DateTime.fromJSDate(currentDate).toUTC().set({
-        hour: hours.from.hour,
-        minute: hours.from.minute,
-        second: 0,
-        millisecond: 0,
-      }).toJSDate(),
-      toDate: DateTime.fromJSDate(currentDate).toUTC().set({
-        hour: hours.to.hour,
-        minute: hours.to.minute,
-        second: 0,
-        millisecond: 0,
-      }).toJSDate(),
+      fromDate: hours.from.toJSDate(),
+      toDate: hours.to.toJSDate(),
       users: selectedUsers,
     },
   };
   const [tasks, setTasks] = useFetch(
     TaskService.baseUrl,
     options,
-    [],
-    [currentDate, hours, selectedUsers],
-    (data) => data.map((task) => TaskService.createTaskObject(task)),
+    {
+      dependencies: [hours, selectedUsers, reload],
+      callback: (data) => data.map((task) => TaskService.createTaskObject(task)),
+      resetDataOnChange: false,
+      skipFirst: true,
+    },
   );
 
   const handleTaskAdd = (task) => {
     const expectedStart = DateTime.fromISO(task.expectedStartDate);
     if (expectedStart >= hours.from && expectedStart <= hours.to) {
-      setTasks((prev) => prev.concat(TaskService.createTaskObject(task)));
+      setTasks((prev) => prev
+        .filter((t) => t.id !== task.id)
+        .concat(TaskService.createTaskObject(task)));
     }
   };
 
@@ -125,18 +121,6 @@ const TaskDashboard = () => {
       to: DateTime.fromJSDate(DateUtils.setDateFromTo(currentDate, prev.to.toJSDate())).toUTC(),
     }));
   }, [currentDate]);
-
-  // Adjust hours if to is less than from
-  useEffect(() => {
-    if (hours.to < hours.from) {
-      setHours((prev) => ({
-        ...prev,
-        to: hours.to.set({
-          day: hours.from.day + 1,
-        }),
-      }));
-    }
-  }, [hours]);
 
   /**
    * Update user options
@@ -186,7 +170,7 @@ const TaskDashboard = () => {
 
   return (
     <>
-      <TaskLiveUpdate setTasks={setTasks} />
+      <TaskLiveUpdate setTasks={setTasks} hours={hours} setReload={setReload} />
       <Container lg>
         <PageHeader text="Daily tasks" />
         <Row>

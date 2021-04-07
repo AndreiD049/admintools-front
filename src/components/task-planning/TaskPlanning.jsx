@@ -41,12 +41,13 @@ const TaskPlanning = () => {
   const [selectedCell, setSelectedCell] = useState(null);
   const [teams] = useFetch(
     TeamService.baseUrl,
-    null, [], [],
-    (data) => data.map((team) => ({
-      key: team.id,
-      text: team.name,
-      data: team,
-    })),
+    null, {
+      callback: (data) => data.map((team) => ({
+        key: team.id,
+        text: team.name,
+        data: team,
+      })),
+    },
   );
   const [selectedTeam, setSelectedTeam] = useLocalStorageState('TaskPlanningSelectedTeam', null);
   const [users] = useFetch(
@@ -55,7 +56,7 @@ const TaskPlanning = () => {
       params: {
         teams: [selectedTeam],
       },
-    }, [], [selectedTeam],
+    }, { dependencies: [selectedTeam] },
   );
   const [data, setData] = useFetch(
     TaskPlanningService.baseUrl,
@@ -66,8 +67,7 @@ const TaskPlanning = () => {
         teams: [selectedTeam],
       },
     },
-    [],
-    [selectedTeam, dates],
+    { dependencies: [selectedTeam, dates] },
   );
 
   const userFlowMap = useMemo(() => {

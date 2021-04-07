@@ -53,7 +53,7 @@ const App = () => {
     <GlobalContext.Provider value={context}>
       <ThemeProvider applyTo="body" theme={theme}>
         <ConnectionManager />
-        <NotificationContainer timeout={100000} />
+        <NotificationContainer timeout={10000} />
         <Router>
           <UserInfoProvider ctx={context} setCtx={setContext} />
           <UserSecuritiesProvider />

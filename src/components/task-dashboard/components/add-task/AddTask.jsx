@@ -16,11 +16,12 @@ import PeoplePicker from '../../../shared/people-picker/PeoplePicker';
 
 const AddTask = ({ setOpen, handleAdd }) => {
   const [users] = useFetch(UserService.teamUsersPath,
-    null, [], [],
-    (dt) => dt.map((user) => ({
-      key: user.id,
-      data: user,
-    })));
+    null, {
+      callback: (dt) => dt.map((user) => ({
+        key: user.id,
+        data: user,
+      })),
+    });
   const [data, setData] = useState({
     title: '',
     description: '',

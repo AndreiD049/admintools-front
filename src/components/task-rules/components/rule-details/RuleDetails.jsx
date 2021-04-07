@@ -20,7 +20,6 @@ import {
   TextField,
   DatePicker,
   MaskedTextField,
-  Tooltip,
   TooltipHost,
 } from '@fluentui/react';
 import { DateTime } from 'luxon';
@@ -215,7 +214,9 @@ const RuleDetails = ({
 }) => {
   const classes = useStyles();
   const global = useContext(GlobalContext);
-  const [rule] = useFetch(id && TaskRuleService.taskRulePath(id), null, null);
+  const [rule] = useFetch(id && TaskRuleService.taskRulePath(id), null, {
+    initialData: null,
+  });
   const panel = useContext(PanelContext);
   const [data, setData] = useState({});
   const [users] = useFetch(UserService.baseUrl,
@@ -224,17 +225,19 @@ const RuleDetails = ({
         teams: global.user.teams.map((t) => t.id),
       },
     },
-    [], [],
-    (dt) => dt.map((u) => ({
-      key: u.id,
-      data: u,
-    })));
+    {
+      callback: (dt) => dt.map((u) => ({
+        key: u.id,
+        data: u,
+      })),
+    });
   const [flows] = useFetch(TaskFlowService.baseUrl,
-    null, [], [],
-    (flowsData) => flowsData.map((flow) => ({
-      key: flow.id,
-      data: flow,
-    })));
+    null, {
+      callback: (flowsData) => flowsData.map((flow) => ({
+        key: flow.id,
+        data: flow,
+      })),
+    });
 
   const handleUpdate = useCallback(async () => {
     const update = { ...data };

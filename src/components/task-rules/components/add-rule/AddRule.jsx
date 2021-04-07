@@ -37,17 +37,19 @@ const useStyles = makeStyles((theme) => ({
 const AddRule = ({ setRules, setOpen }) => {
   const classes = useStyles();
   const [users] = useFetch(UserService.teamUsersPath,
-    null, [], [],
-    (dt) => dt.map((user) => ({
-      key: user.id,
-      data: user,
-    })));
+    null, {
+      callback: (dt) => dt.map((user) => ({
+        key: user.id,
+        data: user,
+      })),
+    });
   const [flows] = useFetch(TaskFlowService.baseUrl,
-    null, [], [],
-    (dt) => dt.map((flow) => ({
-      key: flow.id,
-      data: flow,
-    })));
+    null, {
+      callback: (dt) => dt.map((flow) => ({
+        key: flow.id,
+        data: flow,
+      })),
+    });
   const [data, setData] = useState({
     title: '',
     description: '',

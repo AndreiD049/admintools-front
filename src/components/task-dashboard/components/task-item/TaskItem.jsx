@@ -7,7 +7,6 @@ import {
   ActionButton, makeStyles, Separator, Text, TooltipHost,
 } from '@fluentui/react';
 import { DateTime } from 'luxon';
-import { Transition } from 'react-transition-group';
 import TaskCollapsed from '../task-collapsed/TaskCollapsed';
 import { ReactComponent as ExpiredIcon } from './assets/expired.svg';
 import { ReactComponent as PausedIcon } from './assets/paused.svg';
