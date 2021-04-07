@@ -116,9 +116,12 @@ const TaskDashboard = () => {
 
   // Update working hours when date is updated
   useEffect(() => {
+    // Determine the difference between new current date and from hours, to check where we moved
+    // if difference > 0, we moved forward
+    const difference = DateTime.fromJSDate(currentDate).diff(hours.from, 'day').values.days;
     setHours((prev) => ({
       from: DateTime.fromJSDate(DateUtils.setDateFromTo(currentDate, prev.from.toJSDate())).toUTC(),
-      to: DateTime.fromJSDate(DateUtils.setDateFromTo(currentDate, prev.to.toJSDate())).toUTC(),
+      to: difference < 0 ? prev.to.minus({ day: 1 }) : prev.to.plus({ day: 1 }),
     }));
   }, [currentDate]);
 
