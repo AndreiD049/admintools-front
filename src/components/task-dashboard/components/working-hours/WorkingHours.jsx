@@ -1,6 +1,8 @@
-import { ComboBox, makeStyles, Stack, Text } from '@fluentui/react';
-import PropTypes from 'prop-types';
 import React from 'react';
+import {
+  ComboBox, makeStyles, Stack, Text,
+} from '@fluentui/react';
+import PropTypes from 'prop-types';
 
 const hourOptions = [
   { key: '00:00', text: '00:00' },
@@ -46,24 +48,30 @@ const WorkingHours = ({ hours, setHours }) => {
 
   const handleChangeFrom = (evt, option) => {
     const [hour, minute] = option.key.split(':').map((o) => +o);
-    if (Number.isNaN(hour) || Number.isNaN(minute))
+    if (Number.isNaN(hour) || Number.isNaN(minute)) {
       throw new Error(
         'Option key is not in correct format. Supposed to be hh:mm.',
-        option.key
+        option.key,
       );
-    setHours((prev) => ({
-      ...prev,
-      from: prev.from.set({ hour, minute }),
-    }));
+    }
+    setHours((prev) => {
+      const newFrom = prev.from.set({ hour, minute });
+      const newDuration = prev.duration + prev.from.diff(newFrom, 'minute').values.minutes;
+      return {
+        from: newFrom,
+        duration: newDuration,
+      };
+    });
   };
 
   const handleChangeTo = (evt, option) => {
     const [hour, minute] = option.key.split(':').map((o) => +o);
-    if (Number.isNaN(hour) || Number.isNaN(minute))
+    if (Number.isNaN(hour) || Number.isNaN(minute)) {
       throw new Error(
         'Option key is not in correct format. Supposed to be hh:mm.',
-        option.key
+        option.key,
       );
+    }
     let toHours = hours.from.set({ hour, minute });
     // If we selected hours in the following day
     if (toHours <= hours.from) toHours = toHours.plus({ day: 1 });

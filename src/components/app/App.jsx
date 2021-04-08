@@ -1,7 +1,9 @@
 import { KeytipLayer, KeyCodes, ThemeProvider } from '@fluentui/react';
 import DocumentTitle from 'react-document-title';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import React, { useState, useEffect, useContext, Suspense } from 'react';
+import React, {
+  useState, useEffect, useContext, Suspense,
+} from 'react';
 import GlobalContext from '../../services/GlobalContext';
 import AuthorizationService from '../../services/AuthorizationService';
 import UserInfoProvider from '../shared/user-info-provider';

@@ -59,9 +59,19 @@ const TaskDashboard = () => {
       }),
       duration: 540,
     },
-    (h) => h && {
-      from: DateTime.fromISO(h?.from).toUTC(),
-      duration: h?.duration,
+    (h) => {
+      const from = DateTime.fromISO(h?.from).toUTC();
+      return (
+        h && {
+          from: DateTime.now().setZone('utc', { keepLocalTime: true }).set({
+            hour: from.hour,
+            minute: from.minute,
+            second: 0,
+            millisecond: 0,
+          }),
+          duration: h?.duration,
+        }
+      );
     },
   );
 
@@ -192,7 +202,10 @@ const TaskDashboard = () => {
         ? TaskService.createTaskObject(updated.unpaused)
         : t)));
     }
-    setTasks((ts) => ts.map((t) => (t.id === task.id ? TaskService.createTaskObject(updated.result) : t)));
+    setTasks((ts) => ts
+      .map(
+        (t) => (t.id === task.id ? TaskService.createTaskObject(updated.result) : t),
+      ));
   };
 
   return (
