@@ -124,9 +124,8 @@ const TaskPlanning = () => {
       title: 'Details',
       type: DialogType.largeHeader,
       dialogFooter: () => (
-        // eslint-disable-next-line jsx-a11y/tabindex-no-positive
         <PrimaryButton
-          tabIndex={1}
+          tabIndex={0}
           onClick={() => flowsDialog.setVisible(false)}
           text="Close"
         />
