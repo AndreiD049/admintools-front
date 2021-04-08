@@ -9,15 +9,13 @@ import userVal from './UserValidators';
 import generalVal from './General';
 import constants from '../../utils/constants';
 
-const {
-  and, or, not, perform,
-} = operators;
+const { and, or, not, perform } = operators;
 const AD = constants.securities.APPRAISAL_DETAILS;
 const ADO = constants.securities.APPRAISAL_DETAILS_OTHER;
 
 const periodExists = (period) => async () => ({
   result: Boolean(period),
-  message: 'Period doesn\'t exist.',
+  message: "Period doesn't exist.",
 });
 
 const periodLocked = (period, userId, message = null) => async () => {
@@ -40,7 +38,7 @@ const periodLocked = (period, userId, message = null) => async () => {
 
 const itemExists = (item) => async () => ({
   result: Boolean(item),
-  message: 'Item doesn\'t exist.',
+  message: "Item doesn't exist.",
 });
 
 const periodStatus = (period, status) => async () => ({
@@ -74,98 +72,119 @@ const itemContentNotNull = (item) => async () => ({
 });
 
 const canInsert = (context, period, userId) => async () => {
-  const result = perform(or([
-    and([
-      periodStatus(period, 'Active'),
-      or([
-        and([
-          not(generalVal.isTruthy(userId)),
-          userVal.userAuthorized(context, AD.code, AD.grants.create),
+  const result = perform(
+    or([
+      and([
+        periodStatus(period, 'Active'),
+        or([
+          and([
+            not(generalVal.isTruthy(userId)),
+            userVal.userAuthorized(context, AD.code, AD.grants.create),
+          ]),
+          and([
+            generalVal.isTruthy(userId),
+            userVal.userAuthorized(context, ADO.code, ADO.grants.create),
+          ]),
         ]),
-        and([
-          generalVal.isTruthy(userId),
-          userVal.userAuthorized(context, ADO.code, ADO.grants.create),
+      ]),
+      and([
+        periodStatus(period, 'Finished'),
+        or([
+          and([
+            not(generalVal.isTruthy(userId)),
+            userVal.userAuthorized(context, AD.code, AD.grants.createFinished),
+          ]),
+          and([
+            generalVal.isTruthy(userId),
+            userVal.userAuthorized(
+              context,
+              ADO.code,
+              ADO.grants.createFinished
+            ),
+          ]),
         ]),
       ]),
     ]),
-    and([
-      periodStatus(period, 'Finished'),
-      or([
-        and([
-          not(generalVal.isTruthy(userId)),
-          userVal.userAuthorized(context, AD.code, AD.grants.createFinished),
-        ]),
-        and([
-          generalVal.isTruthy(userId),
-          userVal.userAuthorized(context, ADO.code, ADO.grants.createFinished),
-        ]),
-      ]),
-    ]),
-  ]), false);
+    false
+  );
   return result;
 };
 
 const canUpdate = (context, period, userId) => async () => {
-  const result = perform(or([
-    and([
-      periodStatus(period, 'Active'),
-      or([
-        and([
-          not(generalVal.isTruthy(userId)),
-          userVal.userAuthorized(context, AD.code, AD.grants.update),
+  const result = perform(
+    or([
+      and([
+        periodStatus(period, 'Active'),
+        or([
+          and([
+            not(generalVal.isTruthy(userId)),
+            userVal.userAuthorized(context, AD.code, AD.grants.update),
+          ]),
+          and([
+            generalVal.isTruthy(userId),
+            userVal.userAuthorized(context, ADO.code, ADO.grants.update),
+          ]),
         ]),
-        and([
-          generalVal.isTruthy(userId),
-          userVal.userAuthorized(context, ADO.code, ADO.grants.update),
+      ]),
+      and([
+        periodStatus(period, 'Finished'),
+        or([
+          and([
+            not(generalVal.isTruthy(userId)),
+            userVal.userAuthorized(context, AD.code, AD.grants.updateFinished),
+          ]),
+          and([
+            generalVal.isTruthy(userId),
+            userVal.userAuthorized(
+              context,
+              ADO.code,
+              ADO.grants.updateFinished
+            ),
+          ]),
         ]),
       ]),
     ]),
-    and([
-      periodStatus(period, 'Finished'),
-      or([
-        and([
-          not(generalVal.isTruthy(userId)),
-          userVal.userAuthorized(context, AD.code, AD.grants.updateFinished),
-        ]),
-        and([
-          generalVal.isTruthy(userId),
-          userVal.userAuthorized(context, ADO.code, ADO.grants.updateFinished),
-        ]),
-      ]),
-    ]),
-  ]), false);
+    false
+  );
   return result;
 };
 
 const canDelete = (context, period, userId) => async () => {
-  const result = await perform(or([
-    and([
-      periodStatus(period, 'Active'),
-      or([
-        and([
-          not(generalVal.isTruthy(userId)),
-          userVal.userAuthorized(context, AD.code, AD.grants.delete),
+  const result = await perform(
+    or([
+      and([
+        periodStatus(period, 'Active'),
+        or([
+          and([
+            not(generalVal.isTruthy(userId)),
+            userVal.userAuthorized(context, AD.code, AD.grants.delete),
+          ]),
+          and([
+            generalVal.isTruthy(userId),
+            userVal.userAuthorized(context, ADO.code, ADO.grants.delete),
+          ]),
         ]),
-        and([
-          generalVal.isTruthy(userId),
-          userVal.userAuthorized(context, ADO.code, ADO.grants.delete),
+      ]),
+      and([
+        periodStatus(period, 'Finished'),
+        or([
+          and([
+            not(generalVal.isTruthy(userId)),
+            userVal.userAuthorized(context, AD.code, AD.grants.deleteFinished),
+          ]),
+          and([
+            generalVal.isTruthy(userId),
+            userVal.userAuthorized(
+              context,
+              ADO.code,
+              ADO.grants.deleteFinished
+            ),
+          ]),
         ]),
       ]),
     ]),
-    and([
-      periodStatus(period, 'Finished'),
-      or([
-        and([
-          not(generalVal.isTruthy(userId)),
-          userVal.userAuthorized(context, AD.code, AD.grants.deleteFinished),
-        ]),
-        and([
-          generalVal.isTruthy(userId),
-          userVal.userAuthorized(context, ADO.code, ADO.grants.deleteFinished),
-        ]),
-      ]),
-    ]),
-  ]), false);
+    false
+  );
   return result;
 };
 

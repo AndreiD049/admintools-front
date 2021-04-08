@@ -11,19 +11,28 @@ export default {
   },
 
   combineDateHours(date, hours) {
-    return new Date(date.getFullYear(), date.getMonth(), date.getDate(), hours.h, hours.m, hours.s);
+    return new Date(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate(),
+      hours.h,
+      hours.m,
+      hours.s
+    );
   },
 
   makeUTC(date) {
     if (Number.isNaN(+new Date(date)) || date === null) return null;
-    return new Date(Date.UTC(
-      date.getFullYear(),
-      date.getMonth(),
-      date.getDate(),
-      date.getHours(),
-      date.getMinutes(),
-      date.getSeconds(),
-    ));
+    return new Date(
+      Date.UTC(
+        date.getFullYear(),
+        date.getMonth(),
+        date.getDate(),
+        date.getHours(),
+        date.getMinutes(),
+        date.getSeconds()
+      )
+    );
   },
 
   // Return an array containing all days from the same week as date
@@ -45,14 +54,9 @@ export default {
 
   makeUTCDateOnly(date) {
     if (Number.isNaN(+new Date(date)) || date === null) return null;
-    return new Date(Date.UTC(
-      date.getFullYear(),
-      date.getMonth(),
-      date.getDate(),
-      0,
-      0,
-      0,
-    ));
+    return new Date(
+      Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0)
+    );
   },
 
   /**
@@ -82,12 +86,15 @@ export default {
     const pattern = /\d{2}:\d{2}/;
     const dt = baseDate ? DateTime.fromJSDate(baseDate) : DateTime.now();
     if (!pattern.test(string)) {
-      return dt.toUTC().set({
-        hour: 0,
-        minute: 0,
-        second: 0,
-        millisecond: 0,
-      }).toISO();
+      return dt
+        .toUTC()
+        .set({
+          hour: 0,
+          minute: 0,
+          second: 0,
+          millisecond: 0,
+        })
+        .toISO();
     }
     // Split and convert to numbers, regex passed so this shouldn't give any issues
     let [hour, minute] = string.split(':');
@@ -102,12 +109,15 @@ export default {
       minute = `0${minute}`.slice(0, 2);
     }
     // return the validated date as utc iso string
-    return dt.toUTC().set({
-      hour,
-      minute,
-      second: 0,
-      millisecond: 0,
-    }).toISO();
+    return dt
+      .toUTC()
+      .set({
+        hour,
+        minute,
+        second: 0,
+        millisecond: 0,
+      })
+      .toISO();
   },
 
   /**
@@ -116,9 +126,12 @@ export default {
    * @param {Number} duration
    */
   getEndTimeTextUTC(startTime, duration) {
-    return DateTime.fromJSDate(startTime).plus({
-      minute: duration,
-    }).toUTC().toFormat('HH:mm');
+    return DateTime.fromJSDate(startTime)
+      .plus({
+        minute: duration,
+      })
+      .toUTC()
+      .toFormat('HH:mm');
   },
 
   /**
@@ -130,7 +143,15 @@ export default {
    */
   transform2UTCDate(date) {
     const exp = DateTime.fromJSDate(date);
-    return DateTime.utc(exp.year, exp.month, exp.day, exp.hour, exp.minute, 0, 0).toJSDate();
+    return DateTime.utc(
+      exp.year,
+      exp.month,
+      exp.day,
+      exp.hour,
+      exp.minute,
+      0,
+      0
+    ).toJSDate();
   },
 
   /**
@@ -141,10 +162,12 @@ export default {
   setDateFromTo(from, to) {
     const fromDT = DateTime.fromJSDate(from);
     const toDT = DateTime.fromJSDate(to);
-    return toDT.set({
-      year: fromDT.year,
-      month: fromDT.month,
-      day: fromDT.day,
-    }).toJSDate();
+    return toDT
+      .set({
+        year: fromDT.year,
+        month: fromDT.month,
+        day: fromDT.day,
+      })
+      .toJSDate();
   },
 };

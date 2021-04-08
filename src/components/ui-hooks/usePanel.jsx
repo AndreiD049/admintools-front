@@ -1,7 +1,5 @@
 import React, { useState, createContext, useRef } from 'react';
-import {
-  Panel, PanelType,
-} from '@fluentui/react';
+import { Panel, PanelType } from '@fluentui/react';
 
 const PanelContext = createContext({
   isPanel: false,
@@ -24,7 +22,9 @@ const PanelContext = createContext({
  */
 const usePanel = (Component, options = {}, componentProps = {}) => {
   const [isOpen, setOpen] = useState(false);
-  const [onRenderFooter, setOnRenderFooter] = useState(() => options.onRenderFooterContent);
+  const [onRenderFooter, setOnRenderFooter] = useState(
+    () => options.onRenderFooterContent
+  );
   const componentRef = useRef(null);
   const [ctx] = useState({
     isPanel: true,
@@ -40,31 +40,32 @@ const usePanel = (Component, options = {}, componentProps = {}) => {
         id={options.id ?? 'use-panel'}
         componentRef={componentRef}
         isOpen={isOpen}
-        onDismiss={(options?.onDismiss && options.onDismiss(isOpen, setOpen))
-        ?? (() => setOpen(false))}
+        onDismiss={
+          (options?.onDismiss && options.onDismiss(isOpen, setOpen)) ??
+          (() => setOpen(false))
+        }
         type={options.type ?? PanelType.smallFixedFar}
         headerText={options.headerText ?? 'Panel'}
         isLightDismiss={options.isLightDismiss ?? false}
         onRenderFooterContent={onRenderFooter}
         isFooterAtBottom={options.isFooterAtBottom ?? false}
       >
-        {
-        isOpen
+        {isOpen ? (
           // eslint-disable-next-line react/jsx-props-no-spreading
-          ? <Component isOpen={isOpen} setOpen={setOpen} {...componentProps} />
-          : null
-      }
+          <Component isOpen={isOpen} setOpen={setOpen} {...componentProps} />
+        ) : null}
       </Panel>
     </PanelContext.Provider>
   );
 
   return {
-    isOpen, setOpen, render, componentRef,
+    isOpen,
+    setOpen,
+    render,
+    componentRef,
   };
 };
 
 export default usePanel;
 
-export {
-  PanelContext,
-};
+export { PanelContext };

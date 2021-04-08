@@ -4,7 +4,12 @@ import PropTypes from 'prop-types';
 import { DetailsList, Selection } from '@fluentui/react';
 
 const Table = ({
-  columns, items, searchValue, sortedCol, setSelectionDetails, ...props
+  columns,
+  items,
+  searchValue,
+  sortedCol,
+  setSelectionDetails,
+  ...props
 }) => {
   const [sortedColumn, setSortedColumn] = useState(null);
   const [_columns, setColumns] = useState(columns);
@@ -43,7 +48,7 @@ const Table = ({
         const c = col;
         // column we're sorting now
         if (c.key === column.key) {
-        // if it's already sorted, just invert the sorting
+          // if it's already sorted, just invert the sorting
           columnCopy = c;
           if (c.isSorted) {
             c.isSortedDescending = !c.isSortedDescending;
@@ -53,7 +58,7 @@ const Table = ({
           c.isSorted = true;
           c.isSortedDescending = true;
         } else {
-        // other column, remove the sorting
+          // other column, remove the sorting
           c.isSorted = false;
           c.isSortedDescending = false;
         }
@@ -65,24 +70,27 @@ const Table = ({
     }
   };
 
-  const filterValues = useCallback((values) => {
-    if (!searchValue) {
-      return values;
-    }
-    const rg = new RegExp(searchValue, 'i');
-    return values.filter((item) => {
-      const filterableColumns = _columns.filter((c) => c.isFilterable);
-      for (let i = 0; i < filterableColumns.length; i += 1) {
-        const col = filterableColumns[i];
-        let val = item[col.fieldName];
-        if (col.filterValueAccessor) {
-          val = col.filterValueAccessor(item);
-        }
-        if (rg.test(val)) return true;
+  const filterValues = useCallback(
+    (values) => {
+      if (!searchValue) {
+        return values;
       }
-      return false;
-    });
-  }, [_columns, searchValue]);
+      const rg = new RegExp(searchValue, 'i');
+      return values.filter((item) => {
+        const filterableColumns = _columns.filter((c) => c.isFilterable);
+        for (let i = 0; i < filterableColumns.length; i += 1) {
+          const col = filterableColumns[i];
+          let val = item[col.fieldName];
+          if (col.filterValueAccessor) {
+            val = col.filterValueAccessor(item);
+          }
+          if (rg.test(val)) return true;
+        }
+        return false;
+      });
+    },
+    [_columns, searchValue]
+  );
 
   useEffect(() => {
     const copy = items.slice();
@@ -97,12 +105,17 @@ const Table = ({
 
   useEffect(() => {
     if (sortedCol) {
-      setColumns((prev) => prev.map((col) => (col.key === sortedCol.key
-        ? ({
-          ...col,
-          isSorted: sortedCol.isSorted,
-          isSortedDescending: sortedCol.isSortedDescending,
-        }) : col)));
+      setColumns((prev) =>
+        prev.map((col) =>
+          col.key === sortedCol.key
+            ? {
+                ...col,
+                isSorted: sortedCol.isSorted,
+                isSortedDescending: sortedCol.isSortedDescending,
+              }
+            : col
+        )
+      );
       setSortedColumn(sortedCol);
     }
   }, [sortedCol]);
@@ -119,18 +132,20 @@ const Table = ({
 };
 
 Table.propTypes = {
-  columns: PropTypes.arrayOf(PropTypes.shape({
-    key: PropTypes.string,
-    name: PropTypes.string,
-    fieldName: PropTypes.string,
-    minWidth: PropTypes.number,
-    maxWidth: PropTypes.number,
-    isSortable: PropTypes.bool,
-    isFilterable: PropTypes.bool,
-    isResizable: PropTypes.bool,
-    sort: PropTypes.func,
-    onRender: PropTypes.func,
-  })).isRequired,
+  columns: PropTypes.arrayOf(
+    PropTypes.shape({
+      key: PropTypes.string,
+      name: PropTypes.string,
+      fieldName: PropTypes.string,
+      minWidth: PropTypes.number,
+      maxWidth: PropTypes.number,
+      isSortable: PropTypes.bool,
+      isFilterable: PropTypes.bool,
+      isResizable: PropTypes.bool,
+      sort: PropTypes.func,
+      onRender: PropTypes.func,
+    })
+  ).isRequired,
   items: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   searchValue: PropTypes.string,
   sortedCol: PropTypes.shape({

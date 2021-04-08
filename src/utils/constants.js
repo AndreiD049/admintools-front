@@ -56,12 +56,30 @@ const constants = {
     },
   },
   colors: [
-    '#FFB900', '#FF8C00', '#E74856', '#E81123',
-    '#0078D7', '#0063B1', '#0099BC', '#2D7D9A',
-    '#EA005E', '#C30052', '#8E8CD8', '#6B69D6',
-    '#00B7C3', '#038387', '#7A7574', '#5D5A58',
-    '#68768A', '#515C6B', '#B146C2', '#881798',
-    '#00CC6A', '#10893E', '#498205', '#107C10',
+    '#FFB900',
+    '#FF8C00',
+    '#E74856',
+    '#E81123',
+    '#0078D7',
+    '#0063B1',
+    '#0099BC',
+    '#2D7D9A',
+    '#EA005E',
+    '#C30052',
+    '#8E8CD8',
+    '#6B69D6',
+    '#00B7C3',
+    '#038387',
+    '#7A7574',
+    '#5D5A58',
+    '#68768A',
+    '#515C6B',
+    '#B146C2',
+    '#881798',
+    '#00CC6A',
+    '#10893E',
+    '#498205',
+    '#107C10',
   ],
   securities: {
     REPORTS: {
@@ -76,7 +94,8 @@ const constants = {
     },
     APPRAISAL_DETAILS: {
       code: 'APPRAISAL DETAILS',
-      description: 'Access to see, add, edit, delete Appraisal details for user himself',
+      description:
+        'Access to see, add, edit, delete Appraisal details for user himself',
       grants: {
         read: 'read',
         create: 'create',
@@ -89,7 +108,8 @@ const constants = {
     },
     APPRAISAL_DETAILS_OTHER: {
       code: 'APPRAISAL DETAILS - OTHER USERS',
-      description: 'Access to see, add, edit, delete Appraisal details for other users within the team',
+      description:
+        'Access to see, add, edit, delete Appraisal details for other users within the team',
       grants: {
         read: 'read',
         create: 'create',
@@ -114,7 +134,8 @@ const constants = {
     },
     SETTINGS: {
       code: 'SETTINGS',
-      description: 'Access to various settings. Be careful about following: users - will allow users to modify other users; permissions - will allow users to alter permissions',
+      description:
+        'Access to various settings. Be careful about following: users - will allow users to modify other users; permissions - will allow users to alter permissions',
       grants: {
         read: 'read',
         general: 'general',
@@ -176,7 +197,8 @@ const constants = {
     },
     TASK_PLANNING: {
       code: 'TASK-PLANNING',
-      description: 'Access to read, update, create or delete task planning items',
+      description:
+        'Access to read, update, create or delete task planning items',
       grants: {
         read: 'read',
         create: 'create',

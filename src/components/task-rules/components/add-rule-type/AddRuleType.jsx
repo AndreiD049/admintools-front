@@ -1,7 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  Checkbox, ChoiceGroup, Stack, makeStyles, Dropdown, SpinButton, Position,
+  Checkbox,
+  ChoiceGroup,
+  Stack,
+  makeStyles,
+  Dropdown,
+  SpinButton,
+  Position,
 } from '@fluentui/react';
 import constants from '../../../../utils/constants';
 
@@ -110,24 +116,58 @@ const AddRuleType = ({ data, setData }) => {
             label="Day type"
             defaultSelectedKey={data.dailyType}
             options={options}
-            onChange={(ev, option) => setData((prev) => ({
-              ...prev,
-              dailyType: option.key,
-            }))}
+            onChange={(ev, option) =>
+              setData((prev) => ({
+                ...prev,
+                dailyType: option.key,
+              }))
+            }
           />
         </>
       );
       break;
     case constants.tasks.types.Weekly:
       render = (
-        <Stack className={classes.weeklyCheck} verticalFill verticalAlign="start">
-          <Checkbox onChange={handleSetWeeklyData(1)} checked={isDaySelected(1)} label="Monday" />
-          <Checkbox onChange={handleSetWeeklyData(2)} checked={isDaySelected(2)} label="Tuesday" />
-          <Checkbox onChange={handleSetWeeklyData(3)} checked={isDaySelected(3)} label="Wednesday" />
-          <Checkbox onChange={handleSetWeeklyData(4)} checked={isDaySelected(4)} label="Thursday" />
-          <Checkbox onChange={handleSetWeeklyData(5)} checked={isDaySelected(5)} label="Friday" />
-          <Checkbox onChange={handleSetWeeklyData(6)} checked={isDaySelected(6)} label="Saturday" />
-          <Checkbox onChange={handleSetWeeklyData(7)} checked={isDaySelected(7)} label="Sunday" />
+        <Stack
+          className={classes.weeklyCheck}
+          verticalFill
+          verticalAlign="start"
+        >
+          <Checkbox
+            onChange={handleSetWeeklyData(1)}
+            checked={isDaySelected(1)}
+            label="Monday"
+          />
+          <Checkbox
+            onChange={handleSetWeeklyData(2)}
+            checked={isDaySelected(2)}
+            label="Tuesday"
+          />
+          <Checkbox
+            onChange={handleSetWeeklyData(3)}
+            checked={isDaySelected(3)}
+            label="Wednesday"
+          />
+          <Checkbox
+            onChange={handleSetWeeklyData(4)}
+            checked={isDaySelected(4)}
+            label="Thursday"
+          />
+          <Checkbox
+            onChange={handleSetWeeklyData(5)}
+            checked={isDaySelected(5)}
+            label="Friday"
+          />
+          <Checkbox
+            onChange={handleSetWeeklyData(6)}
+            checked={isDaySelected(6)}
+            label="Saturday"
+          />
+          <Checkbox
+            onChange={handleSetWeeklyData(7)}
+            checked={isDaySelected(7)}
+            label="Sunday"
+          />
         </Stack>
       );
       break;
@@ -155,24 +195,74 @@ const AddRuleType = ({ data, setData }) => {
             className={classes.monthlyDropdown}
             options={monthlyOptions}
             placeHolder="Select"
-            onChange={(evt, option) => setData((prev) => ({
-              ...prev,
-              monthlyOnType: option.key,
-            }))}
+            onChange={(evt, option) =>
+              setData((prev) => ({
+                ...prev,
+                monthlyOnType: option.key,
+              }))
+            }
             label="Type"
           />
-          <Checkbox className={classes.monthlyCheck} onChange={handleSetMonths(0)} label="January" />
-          <Checkbox className={classes.monthlyCheck} onChange={handleSetMonths(1)} label="February" />
-          <Checkbox className={classes.monthlyCheck} onChange={handleSetMonths(2)} label="March" />
-          <Checkbox className={classes.monthlyCheck} onChange={handleSetMonths(3)} label="April" />
-          <Checkbox className={classes.monthlyCheck} onChange={handleSetMonths(4)} label="May" />
-          <Checkbox className={classes.monthlyCheck} onChange={handleSetMonths(5)} label="June" />
-          <Checkbox className={classes.monthlyCheck} onChange={handleSetMonths(6)} label="July" />
-          <Checkbox className={classes.monthlyCheck} onChange={handleSetMonths(7)} label="August" />
-          <Checkbox className={classes.monthlyCheck} onChange={handleSetMonths(8)} label="September" />
-          <Checkbox className={classes.monthlyCheck} onChange={handleSetMonths(9)} label="October" />
-          <Checkbox className={classes.monthlyCheck} onChange={handleSetMonths(10)} label="November" />
-          <Checkbox className={classes.monthlyCheck} onChange={handleSetMonths(11)} label="December" />
+          <Checkbox
+            className={classes.monthlyCheck}
+            onChange={handleSetMonths(0)}
+            label="January"
+          />
+          <Checkbox
+            className={classes.monthlyCheck}
+            onChange={handleSetMonths(1)}
+            label="February"
+          />
+          <Checkbox
+            className={classes.monthlyCheck}
+            onChange={handleSetMonths(2)}
+            label="March"
+          />
+          <Checkbox
+            className={classes.monthlyCheck}
+            onChange={handleSetMonths(3)}
+            label="April"
+          />
+          <Checkbox
+            className={classes.monthlyCheck}
+            onChange={handleSetMonths(4)}
+            label="May"
+          />
+          <Checkbox
+            className={classes.monthlyCheck}
+            onChange={handleSetMonths(5)}
+            label="June"
+          />
+          <Checkbox
+            className={classes.monthlyCheck}
+            onChange={handleSetMonths(6)}
+            label="July"
+          />
+          <Checkbox
+            className={classes.monthlyCheck}
+            onChange={handleSetMonths(7)}
+            label="August"
+          />
+          <Checkbox
+            className={classes.monthlyCheck}
+            onChange={handleSetMonths(8)}
+            label="September"
+          />
+          <Checkbox
+            className={classes.monthlyCheck}
+            onChange={handleSetMonths(9)}
+            label="October"
+          />
+          <Checkbox
+            className={classes.monthlyCheck}
+            onChange={handleSetMonths(10)}
+            label="November"
+          />
+          <Checkbox
+            className={classes.monthlyCheck}
+            onChange={handleSetMonths(11)}
+            label="December"
+          />
         </Stack>
       );
       break;

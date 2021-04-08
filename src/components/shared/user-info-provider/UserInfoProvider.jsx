@@ -15,7 +15,11 @@ const UserInfoProvider = () => {
         const user = await LoginService.getCurrentUser();
         if (user) {
           const name = user.displayName || user.username || 'Unknown';
-          user.avatar = name.split(/[. ,_-]/).map((n) => n[0]).join('').slice(0, 2)
+          user.avatar = name
+            .split(/[. ,_-]/)
+            .map((n) => n[0])
+            .join('')
+            .slice(0, 2)
             .toUpperCase();
         }
         return global.setContext({ ...global, user, userLoaded: true });

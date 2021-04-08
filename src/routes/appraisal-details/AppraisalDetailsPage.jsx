@@ -16,7 +16,8 @@ const AppraisalDetailsPage = () => {
         failureNotification={{
           type: 'info',
           header: 'No access',
-          content: 'You have no access to this page. Please contact your administrator',
+          content:
+            'You have no access to this page. Please contact your administrator',
         }}
       >
         <AppraisalDetails context={global} />

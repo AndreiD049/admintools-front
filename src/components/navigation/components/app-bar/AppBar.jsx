@@ -1,8 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  Icon, IconButton, makeStyles, Text, useTheme,
-} from '@fluentui/react';
+import { Icon, IconButton, makeStyles, Text, useTheme } from '@fluentui/react';
 import UserInfo from '../user-info/UserInfo';
 import keytipStyles from '../../../../styles/keytipStyles';
 

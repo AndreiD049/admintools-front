@@ -1,3 +1,3 @@
-import PanelNew from "./PanelNew";
+import PanelNew from './PanelNew';
 
 export default PanelNew;

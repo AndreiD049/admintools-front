@@ -28,9 +28,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const PlanningCell = ({
-  userFlows, handleClick, handleInvoke, isSelected,
-}) => {
+const PlanningCell = ({ userFlows, handleClick, handleInvoke, isSelected }) => {
   const classes = useStyles();
 
   return (
@@ -42,28 +40,28 @@ const PlanningCell = ({
       onKeyDown={(evt) => evt.code === 'Enter' && handleClick()}
       onDoubleClick={handleInvoke}
     >
-      {
-        !userFlows?.flows || userFlows?.flows?.length === 0
-          ? <Text className={classes.noSelect} variant="medium">-</Text>
-          : (
-            <ul>
-              {Array.from(userFlows?.flows)?.map((f) => (
-                <li className={classes.flowItem} key={f.id}>
-                  <Chip
-                    className={classes.noSelect}
-                    style={{
-                      backgroundColor: f.color ?? 'transparent',
-                      padding: 3,
-                      whiteSpace: 'pre-wrap',
-                    }}
-                  >
-                    <Text variant="medium">{f.name}</Text>
-                  </Chip>
-                </li>
-              ))}
-            </ul>
-          )
-      }
+      {!userFlows?.flows || userFlows?.flows?.length === 0 ? (
+        <Text className={classes.noSelect} variant="medium">
+          -
+        </Text>
+      ) : (
+        <ul>
+          {Array.from(userFlows?.flows)?.map((f) => (
+            <li className={classes.flowItem} key={f.id}>
+              <Chip
+                className={classes.noSelect}
+                style={{
+                  backgroundColor: f.color ?? 'transparent',
+                  padding: 3,
+                  whiteSpace: 'pre-wrap',
+                }}
+              >
+                <Text variant="medium">{f.name}</Text>
+              </Chip>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 };

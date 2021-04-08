@@ -2,7 +2,15 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import {
-  Panel, PrimaryButton, DefaultButton, PanelType, Stack, TextField, Separator, Label, makeStyles,
+  Panel,
+  PrimaryButton,
+  DefaultButton,
+  PanelType,
+  Stack,
+  TextField,
+  Separator,
+  Label,
+  makeStyles,
 } from '@fluentui/react';
 import { Col, Container, Row } from 'react-grid-system';
 import ReportingService from '../../../../services/ReportingService';
@@ -149,7 +157,9 @@ const ReportsNewPanel = ({ isOpen, setOpen, addReport }) => {
         childrenGap: 10,
       }}
     >
-      <PrimaryButton form="new-report-form" type="submit">Create</PrimaryButton>
+      <PrimaryButton form="new-report-form" type="submit">
+        Create
+      </PrimaryButton>
       <DefaultButton onClick={() => setOpen(false)}>Close</DefaultButton>
     </Stack>
   );
@@ -181,19 +191,30 @@ const ReportsNewPanel = ({ isOpen, setOpen, addReport }) => {
               />
               <Label>Select template</Label>
               <SinglePicker
-                options={templates.map((t) => ({ key: t.id, data: t }))}
+                options={templates.map((t) => ({
+                  key: t.id,
+                  data: t,
+                }))}
                 getTextFromItem={(item) => item.data.name}
                 onSelect={handleChangeTempalte}
                 onRenderItem={() => (
                   <TextField
-                    value={template ? templates.find((temp) => temp.id === template)?.name : null}
+                    value={
+                      template
+                        ? templates.find((temp) => temp.id === template)?.name
+                        : null
+                    }
                     underlined
                     readOnly
                   />
                 )}
                 maxHeight="400px"
               />
-              <input value={template} className={classes.invisibleInput} required />
+              <input
+                value={template}
+                className={classes.invisibleInput}
+                required
+              />
             </Col>
           </Row>
           <Separator>Parameters</Separator>
@@ -201,18 +222,18 @@ const ReportsNewPanel = ({ isOpen, setOpen, addReport }) => {
             <Col xs={12} sm={8} md={6}>
               <Label>Select parameter</Label>
               <SinglePicker
-                options={parameters.map((param) => param.paths.map((path) => ({
-                  key: `${param.name}${path}`,
-                  data: `${param.name}${path}`,
-                }))).flat()}
+                options={parameters
+                  .map((param) =>
+                    param.paths.map((path) => ({
+                      key: `${param.name}${path}`,
+                      data: `${param.name}${path}`,
+                    }))
+                  )
+                  .flat()}
                 getTextFromItem={(item) => item.data}
                 onSelect={(item) => handleChangeParameter(item)}
                 onRenderItem={() => (
-                  <TextField
-                    value={parameter}
-                    underlined
-                    readOnly
-                  />
+                  <TextField value={parameter} underlined readOnly />
                 )}
                 maxHeight="400px"
               />
@@ -227,8 +248,7 @@ const ReportsNewPanel = ({ isOpen, setOpen, addReport }) => {
           <Separator>Selected Paramaters</Separator>
           <Row justify="start">
             <Col xs={12} sm={8} md={6}>
-              {
-              selectedParameters.map((sp, idx) => (
+              {selectedParameters.map((sp, idx) => (
                 <Box className={classes.box}>
                   <TextField
                     label="Name"
@@ -240,14 +260,9 @@ const ReportsNewPanel = ({ isOpen, setOpen, addReport }) => {
                     value={sp.defaultValue}
                     onChange={handleChangeParameterValue(idx)}
                   />
-                  <TextField
-                    label="Path"
-                    value={sp.path}
-                    readOnly
-                  />
+                  <TextField label="Path" value={sp.path} readOnly />
                 </Box>
-              ))
-            }
+              ))}
             </Col>
           </Row>
         </Container>

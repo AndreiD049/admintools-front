@@ -2,7 +2,14 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   ActionButton,
-  DefaultButton, makeStyles, Panel, PanelType, PrimaryButton, Separator, Stack, TextField,
+  DefaultButton,
+  makeStyles,
+  Panel,
+  PanelType,
+  PrimaryButton,
+  Separator,
+  Stack,
+  TextField,
 } from '@fluentui/react';
 import { Col, Container, Row } from 'react-grid-system';
 import ReportingService from '../../../../services/ReportingService';
@@ -15,9 +22,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const TemplateDetailsPanel = ({
-  id, isOpen, setOpen, setEdit,
-}) => {
+const TemplateDetailsPanel = ({ id, isOpen, setOpen, setEdit }) => {
   const classes = useStyles();
   const [template, setTemplate] = useState(null);
 
@@ -66,60 +71,90 @@ const TemplateDetailsPanel = ({
       onRenderFooterContent={onRenderFooter}
       isLightDismiss
     >
-      <Container
-        fluid
-        className={classes.root}
-      >
+      <Container fluid className={classes.root}>
         <Separator>General</Separator>
-        {
-          template
-          && (
-            <>
-              <Row justify="start">
-                <Col xs={12} sm={8} md={4}>
-                  <TextField label="Name: " value={template && template.name} readOnly underlined />
-                  <TextField label="Created by: " value={template && template.createdUser && template.createdUser.username} readOnly underlined />
-                  <TextField label="Created on: " value={template && new Date(template.createdDate).toLocaleString()} readOnly underlined />
-                  {
-              template.modifiedUser
-              && (
-              <>
-                <TextField label="Modified by: " value={template.modifiedUser.username} readOnly underlined />
-                <TextField label="Modified on: " value={template.modifiedDate && new Date(template.modifiedDate).toLocaleString()} readOnly underlined />
-              </>
-              )
-            }
-                </Col>
-              </Row>
-              <Separator>Details</Separator>
-              <Row justify="start">
-                <Col xs={12} sm={8} md={4}>
-                  <TextField label="Filename: " value={template.filename} readOnly underlined />
-                </Col>
-                <Col xs={12} sm={8} md={4}>
-                  <ActionButton
-                    iconProps={{
-                      iconName: 'DownloadDocument',
-                    }}
-                    text="Download template"
-                    onClick={handleDownload}
-                  />
-                </Col>
-              </Row>
-              <Row justify="start">
-                <Col xs={12} sm={8} md={6}>
-                  <TextField
-                    readOnly
-                    multiline
-                    autoAdjustHeight
-                    value={template.aggregation || ''}
-                    label="Aggregation"
-                  />
-                </Col>
-              </Row>
-            </>
-          )
-        }
+        {template && (
+          <>
+            <Row justify="start">
+              <Col xs={12} sm={8} md={4}>
+                <TextField
+                  label="Name: "
+                  value={template && template.name}
+                  readOnly
+                  underlined
+                />
+                <TextField
+                  label="Created by: "
+                  value={
+                    template &&
+                    template.createdUser &&
+                    template.createdUser.username
+                  }
+                  readOnly
+                  underlined
+                />
+                <TextField
+                  label="Created on: "
+                  value={
+                    template && new Date(template.createdDate).toLocaleString()
+                  }
+                  readOnly
+                  underlined
+                />
+                {template.modifiedUser && (
+                  <>
+                    <TextField
+                      label="Modified by: "
+                      value={template.modifiedUser.username}
+                      readOnly
+                      underlined
+                    />
+                    <TextField
+                      label="Modified on: "
+                      value={
+                        template.modifiedDate &&
+                        new Date(template.modifiedDate).toLocaleString()
+                      }
+                      readOnly
+                      underlined
+                    />
+                  </>
+                )}
+              </Col>
+            </Row>
+            <Separator>Details</Separator>
+            <Row justify="start">
+              <Col xs={12} sm={8} md={4}>
+                <TextField
+                  label="Filename: "
+                  value={template.filename}
+                  readOnly
+                  underlined
+                />
+              </Col>
+              <Col xs={12} sm={8} md={4}>
+                <ActionButton
+                  iconProps={{
+                    iconName: 'DownloadDocument',
+                  }}
+                  text="Download template"
+                  onClick={handleDownload}
+                />
+              </Col>
+            </Row>
+            <Row justify="start">
+              <Col xs={12} sm={8} md={6}>
+                <TextField
+                  readOnly
+                  multiline
+                  autoAdjustHeight
+                  value={template.aggregation || ''}
+                  label="Aggregation"
+                />
+              </Col>
+            </Row>
+          </>
+        )}
       </Container>
     </Panel>
   );

@@ -1,6 +1,4 @@
-import {
-  makeStyles, Text, Stack, PrimaryButton,
-} from '@fluentui/react';
+import { makeStyles, Text, Stack, PrimaryButton } from '@fluentui/react';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Container } from 'react-grid-system';
@@ -32,8 +30,16 @@ const LoginPage = () => {
     <Container md className={classes.root}>
       <Stack verticalAlign="center" horizontalAlign="center">
         <BoredImage className={classes.image} />
-        <Text block variant="xLarge">You are not logged in</Text>
-        <Link className={classes.loginBtn} to="/auth/login" component={PrimaryButton}>Log In</Link>
+        <Text block variant="xLarge">
+          You are not logged in
+        </Text>
+        <Link
+          className={classes.loginBtn}
+          to="/auth/login"
+          component={PrimaryButton}
+        >
+          Log In
+        </Link>
       </Stack>
     </Container>
   );

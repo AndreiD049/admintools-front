@@ -15,16 +15,20 @@ const TaskLiveUpdate = ({ setTasks, hours, setReload }) => {
         const newTask = info.data;
         const expStart = DateTime.fromISO(newTask.expectedStartDate);
         if (expStart >= hours.from && expStart <= hours.to) {
-          setTasks(
-            (prev) => prev
+          setTasks((prev) =>
+            prev
               .filter((t) => t.id !== newTask.id)
-              .concat(TaskService.createTaskObject(newTask)),
+              .concat(TaskService.createTaskObject(newTask))
           );
         }
       } else if (info.action === constants.connections.actions.UPDATE) {
-        setTasks((prev) => prev.map(
-          (task) => (task.id === info.data.id ? TaskService.createTaskObject(info.data) : task),
-        ));
+        setTasks((prev) =>
+          prev.map((task) =>
+            task.id === info.data.id
+              ? TaskService.createTaskObject(info.data)
+              : task
+          )
+        );
       } else if (info.action === constants.connections.actions.RELOAD) {
         // Just reset the current date so backend is queried again
         setReload((prev) => !prev);

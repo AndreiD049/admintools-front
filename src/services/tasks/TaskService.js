@@ -16,9 +16,13 @@ const TaskService = {
       if (response.status === 200) {
         return response.data;
       }
-      throw new Error(`Server response: ${response.data} - ${response.statusText}`);
+      throw new Error(
+        `Server response: ${response.data} - ${response.statusText}`
+      );
     } catch (err) {
-      NotificationService.notifyError((err.response && err.response.data.error) || err.message);
+      NotificationService.notifyError(
+        (err.response && err.response.data.error) || err.message
+      );
       throw err;
     }
   },
@@ -31,9 +35,13 @@ const TaskService = {
       if (response.status === 200) {
         return response.data;
       }
-      throw new Error(`Server response: ${response.data} - ${response.statusText}`);
+      throw new Error(
+        `Server response: ${response.data} - ${response.statusText}`
+      );
     } catch (err) {
-      NotificationService.notifyError((err.response && err.response.data.error) || err.message);
+      NotificationService.notifyError(
+        (err.response && err.response.data.error) || err.message
+      );
       throw err;
     }
   },
@@ -42,7 +50,9 @@ const TaskService = {
     try {
       // pass
     } catch (err) {
-      NotificationService.notifyError((err.response && err.response.data.error) || err.message);
+      NotificationService.notifyError(
+        (err.response && err.response.data.error) || err.message
+      );
       throw err;
     }
   },
@@ -53,9 +63,13 @@ const TaskService = {
       if (response.status === 200) {
         return response.data;
       }
-      throw new Error(`Server response: ${response.data} - ${response.statusText}`);
+      throw new Error(
+        `Server response: ${response.data} - ${response.statusText}`
+      );
     } catch (err) {
-      NotificationService.notifyError((err.response && err.response.data.error) || err.message);
+      NotificationService.notifyError(
+        (err.response && err.response.data.error) || err.message
+      );
       throw err;
     }
   },
@@ -66,9 +80,13 @@ const TaskService = {
       if (response.status === 200) {
         return response.data;
       }
-      throw new Error(`Server response: ${response.data} - ${response.statusText}`);
+      throw new Error(
+        `Server response: ${response.data} - ${response.statusText}`
+      );
     } catch (err) {
-      NotificationService.notifyError((err.response && err.response.data.error) || err.message);
+      NotificationService.notifyError(
+        (err.response && err.response.data.error) || err.message
+      );
       throw err;
     }
   },
@@ -79,9 +97,13 @@ const TaskService = {
       if (response.status === 200) {
         return response.data;
       }
-      throw new Error(`Server response: ${response.data} - ${response.statusText}`);
+      throw new Error(
+        `Server response: ${response.data} - ${response.statusText}`
+      );
     } catch (err) {
-      NotificationService.notifyError((err.response && err.response.data.error) || err.message);
+      NotificationService.notifyError(
+        (err.response && err.response.data.error) || err.message
+      );
       throw err;
     }
   },
@@ -90,15 +112,16 @@ const TaskService = {
     try {
       // pass
     } catch (err) {
-      NotificationService.notifyError((err.response && err.response.data.error) || err.message);
+      NotificationService.notifyError(
+        (err.response && err.response.data.error) || err.message
+      );
       throw err;
     }
   },
 
   createTaskObject(task) {
     const copy = { ...task };
-    const startRaw = DateTime
-      .fromISO(task.expectedStartDate).toUTC();
+    const startRaw = DateTime.fromISO(task.expectedStartDate).toUTC();
     const endRaw = startRaw.plus({ minute: task.duration });
     copy.expectedStartDate = DateTime.fromObject({
       year: startRaw.year,

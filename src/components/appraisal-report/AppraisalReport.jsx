@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Row, Col } from 'react-grid-system';
 import {
-  PrimaryButton, Separator, Dropdown, makeStyles, DatePicker,
+  PrimaryButton,
+  Separator,
+  Dropdown,
+  makeStyles,
+  DatePicker,
 } from '@fluentui/react';
 import { downloadBlob } from 'download.js';
 import PageHeader from '../shared/page-header';
@@ -39,8 +43,10 @@ const AppraisalReport = () => {
   };
 
   const handleGenerate = async () => {
-    if (dateFrom && dateTo && (dateTo < dateFrom)) {
-      return NotificationService.notifySevereWarning("'Date to' should be bigger than 'Date from'");
+    if (dateFrom && dateTo && dateTo < dateFrom) {
+      return NotificationService.notifySevereWarning(
+        "'Date to' should be bigger than 'Date from'"
+      );
     }
     // if any of the fields are set, generate the report
     if (dateFrom || dateTo || selectedPeriods.length) {
@@ -55,7 +61,9 @@ const AppraisalReport = () => {
       return null;
     }
     // otherwise, notify user
-    return NotificationService.notifySevereWarning('At least one field should be set');
+    return NotificationService.notifySevereWarning(
+      'At least one field should be set'
+    );
   };
 
   useEffect(() => {
@@ -63,11 +71,13 @@ const AppraisalReport = () => {
     async function run() {
       const result = await AppraisalService.getPeriods();
       if (result && mounted) {
-        setPeriods(result.map((r) => ({
-          key: r.id,
-          text: r.name,
-          data: r,
-        })));
+        setPeriods(
+          result.map((r) => ({
+            key: r.id,
+            text: r.name,
+            data: r,
+          }))
+        );
       }
     }
     run();

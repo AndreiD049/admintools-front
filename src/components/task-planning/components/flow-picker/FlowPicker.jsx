@@ -2,7 +2,13 @@
 import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import {
-  BasePickerListBelow, Checkbox, IconButton, Label, makeStyles, Stack, Text,
+  BasePickerListBelow,
+  Checkbox,
+  IconButton,
+  Label,
+  makeStyles,
+  Stack,
+  Text,
 } from '@fluentui/react';
 import Chip from '../../../shared/chip';
 
@@ -46,10 +52,20 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const FlowPicker = ({
-  label, options, onSelect, disabled, onRemove, selected, showDeleteIcon, showCheckboxes, ...props
+  label,
+  options,
+  onSelect,
+  disabled,
+  onRemove,
+  selected,
+  showDeleteIcon,
+  showCheckboxes,
+  ...props
 }) => {
   const classes = useStyles();
-  const selectedSet = useMemo(() => new Set(selected.map((s) => s.key)), [selected]);
+  const selectedSet = useMemo(() => new Set(selected.map((s) => s.key)), [
+    selected,
+  ]);
 
   const handleCheckboxClick = (item) => (ev) => {
     ev.preventDefault();
@@ -68,24 +84,19 @@ const FlowPicker = ({
       verticalAlign="center"
       horizontal
     >
-      {
-        showCheckboxes
-        && (
+      {showCheckboxes && (
         <span
           className={classes.suggestionCheck}
           role="button"
           tabIndex={-1}
-          onKeyDown={(evt) => (evt.key === 'Space'
-            ? renderSuggestionsItem(item)()
-            : null)}
+          onKeyDown={(evt) =>
+            evt.key === 'Space' ? renderSuggestionsItem(item)() : null
+          }
           onClick={handleCheckboxClick(item)}
         >
-          <Checkbox
-            checked={selectedSet.has(item.key)}
-          />
+          <Checkbox checked={selectedSet.has(item.key)} />
         </span>
-        )
-      }
+      )}
       <div
         className={classes.colorBox}
         style={{
@@ -94,7 +105,9 @@ const FlowPicker = ({
       />
       <Stack horizontalAlign="start">
         <Text variant="mediumPlus">{item.data.name}</Text>
-        <Text className={classes.secondaryText} variant="xSmall">{item.data.teams.map((t) => t.name).join(', ')}</Text>
+        <Text className={classes.secondaryText} variant="xSmall">
+          {item.data.teams.map((t) => t.name).join(', ')}
+        </Text>
       </Stack>
     </Stack>
   );
@@ -118,18 +131,15 @@ const FlowPicker = ({
       >
         <Text variant="medium">{details.item?.data?.name}</Text>
       </Chip>
-      {
-        showDeleteIcon
-      && (
-      <IconButton
-        className={classes.removeIcon}
-        iconProps={{
-          iconName: 'Delete',
-        }}
-        onClick={() => onRemove(details.item)}
-      />
-      )
-      }
+      {showDeleteIcon && (
+        <IconButton
+          className={classes.removeIcon}
+          iconProps={{
+            iconName: 'Delete',
+          }}
+          onClick={() => onRemove(details.item)}
+        />
+      )}
     </Stack>
   );
 
@@ -142,7 +152,7 @@ const FlowPicker = ({
 
   return (
     <div {...props}>
-      { label && (<Label>{label}</Label>) }
+      {label && <Label>{label}</Label>}
       <BasePickerListBelow
         inputProps={{
           placeholder: 'Select...',
@@ -150,8 +160,12 @@ const FlowPicker = ({
         className={classes.picker}
         disabled={disabled}
         onRenderSuggestionsItem={renderSuggestionsItem}
-        onResolveSuggestions={(filter) => options
-          .filter((o) => o.data.name.toLowerCase().indexOf(filter.toLowerCase()) !== -1)}
+        onResolveSuggestions={(filter) =>
+          options.filter(
+            (o) =>
+              o.data.name.toLowerCase().indexOf(filter.toLowerCase()) !== -1
+          )
+        }
         resolveDelay={300}
         onRenderItem={renderItem}
         selectedItems={selected}

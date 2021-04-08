@@ -19,9 +19,4 @@ const selectTheme = (theme) => {
   }
 };
 
-export {
-  lightTheme,
-  darkTheme,
-  warmTheme,
-  selectTheme,
-};
+export { lightTheme, darkTheme, warmTheme, selectTheme };

@@ -26,7 +26,8 @@ const SettingsPage = () => {
               to="/"
               failureNotification={{
                 header: 'No Access',
-                content: 'No permission to access this page. Please contact your administrator.',
+                content:
+                  'No permission to access this page. Please contact your administrator.',
               }}
             >
               <SettingsGeneral />
@@ -39,7 +40,8 @@ const SettingsPage = () => {
               to="/"
               failureNotification={{
                 header: 'No Access',
-                content: 'No permission to access this page. Please contact your administrator.',
+                content:
+                  'No permission to access this page. Please contact your administrator.',
               }}
             >
               <DocumentTitle title="Users">
@@ -54,7 +56,8 @@ const SettingsPage = () => {
               to="/"
               failureNotification={{
                 header: 'No Access',
-                content: 'No permission to access this page. Please contact your administrator.',
+                content:
+                  'No permission to access this page. Please contact your administrator.',
               }}
             >
               <DocumentTitle title="Settings - appraisal periods">
@@ -69,7 +72,8 @@ const SettingsPage = () => {
               to="/"
               failureNotification={{
                 header: 'No Access',
-                content: 'No permission to access this page. Please contact your administrator.',
+                content:
+                  'No permission to access this page. Please contact your administrator.',
               }}
             >
               <DocumentTitle title="Settings - appraisal items">
@@ -84,7 +88,8 @@ const SettingsPage = () => {
               to="/"
               failureNotification={{
                 header: 'No Access',
-                content: 'No permission to access this page. Please contact your administrator.',
+                content:
+                  'No permission to access this page. Please contact your administrator.',
               }}
             >
               <DocumentTitle title="Settings - Securities">

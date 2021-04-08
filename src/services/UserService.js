@@ -29,10 +29,13 @@ const UserService = {
       if (response.status === 200) {
         return response.data;
       }
-      throw new Error(`Server response: ${response.status} - ${response.statusText}`);
+      throw new Error(
+        `Server response: ${response.status} - ${response.statusText}`
+      );
     } catch (err) {
-      NotificationService
-        .notifyError((err.response.data && err.response.data.error) || err.message);
+      NotificationService.notifyError(
+        (err.response.data && err.response.data.error) || err.message
+      );
       throw err;
     }
   },
@@ -43,38 +46,53 @@ const UserService = {
       if (response.status === 200) {
         return response.data;
       }
-      throw new Error(`Server response: ${response.status} - ${response.statusText}`);
+      throw new Error(
+        `Server response: ${response.status} - ${response.statusText}`
+      );
     } catch (err) {
-      NotificationService
-        .notifyError((err.response.data && err.response.data.error) || err.message);
+      NotificationService.notifyError(
+        (err.response.data && err.response.data.error) || err.message
+      );
       throw err;
     }
   },
 
   async updateUser(id, user) {
     try {
-      const response = await axios.put(this.updateUsersPath(id), this.normalizeUser(user));
+      const response = await axios.put(
+        this.updateUsersPath(id),
+        this.normalizeUser(user)
+      );
       if (response.status === 200) {
         return response.data;
       }
-      throw new Error(`Server response: ${response.status} - ${response.statusText}\n`);
+      throw new Error(
+        `Server response: ${response.status} - ${response.statusText}\n`
+      );
     } catch (err) {
-      NotificationService
-        .notifyError((err.response.data && err.response.data.error) || err.message);
+      NotificationService.notifyError(
+        (err.response.data && err.response.data.error) || err.message
+      );
       throw err;
     }
   },
 
   async updateSettingsUser(id, user) {
     try {
-      const response = await axios.put(this.putSettingsUsersPath(id), this.normalizeUser(user));
+      const response = await axios.put(
+        this.putSettingsUsersPath(id),
+        this.normalizeUser(user)
+      );
       if (response.status === 200) {
         return response.data;
       }
-      throw new Error(`Server response: ${response.status} - ${response.statusText}\n`);
+      throw new Error(
+        `Server response: ${response.status} - ${response.statusText}\n`
+      );
     } catch (err) {
-      NotificationService
-        .notifyError((err.response.data && err.response.data.error) || err.message);
+      NotificationService.notifyError(
+        (err.response.data && err.response.data.error) || err.message
+      );
       throw err;
     }
   },
@@ -85,10 +103,13 @@ const UserService = {
       if (response.status === 200) {
         return response.data;
       }
-      throw new Error(`Server response: ${response.status} - ${response.statusText}`);
+      throw new Error(
+        `Server response: ${response.status} - ${response.statusText}`
+      );
     } catch (err) {
-      NotificationService
-        .notifyError((err.response.data && err.response.data.error) || err.message);
+      NotificationService.notifyError(
+        (err.response.data && err.response.data.error) || err.message
+      );
       throw err;
     }
   },
@@ -98,11 +119,11 @@ const UserService = {
       const response = await axios.get(this.getUserTeamMembersPath);
       return response.data;
     } catch (err) {
-      NotificationService
-        .notifyError((err.response.data && err.response.data.error) || err.message);
+      NotificationService.notifyError(
+        (err.response.data && err.response.data.error) || err.message
+      );
       throw err;
     }
   },
-
 };
 export default UserService;

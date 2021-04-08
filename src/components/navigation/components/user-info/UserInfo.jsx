@@ -59,96 +59,86 @@ const UserInfo = () => {
     },
   });
   const displayName = global.user
-    ? (global.user.displayName || global.user.username)
+    ? global.user.displayName || global.user.username
     : 'Unknown';
 
   const handleCalloutToggle = () => setCalloutVisible((prev) => !prev);
 
   return (
     <div className={classes.root}>
-      {
-        global.user
-          ? (
-            <FluidLink
-              ref={userLinkRef}
-              onClick={handleCalloutToggle}
-              style={{
-                textDecoration: 'none',
+      {global.user ? (
+        <FluidLink
+          ref={userLinkRef}
+          onClick={handleCalloutToggle}
+          style={{
+            textDecoration: 'none',
+          }}
+          id="persona"
+        >
+          <Stack verticalAlign="center" wrap={false} horizontal>
+            <Text className={classes.usernameText}>{global.user.username}</Text>
+            <Persona
+              size={PersonaSize.size32}
+              text={displayName}
+              hidePersonaDetails
+              className={classes.fluidLink}
+              styles={{
+                root: {
+                  marginRight: '18px',
+                },
               }}
-              id="persona"
+            />
+          </Stack>
+          {calloutVisible && (
+            <Callout
+              role="alertdialog"
+              gapSpace={0}
+              target="#persona"
+              setInitialFocus
+              isBeakVisible={false}
+              onDismiss={handleCalloutToggle}
             >
-              <Stack verticalAlign="center" wrap={false} horizontal>
-                <Text className={classes.usernameText}>{global.user.username}</Text>
-                <Persona
-                  size={PersonaSize.size32}
-                  text={displayName}
-                  hidePersonaDetails
-                  className={classes.fluidLink}
-                  styles={{
-                    root: {
-                      marginRight: '18px',
-                    },
+              <Stack className={classes.callout}>
+                <Stack horizontalAlign="space-between" horizontal>
+                  <Text variant="medium">Admin Tools</Text>
+                  <FluidLink href="/auth/logout">
+                    <Text variant="medium">Sign Out</Text>
+                  </FluidLink>
+                </Stack>
+                <Separator />
+                <Stack horizontal horizontalAlign="space-evenly" wrap>
+                  <Persona size={PersonaSize.size56} />
+                  <Text variant="mediumPlus">{global.user.username}</Text>
+                </Stack>
+                <Separator />
+                <ActionButton
+                  onClick={() => setThemeModalOpen(true)}
+                  iconProps={{
+                    iconName: 'Brush',
                   }}
-                />
-              </Stack>
-              {
-                calloutVisible && (
-                <Callout
-                  role="alertdialog"
-                  gapSpace={0}
-                  target="#persona"
-                  setInitialFocus
-                  isBeakVisible={false}
-                  onDismiss={handleCalloutToggle}
                 >
-                  <Stack className={classes.callout}>
-                    <Stack horizontalAlign="space-between" horizontal>
-                      <Text variant="medium">Admin Tools</Text>
-                      <FluidLink href="/auth/logout">
-                        <Text variant="medium">Sign Out</Text>
-                      </FluidLink>
-                    </Stack>
-                    <Separator />
-                    <Stack horizontal horizontalAlign="space-evenly" wrap>
-                      <Persona size={PersonaSize.size56} />
-                      <Text variant="mediumPlus">{global.user.username}</Text>
-                    </Stack>
-                    <Separator />
-                    <ActionButton
-                      onClick={() => setThemeModalOpen(true)}
-                      iconProps={{
-                        iconName: 'Brush',
-                      }}
-                    >
-                      Chgange Layout
-                    </ActionButton>
-                    <Separator />
-                  </Stack>
-                  <ChooseThemeModal
-                    isOpen={themeModalOpen}
-                    setOpen={setThemeModalOpen}
-                  />
-                </Callout>
-                )
-              }
+                  Chgange Layout
+                </ActionButton>
+                <Separator />
+              </Stack>
+              <ChooseThemeModal
+                isOpen={themeModalOpen}
+                setOpen={setThemeModalOpen}
+              />
+            </Callout>
+          )}
+        </FluidLink>
+      ) : (
+        <div>
+          {global.userLoaded ? (
+            <FluidLink href="/auth/login">
+              <Text className={classes.link} variant="mediumPlus">
+                Login
+              </Text>
             </FluidLink>
-          )
-          : (
-            <div>
-              {
-                global.userLoaded
-                  ? (
-                    <FluidLink href="/auth/login">
-                      <Text className={classes.link} variant="mediumPlus">
-                        Login
-                      </Text>
-                    </FluidLink>
-                  )
-                  : null
-              }
-            </div>
-          )
-      }
+          ) : null}
+        </div>
+      )}
     </div>
   );
 };

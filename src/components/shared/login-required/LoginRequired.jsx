@@ -19,13 +19,7 @@ const LoginRequired = () => {
     getUser();
   }, [global]);
 
-  return (
-    <>
-      {redirect
-        ? <Redirect to="/login" />
-        : null}
-    </>
-  );
+  return <>{redirect ? <Redirect to="/login" /> : null}</>;
 };
 
 export default LoginRequired;

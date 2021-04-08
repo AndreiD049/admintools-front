@@ -20,7 +20,8 @@ const ReportingPage = () => {
             to="/"
             failureNotification={{
               header: 'No Access',
-              content: 'No permission to access this page. Please contact your administrator.',
+              content:
+                'No permission to access this page. Please contact your administrator.',
             }}
           >
             <ReportsPage />
@@ -33,7 +34,8 @@ const ReportingPage = () => {
             to="/"
             failureNotification={{
               header: 'No Access',
-              content: 'No permission to access this page. Please contact your administrator.',
+              content:
+                'No permission to access this page. Please contact your administrator.',
             }}
           >
             <DocumentTitle title="Reporting Templates">
@@ -48,7 +50,8 @@ const ReportingPage = () => {
             to="/"
             failureNotification={{
               header: 'No Access',
-              content: 'No permission to access this page. Please contact your administrator.',
+              content:
+                'No permission to access this page. Please contact your administrator.',
             }}
           >
             <DocumentTitle title="Appraisal Report">

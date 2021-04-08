@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import { Container, Row, Col } from 'react-grid-system';
-import { DetailsListLayoutMode, SelectionMode, Separator } from '@fluentui/react';
+import {
+  DetailsListLayoutMode,
+  SelectionMode,
+  Separator,
+} from '@fluentui/react';
 import ReportsInfoProvider from './components/reports-info-provider';
 import PageHeader from '../shared/page-header/PageHeader';
 import CommandTable from '../shared/command-table/CommandTable';
@@ -50,7 +54,8 @@ const ReportsList = () => {
       iconName: 'Contact',
       minWidth: 100,
       maxWidth: 300,
-      sort: (a, b) => (a.createdUser.username < b.createdUser.username ? -1 : 1),
+      sort: (a, b) =>
+        a.createdUser.username < b.createdUser.username ? -1 : 1,
       onRender: (item) => item.createdUser.username,
     },
     {
@@ -63,25 +68,23 @@ const ReportsList = () => {
       iconName: 'DateTime',
       minWidth: 200,
       maxWidth: 300,
-      onRender: (item) => (new Date(item.createdDate).toLocaleString()),
+      onRender: (item) => new Date(item.createdDate).toLocaleString(),
     },
   ]);
 
-  const [sortedColumn] = useState(
-    {
-      key: 'name',
-      name: ' Name',
-      fieldName: 'name',
-      isSortable: true,
-      isFilterable: true,
-      isResizable: true,
-      iconName: 'FileTemplate',
-      minWidth: 100,
-      maxWidth: 300,
-      isSorted: true,
-      isSortedDescending: false,
-    },
-  );
+  const [sortedColumn] = useState({
+    key: 'name',
+    name: ' Name',
+    fieldName: 'name',
+    isSortable: true,
+    isFilterable: true,
+    isResizable: true,
+    iconName: 'FileTemplate',
+    minWidth: 100,
+    maxWidth: 300,
+    isSorted: true,
+    isSortedDescending: false,
+  });
 
   return (
     <Container fluid>
@@ -139,8 +142,10 @@ const ReportsList = () => {
         id={selectionDetails.count > 0 ? selectionDetails.items[0].id : null}
         isOpen={editPanelOpen}
         setOpen={setEditPanelOpen}
-        setReport={
-          (report) => setReports((prev) => prev.map((r) => (r.id === report.id ? report : r)))
+        setReport={(report) =>
+          setReports((prev) =>
+            prev.map((r) => (r.id === report.id ? report : r))
+          )
         }
       />
     </Container>

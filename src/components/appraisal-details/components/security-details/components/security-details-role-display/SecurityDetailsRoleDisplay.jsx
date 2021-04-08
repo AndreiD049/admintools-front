@@ -3,7 +3,11 @@ import PropTypes from 'prop-types';
 import { Col, Container, Row } from 'react-grid-system';
 import {
   Checkbox,
-  CommandBar, makeStyles, SearchBox, Stack, Text,
+  CommandBar,
+  makeStyles,
+  SearchBox,
+  Stack,
+  Text,
 } from '@fluentui/react';
 import AuthorizationService from '../../../../../../services/AuthorizationService';
 import Accordion from '../../../../../shared/accordion/Accordion';
@@ -81,7 +85,10 @@ const SecurityDetailsRoleDisplay = ({
   };
 
   const handleUpdate = async (permission) => {
-    const result = await AuthorizationService.updatePermission(permission.id, permission);
+    const result = await AuthorizationService.updatePermission(
+      permission.id,
+      permission
+    );
     return result;
   };
 
@@ -103,22 +110,31 @@ const SecurityDetailsRoleDisplay = ({
     } else if (e.target.checked) {
       // add a grant
       const grants = [...rolePermissions[role.name][code.code].grants, grant];
-      const result = await handleUpdate({ ...rolePermissions[role.name][code.code], grants });
+      const result = await handleUpdate({
+        ...rolePermissions[role.name][code.code],
+        grants,
+      });
       result && handleSetPermission(role, code, result);
     } else if (!e.target.checked) {
-      const grants = rolePermissions[role.name][code.code].grants.filter((g) => g !== grant);
+      const grants = rolePermissions[role.name][code.code].grants.filter(
+        (g) => g !== grant
+      );
       if (grants.length === 0) {
         await handleDelete(rolePermissions[role.name][code.code]);
         handleSetPermission(role, code, null);
       } else {
-        const result = await handleUpdate({ ...rolePermissions[role.name][code.code], grants });
+        const result = await handleUpdate({
+          ...rolePermissions[role.name][code.code],
+          grants,
+        });
         result && handleSetPermission(role, code, result);
       }
     }
   };
 
   const getPermissionChecked = (role, code, grant) => {
-    const permission = rolePermissions[role.name] && rolePermissions[role.name][code.code];
+    const permission =
+      rolePermissions[role.name] && rolePermissions[role.name][code.code];
     if (permission) {
       return permission.grants.indexOf(grant) !== -1;
     }
@@ -127,24 +143,26 @@ const SecurityDetailsRoleDisplay = ({
 
   const renderPermissions = () => {
     if (selectedRole) {
-      const render = codes.filter((el) => (
-        el.code.toLowerCase().indexOf(filter.toLowerCase()) !== -1));
+      const render = codes.filter(
+        (el) => el.code.toLowerCase().indexOf(filter.toLowerCase()) !== -1
+      );
       return (
         <Accordion
-          items={render.map(
-            (permission) => (
-              {
-                ...permission,
-                text: permission.code,
-                isOpen: expanded.indexOf(permission.code) !== -1,
-              }),
-          )}
+          items={render.map((permission) => ({
+            ...permission,
+            text: permission.code,
+            isOpen: expanded.indexOf(permission.code) !== -1,
+          }))}
           getKey={(code) => code.id}
           headerProps={{
             onRenderHeaderText: (item) => (
               <div>
-                <Text variant="mediumPlus" block>{item.code}</Text>
-                <Text variant="medium" className={classes.secondaryText}>{item.description}</Text>
+                <Text variant="mediumPlus" block>
+                  {item.code}
+                </Text>
+                <Text variant="medium" className={classes.secondaryText}>
+                  {item.description}
+                </Text>
               </div>
             ),
           }}
@@ -155,16 +173,14 @@ const SecurityDetailsRoleDisplay = ({
                 childrenGap: 3,
               }}
             >
-              {
-                  item.grants.map((grant) => (
-                    <Checkbox
-                      key={`${item.id}-${grant}`}
-                      label={grant}
-                      checked={getPermissionChecked(selectedRole, item, grant)}
-                      onChange={handleClick(selectedRole, item, grant)}
-                    />
-                  ))
-                }
+              {item.grants.map((grant) => (
+                <Checkbox
+                  key={`${item.id}-${grant}`}
+                  label={grant}
+                  checked={getPermissionChecked(selectedRole, item, grant)}
+                  onChange={handleClick(selectedRole, item, grant)}
+                />
+              ))}
             </Stack>
           )}
           onToggle={handleExpandSingle}
@@ -193,9 +209,15 @@ const SecurityDetailsRoleDisplay = ({
             items={[
               {
                 key: 'expandAll',
-                text: `${expanded.length === codes.length ? 'Collapse' : 'Expand'} All`,
+                text: `${
+                  expanded.length === codes.length ? 'Collapse' : 'Expand'
+                } All`,
                 iconProps: {
-                  iconName: `${expanded.length === codes.length ? 'ChevronFold10' : 'ChevronUnfold10'}`,
+                  iconName: `${
+                    expanded.length === codes.length
+                      ? 'ChevronFold10'
+                      : 'ChevronUnfold10'
+                  }`,
                 },
                 onClick: handleExpandAll,
                 buttonStyles: {
@@ -224,20 +246,22 @@ const SecurityDetailsRoleDisplay = ({
           />
         </Col>
       </Row>
-      <Row>
-        { renderPermissions() }
-      </Row>
+      <Row>{renderPermissions()}</Row>
     </Container>
   );
 };
 
 SecurityDetailsRoleDisplay.propTypes = {
-  codes: PropTypes.arrayOf(PropTypes.shape({
-    code: PropTypes.string,
-  })).isRequired,
-  roles: PropTypes.arrayOf(PropTypes.shape({
-    name: PropTypes.string,
-  })).isRequired,
+  codes: PropTypes.arrayOf(
+    PropTypes.shape({
+      code: PropTypes.string,
+    })
+  ).isRequired,
+  roles: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string,
+    })
+  ).isRequired,
   rolePermissions: PropTypes.shape({}).isRequired,
   setRolePermissions: PropTypes.func.isRequired,
   selectedRole: PropTypes.shape({

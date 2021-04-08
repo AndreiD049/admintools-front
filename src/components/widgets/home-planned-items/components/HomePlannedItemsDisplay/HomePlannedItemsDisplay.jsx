@@ -73,19 +73,31 @@ const HomePlannedItemsDisplay = ({ items, setItems }) => {
 
   const renderCell = (item) => (
     <Stack horizontalAlign="start" verticalAlign="center" horizontal>
-      <Checkbox name={item.content} checked={item.type === 'Achieved'} onChange={checkboxChangeHandler(item)} />
+      <Checkbox
+        name={item.content}
+        checked={item.type === 'Achieved'}
+        onChange={checkboxChangeHandler(item)}
+      />
       <Stack.Item grow={1}>
         <Text variant="medium">{item.content}</Text>
       </Stack.Item>
-      <CommandButton iconProps={{ iconName: 'ChromeClose' }} disabled={item.relatedItemId !== null} onClick={() => removeItem(item)} />
+      <CommandButton
+        iconProps={{ iconName: 'ChromeClose' }}
+        disabled={item.relatedItemId !== null}
+        onClick={() => removeItem(item)}
+      />
     </Stack>
   );
 
   return (
     <div className={classes.root}>
       <Stack>
-        <Text block className={classes.header} variant="mediumPlus">Planned items</Text>
-        <Text block className={classes.subHeader} variant="medium">Here you will see items planned over past periods</Text>
+        <Text block className={classes.header} variant="mediumPlus">
+          Planned items
+        </Text>
+        <Text block className={classes.subHeader} variant="medium">
+          Here you will see items planned over past periods
+        </Text>
         <Separator />
         <List items={items} onRenderCell={renderCell} />
         <Separator />

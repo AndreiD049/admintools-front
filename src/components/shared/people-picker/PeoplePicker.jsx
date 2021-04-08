@@ -2,7 +2,14 @@
 import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import {
-  BasePickerListBelow, Checkbox, Label, makeStyles, Persona, PersonaSize, Stack, Text,
+  BasePickerListBelow,
+  Checkbox,
+  Label,
+  makeStyles,
+  Persona,
+  PersonaSize,
+  Stack,
+  Text,
 } from '@fluentui/react';
 
 const useStyles = makeStyles((theme) => ({
@@ -33,10 +40,18 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const PeoplePicker = ({
-  label, options, onSelect, onRemove, selected, disabled, ...props
+  label,
+  options,
+  onSelect,
+  onRemove,
+  selected,
+  disabled,
+  ...props
 }) => {
   const classes = useStyles();
-  const selectedSet = useMemo(() => new Set(selected.map((s) => s.key)), [selected]);
+  const selectedSet = useMemo(() => new Set(selected.map((s) => s.key)), [
+    selected,
+  ]);
 
   const handleCheckboxClick = (item) => (ev) => {
     ev.preventDefault();
@@ -59,16 +74,16 @@ const PeoplePicker = ({
         className={classes.suggestionCheck}
         role="button"
         tabIndex={-1}
-        onKeyDown={(evt) => (evt.key === 'Space'
-          ? renderSuggestionsItem(item)()
-          : null)}
+        onKeyDown={(evt) =>
+          evt.key === 'Space' ? renderSuggestionsItem(item)() : null
+        }
         onClick={handleCheckboxClick(item)}
       >
-        <Checkbox
-          checked={selectedSet.has(item.key)}
-        />
+        <Checkbox checked={selectedSet.has(item.key)} />
       </span>
-      <Text className={classes.suggestionText} variant="mediumPlus">{item.data.username}</Text>
+      <Text className={classes.suggestionText} variant="mediumPlus">
+        {item.data.username}
+      </Text>
     </Stack>
   );
 
@@ -93,7 +108,7 @@ const PeoplePicker = ({
 
   return (
     <div {...props}>
-      { label && (<Label>{label}</Label>) }
+      {label && <Label>{label}</Label>}
       <BasePickerListBelow
         inputProps={{
           placeholder: 'Select...',
@@ -101,8 +116,12 @@ const PeoplePicker = ({
         disabled={disabled}
         className={classes.picker}
         onRenderSuggestionsItem={renderSuggestionsItem}
-        onResolveSuggestions={(filter) => options
-          .filter((o) => o.data.username.toLowerCase().indexOf(filter.toLowerCase()) !== -1)}
+        onResolveSuggestions={(filter) =>
+          options.filter(
+            (o) =>
+              o.data.username.toLowerCase().indexOf(filter.toLowerCase()) !== -1
+          )
+        }
         resolveDelay={300}
         onRenderItem={renderItem}
         selectedItems={selected}

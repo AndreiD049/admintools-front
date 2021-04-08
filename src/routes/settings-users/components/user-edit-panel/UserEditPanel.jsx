@@ -2,11 +2,21 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   ComboBox,
-  DefaultButton, Panel, PanelType, PrimaryButton, Stack,
+  DefaultButton,
+  Panel,
+  PanelType,
+  PrimaryButton,
+  Stack,
 } from '@fluentui/react';
 
 const UserEditPanel = ({
-  isOpen, user, setOpen, handleEdit, teams, organizations, roles,
+  isOpen,
+  user,
+  setOpen,
+  handleEdit,
+  teams,
+  organizations,
+  roles,
 }) => {
   const [selTeams, setSelTeams] = useState([]);
   const [selPrimaryTeam, setSelPrimaryTeam] = useState(null);
@@ -58,7 +68,10 @@ const UserEditPanel = ({
   }, [user]);
 
   useEffect(() => {
-    if (selPrimaryTeam?.id && !selTeams.find((t) => t.id === selPrimaryTeam?.id)) {
+    if (
+      selPrimaryTeam?.id &&
+      !selTeams.find((t) => t.id === selPrimaryTeam?.id)
+    ) {
       setSelPrimaryTeam(null);
     }
   }, [selTeams]);
@@ -73,9 +86,10 @@ const UserEditPanel = ({
       >
         <form onSubmit={handleSubmit}>
           <Stack verticalAlign="start">
-            <Stack.Item tokens={{
-              margin: '10px 0',
-            }}
+            <Stack.Item
+              tokens={{
+                margin: '10px 0',
+              }}
             >
               <ComboBox
                 label="Teams"
@@ -130,7 +144,9 @@ const UserEditPanel = ({
             </Stack.Item>
             <Stack horizontal horizontalAlign="space-evenly">
               <PrimaryButton type="submit">Update</PrimaryButton>
-              <DefaultButton onClick={() => setOpen(false)}>Cancel</DefaultButton>
+              <DefaultButton onClick={() => setOpen(false)}>
+                Cancel
+              </DefaultButton>
             </Stack>
           </Stack>
         </form>
@@ -152,18 +168,24 @@ UserEditPanel.propTypes = {
   }),
   setOpen: PropTypes.func.isRequired,
   handleEdit: PropTypes.func.isRequired,
-  teams: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.string,
-    name: PropTypes.string,
-  })),
-  organizations: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.string,
-    name: PropTypes.string,
-  })),
-  roles: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.string,
-    name: PropTypes.string,
-  })),
+  teams: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string,
+      name: PropTypes.string,
+    })
+  ),
+  organizations: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string,
+      name: PropTypes.string,
+    })
+  ),
+  roles: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string,
+      name: PropTypes.string,
+    })
+  ),
 };
 
 UserEditPanel.defaultProps = {

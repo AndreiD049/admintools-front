@@ -1,11 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
-import {
-  BasePicker,
-  Checkbox,
-  makeStyles,
-  Text,
-} from '@fluentui/react';
+import { BasePicker, Checkbox, makeStyles, Text } from '@fluentui/react';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -17,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
     '& .ms-BasePicker-text:hover': {
       borderColor: theme.palette.neutralPrimary,
     },
-    '& span[id*=\'selected-items\']': {
+    "& span[id*='selected-items']": {
       whiteSpace: 'nowrap',
       overflow: 'hidden',
       textOverflow: 'elipsis',
@@ -97,9 +92,9 @@ const Autocomplete = ({
         onItemSelected={(item) => {
           toggleSelect(item);
         }}
-        onResolveSuggestions={
-        (filter) => options.filter((option) => option.text.indexOf(filter) !== -1)
-      }
+        onResolveSuggestions={(filter) =>
+          options.filter((option) => option.text.indexOf(filter) !== -1)
+        }
         onRenderSuggestionsItem={(suggestion) => (
           <div
             style={{
@@ -124,20 +119,29 @@ const Autocomplete = ({
           calloutWidth,
         }}
       />
-      <input type="text" className={classes.hidden} required={required} value={selected.length ? 'filled' : ''} />
+      <input
+        type="text"
+        className={classes.hidden}
+        required={required}
+        value={selected.length ? 'filled' : ''}
+      />
     </>
   );
 };
 
 Autocomplete.propTypes = {
-  options: PropTypes.arrayOf(PropTypes.shape({
-    key: PropTypes.string,
-    text: PropTypes.string,
-  })).isRequired,
-  selected: PropTypes.arrayOf(PropTypes.shape({
-    key: PropTypes.string,
-    text: PropTypes.string,
-  })).isRequired,
+  options: PropTypes.arrayOf(
+    PropTypes.shape({
+      key: PropTypes.string,
+      text: PropTypes.string,
+    })
+  ).isRequired,
+  selected: PropTypes.arrayOf(
+    PropTypes.shape({
+      key: PropTypes.string,
+      text: PropTypes.string,
+    })
+  ).isRequired,
   onItemSelected: PropTypes.func.isRequired,
   label: PropTypes.string.isRequired,
   required: PropTypes.bool,

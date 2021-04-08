@@ -1,8 +1,6 @@
 import axios from 'axios';
 import NotificationService from './NotificationService';
-import {
-  and, perform, validate,
-} from './validators';
+import { and, perform, validate } from './validators';
 
 function Item(item) {
   this.id = item.id ? item.id : 0;
@@ -25,20 +23,28 @@ const AppraisalService = {
   periodFinishPath: (periodId) => `/api/periods/${periodId}/finish`,
   getItemsPath: (id) => `/api/periods/${id}`,
   getUserItemsPath: (id, userId) => `/api/periods/${id}/users/${userId}`,
-  toggleLockPeriodPath: (id, userId) => `/api/periods/${id}/users/${userId}/toggle-lock`,
+  toggleLockPeriodPath: (id, userId) =>
+    `/api/periods/${id}/users/${userId}/toggle-lock`,
   getItemPath: (periodId, itemId) => `/api/periods/${periodId}/items/${itemId}`,
   getOrphansPath: '/api/appraisal-items',
   addItemPath: '/api/appraisal-items',
   updateItemPath: (id) => `/api/appraisal-items/${id}`,
   deleteItemPath: (id) => `/api/appraisal-items/${id}`,
   addItemToPeriodPath: (periodId) => `/api/periods/${periodId}/items`,
-  addUserItemPath: (periodId, userId) => `/api/periods/${periodId}/users/${userId}/items`,
-  updateItemInPeriodPath: (periodId, itemId) => `/api/periods/${periodId}/items/${itemId}`,
-  updateUserItemPath: (periodId, userId, itemId) => `/api/periods/${periodId}/users/${userId}/items/${itemId}`,
-  deleteItemFromPeriodPath: (periodId, itemId) => `/api/periods/${periodId}/items/${itemId}`,
-  deleteUserItemPath: (periodId, userId, itemId) => `/api/periods/${periodId}/users/${userId}/items/${itemId}`,
-  updateItemTypePath: (periodId, itemId) => `/api/periods/${periodId}/items/${itemId}/change-type`,
-  updateUserItemTypePath: (periodId, userId, itemId) => `/api/periods/${periodId}/users/${userId}/items/${itemId}/change-type`,
+  addUserItemPath: (periodId, userId) =>
+    `/api/periods/${periodId}/users/${userId}/items`,
+  updateItemInPeriodPath: (periodId, itemId) =>
+    `/api/periods/${periodId}/items/${itemId}`,
+  updateUserItemPath: (periodId, userId, itemId) =>
+    `/api/periods/${periodId}/users/${userId}/items/${itemId}`,
+  deleteItemFromPeriodPath: (periodId, itemId) =>
+    `/api/periods/${periodId}/items/${itemId}`,
+  deleteUserItemPath: (periodId, userId, itemId) =>
+    `/api/periods/${periodId}/users/${userId}/items/${itemId}`,
+  updateItemTypePath: (periodId, itemId) =>
+    `/api/periods/${periodId}/items/${itemId}/change-type`,
+  updateUserItemTypePath: (periodId, userId, itemId) =>
+    `/api/periods/${periodId}/users/${userId}/items/${itemId}/change-type`,
 
   async getPeriods() {
     try {
@@ -46,9 +52,13 @@ const AppraisalService = {
       if (response.status === 200) {
         return response.data;
       }
-      throw new Error(`Server response: ${response.status} - ${response.statusText}`);
+      throw new Error(
+        `Server response: ${response.status} - ${response.statusText}`
+      );
     } catch (err) {
-      NotificationService.notifyError((err.response && err.response.data.error) || err.message);
+      NotificationService.notifyError(
+        (err.response && err.response.data.error) || err.message
+      );
       throw err;
     }
   },
@@ -59,9 +69,13 @@ const AppraisalService = {
       if (response.status === 200) {
         return response.data;
       }
-      throw new Error(`Server response: ${response.status} - ${response.statusText}`);
+      throw new Error(
+        `Server response: ${response.status} - ${response.statusText}`
+      );
     } catch (err) {
-      NotificationService.notifyError((err.response && err.response.data.error) || err.message);
+      NotificationService.notifyError(
+        (err.response && err.response.data.error) || err.message
+      );
       throw err;
     }
   },
@@ -76,9 +90,13 @@ const AppraisalService = {
       if (response.status === 200) {
         return response.data;
       }
-      throw new Error(`Server response: ${response.status} - ${response.statusText}`);
+      throw new Error(
+        `Server response: ${response.status} - ${response.statusText}`
+      );
     } catch (err) {
-      NotificationService.notifyError((err.response && err.response.data.error) || err.message);
+      NotificationService.notifyError(
+        (err.response && err.response.data.error) || err.message
+      );
       throw err;
     }
   },
@@ -89,9 +107,13 @@ const AppraisalService = {
       if (response.status === 200) {
         return response.data;
       }
-      throw new Error(`Server response: ${response.status} - ${response.statusText}`);
+      throw new Error(
+        `Server response: ${response.status} - ${response.statusText}`
+      );
     } catch (err) {
-      NotificationService.notifyError((err.response && err.response.data.error) || err.message);
+      NotificationService.notifyError(
+        (err.response && err.response.data.error) || err.message
+      );
       throw err;
     }
   },
@@ -102,9 +124,13 @@ const AppraisalService = {
       if (response.status === 200) {
         return response.data;
       }
-      throw new Error(`Server response: ${response.status} - ${response.statusText}`);
+      throw new Error(
+        `Server response: ${response.status} - ${response.statusText}`
+      );
     } catch (err) {
-      NotificationService.notifyError((err.response && err.response.data.error) || err.message);
+      NotificationService.notifyError(
+        (err.response && err.response.data.error) || err.message
+      );
       throw err;
     }
   },
@@ -116,13 +142,19 @@ const AppraisalService = {
         validate.isTruthy(item.user),
       ]);
       await perform(validations);
-      const response = await axios.post(this.addItemToPeriodPath(periodId), { ...item });
+      const response = await axios.post(this.addItemToPeriodPath(periodId), {
+        ...item,
+      });
       if (response.status === 200) {
         return response.data;
       }
-      throw new Error(`Server response: ${response.status} - ${response.statusText}`);
+      throw new Error(
+        `Server response: ${response.status} - ${response.statusText}`
+      );
     } catch (err) {
-      NotificationService.notifyError((err.response && err.response.data.error) || err.message);
+      NotificationService.notifyError(
+        (err.response && err.response.data.error) || err.message
+      );
       throw err;
     }
   },
@@ -133,9 +165,13 @@ const AppraisalService = {
       if (response.status === 200) {
         return response.data;
       }
-      throw new Error(`Server response: ${response.status} - ${response.statusText}`);
+      throw new Error(
+        `Server response: ${response.status} - ${response.statusText}`
+      );
     } catch (err) {
-      NotificationService.notifyError((err.response && err.response.data.error) || err.message);
+      NotificationService.notifyError(
+        (err.response && err.response.data.error) || err.message
+      );
       throw err;
     }
   },
@@ -147,13 +183,20 @@ const AppraisalService = {
         validate.isTruthy(item.user),
       ]);
       await perform(validations);
-      const response = await axios.post(this.addUserItemPath(periodId, userId), { ...item });
+      const response = await axios.post(
+        this.addUserItemPath(periodId, userId),
+        { ...item }
+      );
       if (response.status === 200) {
         return response.data;
       }
-      throw new Error(`Server response: ${response.status} - ${response.statusText}`);
+      throw new Error(
+        `Server response: ${response.status} - ${response.statusText}`
+      );
     } catch (err) {
-      NotificationService.notifyError((err.response && err.response.data.error) || err.message);
+      NotificationService.notifyError(
+        (err.response && err.response.data.error) || err.message
+      );
       throw err;
     }
   },
@@ -166,13 +209,20 @@ const AppraisalService = {
         validate.isTruthy(item.periodId),
       ]);
       await perform(validations);
-      const response = await axios.put(this.updateItemInPeriodPath(periodId, item.id), { ...item });
+      const response = await axios.put(
+        this.updateItemInPeriodPath(periodId, item.id),
+        { ...item }
+      );
       if (response.status === 200) {
         return response.data;
       }
-      throw new Error(`Server response: ${response.status} - ${response.statusText}`);
+      throw new Error(
+        `Server response: ${response.status} - ${response.statusText}`
+      );
     } catch (err) {
-      NotificationService.notifyError((err.response && err.response.data.error) || err.message);
+      NotificationService.notifyError(
+        (err.response && err.response.data.error) || err.message
+      );
       throw err;
     }
   },
@@ -188,9 +238,13 @@ const AppraisalService = {
       if (response.status === 200) {
         return response.data;
       }
-      throw new Error(`Server response: ${response.status} - ${response.statusText}`);
+      throw new Error(
+        `Server response: ${response.status} - ${response.statusText}`
+      );
     } catch (err) {
-      NotificationService.notifyError((err.response && err.response.data.error) || err.message);
+      NotificationService.notifyError(
+        (err.response && err.response.data.error) || err.message
+      );
       throw err;
     }
   },
@@ -203,14 +257,19 @@ const AppraisalService = {
       ]);
       await perform(validations);
       const response = await axios.put(
-        this.updateUserItemPath(periodId, userId, item.id), { ...item },
+        this.updateUserItemPath(periodId, userId, item.id),
+        { ...item }
       );
       if (response.status === 200) {
         return response.data;
       }
-      throw new Error(`Server response: ${response.status} - ${response.statusText}`);
+      throw new Error(
+        `Server response: ${response.status} - ${response.statusText}`
+      );
     } catch (err) {
-      NotificationService.notifyError((err.response && err.response.data.error) || err.message);
+      NotificationService.notifyError(
+        (err.response && err.response.data.error) || err.message
+      );
       throw err;
     }
   },
@@ -223,14 +282,19 @@ const AppraisalService = {
       ]);
       await perform(validations);
       const response = await axios.post(
-        this.updateItemTypePath(periodId, item.id), { type: item.type },
+        this.updateItemTypePath(periodId, item.id),
+        { type: item.type }
       );
       if (response.status === 200) {
         return response.data;
       }
-      throw new Error(`Server response: ${response.status} - ${response.statusText}`);
+      throw new Error(
+        `Server response: ${response.status} - ${response.statusText}`
+      );
     } catch (err) {
-      NotificationService.notifyError((err.response && err.response.data.error) || err.message);
+      NotificationService.notifyError(
+        (err.response && err.response.data.error) || err.message
+      );
       throw err;
     }
   },
@@ -243,27 +307,38 @@ const AppraisalService = {
       ]);
       await perform(validations);
       const response = await axios.post(
-        this.updateUserItemTypePath(periodId, userId, item.id), { type: item.type },
+        this.updateUserItemTypePath(periodId, userId, item.id),
+        { type: item.type }
       );
       if (response.status === 200) {
         return response.data;
       }
-      throw new Error(`Server response: ${response.status} - ${response.statusText}`);
+      throw new Error(
+        `Server response: ${response.status} - ${response.statusText}`
+      );
     } catch (err) {
-      NotificationService.notifyError((err.response && err.response.data.error) || err.message);
+      NotificationService.notifyError(
+        (err.response && err.response.data.error) || err.message
+      );
       throw err;
     }
   },
 
   async deleteItemFromPeriod(periodId, itemId) {
     try {
-      const response = await axios.delete(this.deleteItemFromPeriodPath(periodId, itemId));
+      const response = await axios.delete(
+        this.deleteItemFromPeriodPath(periodId, itemId)
+      );
       if (response.status === 204) {
         return response.data;
       }
-      throw new Error(`Server response: ${response.status} - ${response.statusText}`);
+      throw new Error(
+        `Server response: ${response.status} - ${response.statusText}`
+      );
     } catch (err) {
-      NotificationService.notifyError((err.response && err.response.data.error) || err.message);
+      NotificationService.notifyError(
+        (err.response && err.response.data.error) || err.message
+      );
       throw err;
     }
   },
@@ -274,22 +349,32 @@ const AppraisalService = {
       if (response.status === 204) {
         return response.data;
       }
-      throw new Error(`Server response: ${response.status} - ${response.statusText}`);
+      throw new Error(
+        `Server response: ${response.status} - ${response.statusText}`
+      );
     } catch (err) {
-      NotificationService.notifyError((err.response && err.response.data.error) || err.message);
+      NotificationService.notifyError(
+        (err.response && err.response.data.error) || err.message
+      );
       throw err;
     }
   },
 
   async deleteUserItem(periodId, userId, itemId) {
     try {
-      const response = await axios.delete(this.deleteUserItemPath(periodId, userId, itemId));
+      const response = await axios.delete(
+        this.deleteUserItemPath(periodId, userId, itemId)
+      );
       if (response.status === 204) {
         return response.data;
       }
-      throw new Error(`Server response: ${response.status} - ${response.statusText}`);
+      throw new Error(
+        `Server response: ${response.status} - ${response.statusText}`
+      );
     } catch (err) {
-      NotificationService.notifyError((err.response && err.response.data.error) || err.message);
+      NotificationService.notifyError(
+        (err.response && err.response.data.error) || err.message
+      );
       throw err;
     }
   },
@@ -300,9 +385,13 @@ const AppraisalService = {
       if (response.status === 200) {
         return response.data;
       }
-      throw new Error(`Server response: ${response.status} - ${response.statusText}`);
+      throw new Error(
+        `Server response: ${response.status} - ${response.statusText}`
+      );
     } catch (err) {
-      NotificationService.notifyError((err.response && err.response.data.error) || err.message);
+      NotificationService.notifyError(
+        (err.response && err.response.data.error) || err.message
+      );
       throw err;
     }
   },
@@ -313,9 +402,13 @@ const AppraisalService = {
       if (response.status === 200) {
         return response.data;
       }
-      throw new Error(`Server response: ${response.status} - ${response.statusText}`);
+      throw new Error(
+        `Server response: ${response.status} - ${response.statusText}`
+      );
     } catch (err) {
-      NotificationService.notifyError((err.response && err.response.data.error) || err.message);
+      NotificationService.notifyError(
+        (err.response && err.response.data.error) || err.message
+      );
       throw err;
     }
   },
@@ -328,9 +421,13 @@ const AppraisalService = {
       if (response.status === 200) {
         return true;
       }
-      throw new Error(`Server response: ${response.status} - ${response.statusText}`);
+      throw new Error(
+        `Server response: ${response.status} - ${response.statusText}`
+      );
     } catch (err) {
-      NotificationService.notifyError((err.response && err.response.data.error) || err.message);
+      NotificationService.notifyError(
+        (err.response && err.response.data.error) || err.message
+      );
       throw err;
     }
   },
@@ -344,13 +441,19 @@ const AppraisalService = {
   async toggleLockPeriod(periodId, userId) {
     try {
       if (!userId) throw new Error('User is unknown');
-      const response = await axios.post(this.toggleLockPeriodPath(periodId, userId));
+      const response = await axios.post(
+        this.toggleLockPeriodPath(periodId, userId)
+      );
       if (response.status === 200) {
         return response.data;
       }
-      throw new Error(`Server response: ${response.status} - ${response.statusText}`);
+      throw new Error(
+        `Server response: ${response.status} - ${response.statusText}`
+      );
     } catch (err) {
-      NotificationService.notifyError((err.response && err.response.data.error) || err.message);
+      NotificationService.notifyError(
+        (err.response && err.response.data.error) || err.message
+      );
       throw err;
     }
   },
@@ -375,11 +478,14 @@ const AppraisalService = {
     const copy = items.slice().filter((i) => i.user !== null);
     if (!user) {
       return copy;
-    } if (type === 'Feedback' && items.length > 0) {
+    }
+    if (type === 'Feedback' && items.length > 0) {
       return copy;
     }
     // array of empty indexes ex: [1, 4, 5]
-    const empty = copy.map((i, idx) => idx).filter((i) => copy[i].content === '');
+    const empty = copy
+      .map((i, idx) => idx)
+      .filter((i) => copy[i].content === '');
     if (empty.length === 0) {
       copy.push(this.blankItem(periodId, user, type));
     }

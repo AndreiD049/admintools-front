@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useContext } from 'react';
+import { Col, Container, Row } from 'react-grid-system';
 import {
-  Col, Container, Row,
-} from 'react-grid-system';
-import {
-  DetailsListLayoutMode, SelectionMode, Separator,
+  DetailsListLayoutMode,
+  SelectionMode,
+  Separator,
 } from '@fluentui/react';
 import UserService from '../../services/UserService';
 import TeamService from '../../services/TeamService';
@@ -58,7 +58,8 @@ const SettingsUsers = () => {
       isSortable: true,
       isFilterable: true,
       isResizable: true,
-      sort: (a, b) => (a.organizations[0]?.name > b.organizations[0]?.name ? -1 : 1),
+      sort: (a, b) =>
+        a.organizations[0]?.name > b.organizations[0]?.name ? -1 : 1,
       filterValueAccessor: (i) => i.organizations.map((o) => o.name).join(','),
       iconName: 'Org',
       minWidth: 50,
@@ -119,13 +120,11 @@ const SettingsUsers = () => {
    */
   useEffect(() => {
     async function run() {
-      const [users, _teams, _roles] = await Promise.all(
-        [
-          UserService.getSettingsUsers(),
-          TeamService.getTeams(),
-          AuthorizationService.getRoles(),
-        ],
-      );
+      const [users, _teams, _roles] = await Promise.all([
+        UserService.getSettingsUsers(),
+        TeamService.getTeams(),
+        AuthorizationService.getRoles(),
+      ]);
       setData(() => users);
       setTeams(() => _teams);
       setRoles(() => _roles);

@@ -1,6 +1,4 @@
-import React, {
-  useCallback, useContext, useEffect, useState,
-} from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   Checkbox,
@@ -68,7 +66,7 @@ const useStyles = makeStyles((theme) => ({
   },
   separator: {
     margin: `${theme.spacing.m} 0`,
-    '& div[role=\'separator\']': {
+    "& div[role='separator']": {
       backgroundColor: theme.palette.themePrimary,
       padding: '3px',
       borderRadius: '5px',
@@ -90,12 +88,30 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const weekDays = [null, 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+const weekDays = [
+  null,
+  'Monday',
+  'Tuesday',
+  'Wednesday',
+  'Thursday',
+  'Friday',
+  'Saturday',
+  'Sunday',
+];
 const months = [
   null,
-  'January', 'February', 'March', 'April',
-  'May', 'June', 'July', 'August',
-  'September', 'October', 'November', 'December',
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
 ];
 
 const getOrdinalSuffix = (number) => {
@@ -143,13 +159,13 @@ const RuleTypeDetails = ({ rule }) => {
           <Stack horizontalAlign="center" verticalAlign="center">
             <Label style={{ display: 'block' }}>Days: </Label>
             <Stack horizontal horizontalAlign="center">
-              {
-                rule.weeklyDays.map((day) => (
-                  <Chip className={classes.weekDay}>
-                    <Text variant="medium">{weekDays[new Date(day).getDay()]}</Text>
-                  </Chip>
-                ))
-              }
+              {rule.weeklyDays.map((day) => (
+                <Chip className={classes.weekDay}>
+                  <Text variant="medium">
+                    {weekDays[new Date(day).getDay()]}
+                  </Text>
+                </Chip>
+              ))}
             </Stack>
           </Stack>
         );
@@ -158,7 +174,9 @@ const RuleTypeDetails = ({ rule }) => {
           <Stack horizontalAlign="center" verticalAlign="center">
             <Label>Occurs on: </Label>
             <Text variant="medium">
-              {`${rule.monthlyOn}${getOrdinalSuffix(rule.monthlyOn)} ${rule.monthlyOnType} of the month`}
+              {`${rule.monthlyOn}${getOrdinalSuffix(rule.monthlyOn)} ${
+                rule.monthlyOnType
+              } of the month`}
             </Text>
             <Label>Months:</Label>
             <Stack
@@ -169,13 +187,11 @@ const RuleTypeDetails = ({ rule }) => {
                 childrenGap: 4,
               }}
             >
-              {
-                rule.monthlyMonths.map((month) => (
-                  <Chip className={classes.month}>
-                    <Text variant="medium">{months[month]}</Text>
-                  </Chip>
-                ))
-              }
+              {rule.monthlyMonths.map((month) => (
+                <Chip className={classes.month}>
+                  <Text variant="medium">{months[month]}</Text>
+                </Chip>
+              ))}
             </Stack>
           </Stack>
         );
@@ -209,9 +225,7 @@ RuleTypeDetails.propTypes = {
   }).isRequired,
 };
 
-const RuleDetails = ({
-  id, editing, setEditing, setRules,
-}) => {
+const RuleDetails = ({ id, editing, setEditing, setRules }) => {
   const classes = useStyles();
   const global = useContext(GlobalContext);
   const [rule] = useFetch(id && TaskRuleService.taskRulePath(id), null, {
@@ -219,25 +233,28 @@ const RuleDetails = ({
   });
   const panel = useContext(PanelContext);
   const [data, setData] = useState({});
-  const [users] = useFetch(UserService.baseUrl,
+  const [users] = useFetch(
+    UserService.baseUrl,
     {
       params: {
         teams: global.user.teams.map((t) => t.id),
       },
     },
     {
-      callback: (dt) => dt.map((u) => ({
-        key: u.id,
-        data: u,
-      })),
-    });
-  const [flows] = useFetch(TaskFlowService.baseUrl,
-    null, {
-      callback: (flowsData) => flowsData.map((flow) => ({
+      callback: (dt) =>
+        dt.map((u) => ({
+          key: u.id,
+          data: u,
+        })),
+    }
+  );
+  const [flows] = useFetch(TaskFlowService.baseUrl, null, {
+    callback: (flowsData) =>
+      flowsData.map((flow) => ({
         key: flow.id,
         data: flow,
       })),
-    });
+  });
 
   const handleUpdate = useCallback(async () => {
     const update = { ...data };
@@ -255,304 +272,364 @@ const RuleDetails = ({
     setEditing(false);
   }, [rule, data]);
 
-  const handleDataChange = (field, func = (args) => args[0].target.value) => (...args) => {
+  const handleDataChange = (field, func = (args) => args[0].target.value) => (
+    ...args
+  ) => {
     setData((prev) => ({
       ...prev,
       [field]: func(args),
     }));
   };
 
-  const renderFooter = useCallback(() => (
-    <>
-      {
-        editing
-          ? (<PrimaryButton onClick={handleUpdate}>Save</PrimaryButton>)
-          : (<PrimaryButton onClick={() => setEditing(true)}>Edit</PrimaryButton>)
-      }
-      <DefaultButton
-        style={{ marginLeft: '8px' }}
-        onClick={() => {
-          setEditing(false);
-          panel.setOpen(false);
-        }}
-      >
-        Close
-      </DefaultButton>
-    </>
-  ), [panel, editing, handleUpdate]);
+  const renderFooter = useCallback(
+    () => (
+      <>
+        {editing ? (
+          <PrimaryButton onClick={handleUpdate}>Save</PrimaryButton>
+        ) : (
+          <PrimaryButton onClick={() => setEditing(true)}>Edit</PrimaryButton>
+        )}
+        <DefaultButton
+          style={{ marginLeft: '8px' }}
+          onClick={() => {
+            setEditing(false);
+            panel.setOpen(false);
+          }}
+        >
+          Close
+        </DefaultButton>
+      </>
+    ),
+    [panel, editing, handleUpdate]
+  );
 
   /**
    * In case it's opened in a panel
    */
   useEffect(() => {
     if (panel.isPanel) {
-      panel.setOnRenderFooter(() => (renderFooter));
+      panel.setOnRenderFooter(() => renderFooter);
     }
   }, [panel, renderFooter]);
 
-  return rule && (
-    <Stack className={classes.root} verticalAlign="start">
-      <Separator className={classes.separator}>General</Separator>
-      <TextField
-        borderless={!editing}
-        label="Title"
-        readOnly={!editing}
-        value={data.title ?? rule.title}
-        onChange={handleDataChange('title')}
-      />
-      <TextField
-        autoAdjustHeight
-        borderless={!editing}
-        className={classes.description}
-        label="Description"
-        multiline
-        readOnly={!editing}
-        resizable={false}
-        value={data.description ?? rule.description ?? '-'}
-        onChange={handleDataChange('description')}
-      />
-      <MaskedTextField
-        label="Start time"
-        disabled={!editing}
-        mask="99:99"
-        maskChar="0"
-        value={DateUtils.getTimeText(data.taskStartTime ?? new Date(rule.taskStartTime))}
-        onChange={
-          editing
-            ? handleDataChange('taskStartTime', (args) => new Date(DateUtils.getValidTimeStringUTC(args[1])))
-            : null
-        }
-      />
-      <MaskedTextField
-        label="End time"
-        disabled={!editing}
-        mask="99:99"
-        maskChar="0"
-        value={DateUtils.getEndTimeTextUTC(
-          data.taskStartTime ?? new Date(rule.taskStartTime),
-          (data.taskDuration ?? rule.taskDuration),
+  return (
+    rule && (
+      <Stack className={classes.root} verticalAlign="start">
+        <Separator className={classes.separator}>General</Separator>
+        <TextField
+          borderless={!editing}
+          label="Title"
+          readOnly={!editing}
+          value={data.title ?? rule.title}
+          onChange={handleDataChange('title')}
+        />
+        <TextField
+          autoAdjustHeight
+          borderless={!editing}
+          className={classes.description}
+          label="Description"
+          multiline
+          readOnly={!editing}
+          resizable={false}
+          value={data.description ?? rule.description ?? '-'}
+          onChange={handleDataChange('description')}
+        />
+        <MaskedTextField
+          label="Start time"
+          disabled={!editing}
+          mask="99:99"
+          maskChar="0"
+          value={DateUtils.getTimeText(
+            data.taskStartTime ?? new Date(rule.taskStartTime)
+          )}
+          onChange={
+            editing
+              ? handleDataChange(
+                  'taskStartTime',
+                  (args) => new Date(DateUtils.getValidTimeStringUTC(args[1]))
+                )
+              : null
+          }
+        />
+        <MaskedTextField
+          label="End time"
+          disabled={!editing}
+          mask="99:99"
+          maskChar="0"
+          value={DateUtils.getEndTimeTextUTC(
+            data.taskStartTime ?? new Date(rule.taskStartTime),
+            data.taskDuration ?? rule.taskDuration
+          )}
+          onChange={
+            editing
+              ? handleDataChange('taskDuration', (args) => {
+                  const validTime = DateUtils.getValidTimeStringUTC(args[1]);
+                  // Check if end time is after start time
+                  const startDT = DateTime.fromJSDate(
+                    data.taskStartTime ?? new Date(rule.taskStartTime)
+                  );
+                  const endDT = DateTime.fromISO(validTime);
+                  if (endDT < startDT) return 0;
+                  return endDT.diff(startDT, 'minute').values.minutes;
+                })
+              : null
+          }
+        />
+        {editing ? (
+          <SpinButton
+            label="Duration"
+            labelPosition={Position.top}
+            value={data.taskDuration ?? rule.taskDuration}
+            onChange={handleDataChange('taskDuration', (args) =>
+              Number.isNaN(+args[0].target.value) ? 0 : +args[0].target.value
+            )}
+            onIncrement={(val) =>
+              setData((prev) => ({
+                ...prev,
+                taskDuration: +val + 10,
+              }))
+            }
+            onDecrement={(val) => {
+              if (val > 10)
+                setData((prev) => ({
+                  ...prev,
+                  taskDuration: +val - 10,
+                }));
+            }}
+            type="number"
+            min={0}
+            max={1440}
+            step={10}
+          />
+        ) : (
+          <TextField
+            label="Duration"
+            disabled={!editing}
+            value={data.taskDuration ?? rule.taskDuration}
+            onChange={handleDataChange('taskDuration')}
+            min="1"
+            max="1440"
+            type="number"
+          />
         )}
-        onChange={
-          editing
-            ? handleDataChange('taskDuration', (args) => {
-              const validTime = DateUtils.getValidTimeStringUTC(args[1]);
-              // Check if end time is after start time
-              const startDT = DateTime.fromJSDate(
-                data.taskStartTime ?? new Date(rule.taskStartTime),
-              );
-              const endDT = DateTime.fromISO(validTime);
-              if (endDT < startDT) return 0;
-              return endDT.diff(startDT, 'minute').values.minutes;
-            })
-            : null
-        }
-      />
-      {
-        editing
-          ? (
-            <SpinButton
-              label="Duration"
-              labelPosition={Position.top}
-              value={data.taskDuration ?? rule.taskDuration}
-              onChange={handleDataChange('taskDuration', (args) => (Number.isNaN(+args[0].target.value) ? 0 : +args[0].target.value))}
-              onIncrement={(val) => setData((prev) => ({ ...prev, taskDuration: (+val + 10) }))}
-              onDecrement={(val) => {
-                if (val > 10) setData((prev) => ({ ...prev, taskDuration: (+val - 10) }));
-              }}
-              type="number"
-              min={0}
-              max={1440}
-              step={10}
-            />
-          )
-          : (
-            <TextField
-              label="Duration"
-              disabled={!editing}
-              value={data.taskDuration ?? rule.taskDuration}
-              onChange={handleDataChange('taskDuration')}
-              min="1"
-              max="1440"
-              type="number"
-            />
-          )
-      }
-      <DatePicker
-        borderless={!editing}
-        value={data.validFrom ?? new Date(rule.validFrom)}
-        disabled={!editing}
-        label="Valid from"
-        onSelectDate={handleDataChange('validFrom', (args) => DateUtils.makeUTC(args[0]))}
-      />
-      <DatePicker
-        borderless={!editing}
-        value={data.validTo ?? (rule.validTo && new Date(rule.validTo))}
-        disabled={!editing}
-        onSelectDate={handleDataChange('validTo', (args) => DateUtils.makeUTC(args[0]))}
-        label="Valid to"
-        allowTextInput
-      />
-      <RuleTypeDetails rule={rule} />
-      <Separator className={classes.separator}>Assigned</Separator>
-      <Stack horizontal horizontalAlign="stretch" verticalAlign="stretch">
-        <StackItem className={classes.userColumn} grow={1}>
-          <Stack horizontalAlign="center">
-            <Label>Users</Label>
-            {
-              editing
-                ? (
-                  <TooltipHost
-                    styles={{
-                      root: {
-                        width: '90%',
-                      },
-                    }}
-                    content={
-                      (data.flows ? data.flows?.length > 0 : rule.flows?.length > 0)
-                        ? 'Rule can be assigned to users or flows, but not both'
-                        : ''
-                      }
-                  >
-                    <PeoplePicker
-                      options={users}
-                      disabled={data.flows ? data.flows?.length > 0 : rule.flows?.length > 0}
-                      onSelect={(item) => setData((prev) => {
+        <DatePicker
+          borderless={!editing}
+          value={data.validFrom ?? new Date(rule.validFrom)}
+          disabled={!editing}
+          label="Valid from"
+          onSelectDate={handleDataChange('validFrom', (args) =>
+            DateUtils.makeUTC(args[0])
+          )}
+        />
+        <DatePicker
+          borderless={!editing}
+          value={data.validTo ?? (rule.validTo && new Date(rule.validTo))}
+          disabled={!editing}
+          onSelectDate={handleDataChange('validTo', (args) =>
+            DateUtils.makeUTC(args[0])
+          )}
+          label="Valid to"
+          allowTextInput
+        />
+        <RuleTypeDetails rule={rule} />
+        <Separator className={classes.separator}>Assigned</Separator>
+        <Stack horizontal horizontalAlign="stretch" verticalAlign="stretch">
+          <StackItem className={classes.userColumn} grow={1}>
+            <Stack horizontalAlign="center">
+              <Label>Users</Label>
+              {editing ? (
+                <TooltipHost
+                  styles={{
+                    root: {
+                      width: '90%',
+                    },
+                  }}
+                  content={
+                    (
+                      data.flows
+                        ? data.flows?.length > 0
+                        : rule.flows?.length > 0
+                    )
+                      ? 'Rule can be assigned to users or flows, but not both'
+                      : ''
+                  }
+                >
+                  <PeoplePicker
+                    options={users}
+                    disabled={
+                      data.flows
+                        ? data.flows?.length > 0
+                        : rule.flows?.length > 0
+                    }
+                    onSelect={(item) =>
+                      setData((prev) => {
                         if (prev.users) {
-                          return ({
+                          return {
                             ...prev,
                             users: prev.users.concat(item.data),
-                          });
+                          };
                         }
-                        return ({
+                        return {
                           ...prev,
                           users: rule.users.concat(item.data),
-                        });
-                      })}
-                      onRemove={(item) => setData((prev) => {
-                        if (prev.users) {
-                          return ({
-                            ...prev,
-                            users: prev.users.filter((u) => u.id !== item.data.id),
-                          });
-                        }
-                        return ({
-                          ...prev,
-                          users: rule.users.filter((u) => u.id !== item.data.id),
-                        });
-                      })}
-                      selected={
-                      data.users
-                        ? data.users.map((u) => ({ key: u.id, data: u }))
-                        : rule.users.map((u) => ({ key: u.id, data: u }))
+                        };
+                      })
                     }
-                    />
-                  </TooltipHost>
-                )
-                : (
-                  rule.users?.map((user) => (
-                    <StackItem align="start" key={user.id}>
-                      <Persona text={user.username} size={PersonaSize.size24} />
-                    </StackItem>
-                  ))
-                )
-            }
-          </Stack>
-        </StackItem>
-        <Separator vertical />
-        <StackItem className={classes.userColumn} grow={1}>
-          <Stack horizontalAlign="center">
-            <Label>Flows</Label>
-            {
-              editing
-                ? (
-                  <TooltipHost
-                    styles={{
-                      root: {
-                        width: '90%',
-                      },
-                    }}
-                    content={
-                      (data.users ? data.users?.length > 0 : rule.users?.length > 0)
-                        ? 'Rule can be assigned to users or flows, but not both'
-                        : ''
-                      }
-                  >
-                    <FlowPicker
-                      style={{ width: '90%' }}
-                      options={flows}
-                      disabled={data.users ? data.users?.length > 0 : rule.users?.length > 0}
-                      showCheckboxes
-                      showDeleteIcon={false}
-                      onSelect={(item) => setData((prev) => {
+                    onRemove={(item) =>
+                      setData((prev) => {
+                        if (prev.users) {
+                          return {
+                            ...prev,
+                            users: prev.users.filter(
+                              (u) => u.id !== item.data.id
+                            ),
+                          };
+                        }
+                        return {
+                          ...prev,
+                          users: rule.users.filter(
+                            (u) => u.id !== item.data.id
+                          ),
+                        };
+                      })
+                    }
+                    selected={
+                      data.users
+                        ? data.users.map((u) => ({
+                            key: u.id,
+                            data: u,
+                          }))
+                        : rule.users.map((u) => ({
+                            key: u.id,
+                            data: u,
+                          }))
+                    }
+                  />
+                </TooltipHost>
+              ) : (
+                rule.users?.map((user) => (
+                  <StackItem align="start" key={user.id}>
+                    <Persona text={user.username} size={PersonaSize.size24} />
+                  </StackItem>
+                ))
+              )}
+            </Stack>
+          </StackItem>
+          <Separator vertical />
+          <StackItem className={classes.userColumn} grow={1}>
+            <Stack horizontalAlign="center">
+              <Label>Flows</Label>
+              {editing ? (
+                <TooltipHost
+                  styles={{
+                    root: {
+                      width: '90%',
+                    },
+                  }}
+                  content={
+                    (
+                      data.users
+                        ? data.users?.length > 0
+                        : rule.users?.length > 0
+                    )
+                      ? 'Rule can be assigned to users or flows, but not both'
+                      : ''
+                  }
+                >
+                  <FlowPicker
+                    style={{ width: '90%' }}
+                    options={flows}
+                    disabled={
+                      data.users
+                        ? data.users?.length > 0
+                        : rule.users?.length > 0
+                    }
+                    showCheckboxes
+                    showDeleteIcon={false}
+                    onSelect={(item) =>
+                      setData((prev) => {
                         if (prev.flows) {
-                          return ({
+                          return {
                             ...prev,
                             flows: prev.flows.concat(item.data),
-                          });
+                          };
                         }
-                        return ({
+                        return {
                           ...prev,
                           flows: rule.flows.concat(item.data),
-                        });
-                      })}
-                      onRemove={(item) => setData((prev) => {
-                        if (prev.flows) {
-                          return ({
-                            ...prev,
-                            flows: prev.flows.filter((u) => u.id !== item.data.id),
-                          });
-                        }
-                        return ({
-                          ...prev,
-                          flows: rule.flows.filter((u) => u.id !== item.data.id),
-                        });
-                      })}
-                      selected={
-                      data.flows
-                        ? data.flows.map((u) => ({ key: u.id, data: u }))
-                        : rule.flows.map((u) => ({ key: u.id, data: u }))
+                        };
+                      })
                     }
-                    />
-                  </TooltipHost>
-                )
-                : (
-                  rule.flows.map((f) => (
-                    <Chip
-                      style={{
-                        backgroundColor: f.color ?? 'transparent',
-                        padding: 3,
-                        whiteSpace: 'pre-wrap',
-                        width: '50%',
-                        marginLeft: 32,
-                        marginTop: 4,
-                      }}
-                    >
-                      <Text variant="medium">{f.name}</Text>
-                    </Chip>
-                  ))
-                )
-            }
-          </Stack>
-        </StackItem>
+                    onRemove={(item) =>
+                      setData((prev) => {
+                        if (prev.flows) {
+                          return {
+                            ...prev,
+                            flows: prev.flows.filter(
+                              (u) => u.id !== item.data.id
+                            ),
+                          };
+                        }
+                        return {
+                          ...prev,
+                          flows: rule.flows.filter(
+                            (u) => u.id !== item.data.id
+                          ),
+                        };
+                      })
+                    }
+                    selected={
+                      data.flows
+                        ? data.flows.map((u) => ({
+                            key: u.id,
+                            data: u,
+                          }))
+                        : rule.flows.map((u) => ({
+                            key: u.id,
+                            data: u,
+                          }))
+                    }
+                  />
+                </TooltipHost>
+              ) : (
+                rule.flows.map((f) => (
+                  <Chip
+                    style={{
+                      backgroundColor: f.color ?? 'transparent',
+                      padding: 3,
+                      whiteSpace: 'pre-wrap',
+                      width: '50%',
+                      marginLeft: 32,
+                      marginTop: 4,
+                    }}
+                  >
+                    <Text variant="medium">{f.name}</Text>
+                  </Chip>
+                ))
+              )}
+            </Stack>
+          </StackItem>
+        </Stack>
+        <Separator className={classes.separator}>Flags</Separator>
+        <Checkbox
+          checked={data.isBackgroundTask ?? rule.isBackgroundTask}
+          label="Background"
+          disabled={!editing}
+          onChange={handleDataChange(
+            'isBackgroundTask',
+            (args) => args[0].target.checked
+          )}
+        />
+        <Checkbox checked={rule.isSharedTask} label="Shared" disabled />
+        <Separator className={classes.separator}>Created</Separator>
+        <Stack horizontalAlign="center">
+          <Text variant="medium">{rule.createdUser?.username}</Text>
+          <Text variant="medium">
+            {new Date(rule.createdDate).toLocaleString()}
+          </Text>
+        </Stack>
       </Stack>
-      <Separator className={classes.separator}>Flags</Separator>
-      <Checkbox
-        checked={data.isBackgroundTask ?? rule.isBackgroundTask}
-        label="Background"
-        disabled={!editing}
-        onChange={handleDataChange('isBackgroundTask', (args) => args[0].target.checked)}
-      />
-      <Checkbox
-        checked={rule.isSharedTask}
-        label="Shared"
-        disabled
-      />
-      <Separator className={classes.separator}>Created</Separator>
-      <Stack horizontalAlign="center">
-        <Text variant="medium">{rule.createdUser?.username}</Text>
-        <Text variant="medium">{new Date(rule.createdDate).toLocaleString()}</Text>
-      </Stack>
-    </Stack>
+    )
   );
 };
 

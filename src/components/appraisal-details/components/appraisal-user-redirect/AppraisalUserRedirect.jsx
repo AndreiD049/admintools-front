@@ -8,10 +8,13 @@ const AppraisalUserRedirect = ({ defaultValue }) => {
   const history = useHistory();
   const [selectedUser, setSelectedUser] = useState(defaultValue || null);
 
-  const handleSelect = useCallback((user) => {
-    if (user) return history.push(`/appraisals/${id}/user/${user.id}`);
-    return setSelectedUser(user);
-  }, [history, id]);
+  const handleSelect = useCallback(
+    (user) => {
+      if (user) return history.push(`/appraisals/${id}/user/${user.id}`);
+      return setSelectedUser(user);
+    },
+    [history, id]
+  );
 
   return (
     <>

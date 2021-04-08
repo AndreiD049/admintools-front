@@ -6,7 +6,9 @@ import '../../../node_modules/flexlayout-react/style/dark.css';
 import PageHeader from '../../components/shared/page-header';
 import LoginRequired from '../../components/shared/login-required';
 
-const HomePlannedItems = React.lazy(() => import('../../components/widgets/home-planned-items'));
+const HomePlannedItems = React.lazy(() =>
+  import('../../components/widgets/home-planned-items')
+);
 
 const useStyles = makeStyles((theme) => ({
   panel: {
@@ -418,7 +420,7 @@ const HomePage = () => {
     }
     if (component === 'home') {
       return (
-        <Suspense fallback={(<div>Loading...</div>)}>
+        <Suspense fallback={<div>Loading...</div>}>
           <HomePlannedItems />
         </Suspense>
       );
@@ -438,7 +440,8 @@ const HomePage = () => {
       flexlayout__tabset_header: classes.layoutTabsetHeader,
       flexlayout__tabset_tabbar_outer: classes.layoutTabsetTabbarOuter,
       flexlayout__tabset_tabbar_outer_top: classes.layoutTabsetTabbarOuterTop,
-      flexlayout__tabset_tabbar_outer_bottom: classes.layoutTabsetTabbarOuterBottom,
+      flexlayout__tabset_tabbar_outer_bottom:
+        classes.layoutTabsetTabbarOuterBottom,
       'flexlayout__tabset-selected': classes.layoutTabsetSelected,
       'flexlayout__tabset-maximized': classes.layoutTabsetMaximized,
       'flexlayout__tab_button--selected': classes.layoutTabButtonSelected,
@@ -455,11 +458,14 @@ const HomePage = () => {
       'flexlayout__border_button--selected': classes.layoutBorderButtonSelected,
       flexlayout__border_button: classes.layoutBorderButton,
       flexlayout__border_button_trailing: classes.layoutBorderButtonTrailing,
-      'flexlayout__border_toolbar_button-float': classes.layoutBorderToolbarButtonFloat,
-      flexlayout__border_toolbar_button_overflow: classes.layoutBorderToolbarButtonOverflow,
+      'flexlayout__border_toolbar_button-float':
+        classes.layoutBorderToolbarButtonFloat,
+      flexlayout__border_toolbar_button_overflow:
+        classes.layoutBorderToolbarButtonOverflow,
       'flexlayout__tab_toolbar_button-min': classes.layoutTabToolbarButtonMin,
       'flexlayout__tab_toolbar_button-max': classes.layoutTabToolbarButtonMax,
-      'flexlayout__tab_toolbar_button-float': classes.layoutTabToolbarButtonFloat,
+      'flexlayout__tab_toolbar_button-float':
+        classes.layoutTabToolbarButtonFloat,
       flexlayout__tab_button_overflow: classes.layoutTabButtonOverflow,
       flexlayout__border_button_content: classes.layoutBorderButtonContent,
       flexlayout__popup_menu: classes.layoutPopUpMenu,
@@ -486,7 +492,11 @@ const HomePage = () => {
           width: '100%',
         }}
       >
-        <FlexLayout.Layout classNameMapper={classNameMapper} model={model} factory={factory} />
+        <FlexLayout.Layout
+          classNameMapper={classNameMapper}
+          model={model}
+          factory={factory}
+        />
       </Container>
     </>
   );

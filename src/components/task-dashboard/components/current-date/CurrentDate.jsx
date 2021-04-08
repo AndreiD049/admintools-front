@@ -7,24 +7,40 @@ const CurrentDate = ({ currentDate, setCurrentDate }) => (
   <>
     <Stack horizontal verticalAlign="center" horizontalAlign="center">
       <ActionButton
-        onClick={() => setCurrentDate((prev) => {
-          const from = DateTime.fromJSDate(prev).startOf('day');
-          return from.minus({ day: 1 }).toJSDate();
-        })}
+        onClick={() =>
+          setCurrentDate((prev) => ({
+            ...prev,
+            from: prev.from.minus({ day: 1 }),
+          }))
+        }
         iconProps={{
           iconName: 'Previous',
         }}
       />
       <DatePicker
-        value={currentDate}
-        onSelectDate={(date) => setCurrentDate(date)}
+        value={currentDate.toJSDate()}
+        onSelectDate={(date) =>
+          setCurrentDate((prev) => {
+            const dt = DateTime.fromJSDate(date);
+            return {
+              ...prev,
+              from: prev.from.set({
+                year: dt.year,
+                month: dt.month,
+                day: dt.day,
+              }),
+            };
+          })
+        }
         firstDayOfWeek={1}
       />
       <ActionButton
-        onClick={() => setCurrentDate((prev) => {
-          const from = DateTime.fromJSDate(prev).startOf('day');
-          return from.plus({ day: 1 }).toJSDate();
-        })}
+        onClick={() =>
+          setCurrentDate((prev) => ({
+            ...prev,
+            from: prev.from.plus({ day: 1 }),
+          }))
+        }
         iconProps={{
           iconName: 'Next',
         }}
@@ -34,7 +50,7 @@ const CurrentDate = ({ currentDate, setCurrentDate }) => (
 );
 
 CurrentDate.propTypes = {
-  currentDate: PropTypes.instanceOf(Date).isRequired,
+  currentDate: PropTypes.instanceOf(DateTime).isRequired,
   setCurrentDate: PropTypes.func.isRequired,
 };
 

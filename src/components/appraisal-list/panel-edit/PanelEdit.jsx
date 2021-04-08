@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
-  DefaultButton, Panel, PanelType, PrimaryButton, Stack, TextField,
+  DefaultButton,
+  Panel,
+  PanelType,
+  PrimaryButton,
+  Stack,
+  TextField,
 } from '@fluentui/react';
 
-const PanelEdit = ({
-  item, isOpen, setOpen, handleEdit,
-}) => {
+const PanelEdit = ({ item, isOpen, setOpen, handleEdit }) => {
   const [val, setVal] = useState(item ? item.name : '');
 
   const handleSubmit = (e) => {
@@ -30,9 +33,10 @@ const PanelEdit = ({
     >
       <form onSubmit={handleSubmit}>
         <Stack verticalAlign="start">
-          <Stack.Item tokens={{
-            margin: '10px 0',
-          }}
+          <Stack.Item
+            tokens={{
+              margin: '10px 0',
+            }}
           >
             <TextField
               label="Name"

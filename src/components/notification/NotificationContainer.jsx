@@ -23,14 +23,19 @@ const NotificationContainer = ({ timeout = 5000 }) => {
   useEffect(() => {
     const listener = (item) => {
       const idx = uuid();
-      setItems((prev) => [...prev, {
-        ...item,
-        onRender: item.onRender.bind({}, onDismiss(idx)),
-        id: idx,
-        timer: setTimeout(
-          () => setItems((prevState) => prevState.filter((i) => i.id !== idx)), timeout,
-        ),
-      }]);
+      setItems((prev) => [
+        ...prev,
+        {
+          ...item,
+          onRender: item.onRender.bind({}, onDismiss(idx)),
+          id: idx,
+          timer: setTimeout(
+            () =>
+              setItems((prevState) => prevState.filter((i) => i.id !== idx)),
+            timeout
+          ),
+        },
+      ]);
     };
 
     Emitter.on('notification-add', listener);
@@ -43,14 +48,8 @@ const NotificationContainer = ({ timeout = 5000 }) => {
     <div className="container">
       <TransitionGroup>
         {items.map((item) => (
-          <CSSTransition
-            key={item.id}
-            timeout={400}
-            classNames="notification"
-          >
-            <div className="item-wrapper">
-              {item.onRender()}
-            </div>
+          <CSSTransition key={item.id} timeout={400} classNames="notification">
+            <div className="item-wrapper">{item.onRender()}</div>
           </CSSTransition>
         ))}
       </TransitionGroup>

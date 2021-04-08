@@ -1,7 +1,15 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
-  DefaultButton, makeStyles, Panel, PanelType, PrimaryButton, Separator, Stack, Text, TextField,
+  DefaultButton,
+  makeStyles,
+  Panel,
+  PanelType,
+  PrimaryButton,
+  Separator,
+  Stack,
+  Text,
+  TextField,
 } from '@fluentui/react';
 import { Col, Container, Row } from 'react-grid-system';
 import { downloadBlob } from 'download.js';
@@ -83,7 +91,9 @@ const CreateTemplatePanel = ({ isOpen, setOpen }) => {
         childrenGap: 10,
       }}
     >
-      <PrimaryButton type="submit" form="new-template-form">Create</PrimaryButton>
+      <PrimaryButton type="submit" form="new-template-form">
+        Create
+      </PrimaryButton>
       <DefaultButton onClick={handleSample}>Sample</DefaultButton>
       <DefaultButton onClick={handleGenerate}>Generate</DefaultButton>
       <DefaultButton onClick={() => setOpen(false)}>Cancel</DefaultButton>
@@ -99,18 +109,19 @@ const CreateTemplatePanel = ({ isOpen, setOpen }) => {
       onRenderFooterContent={onRenderFooter}
     >
       <form id="new-template-form" onSubmit={handleSubmit}>
-        <Container
-          fluid
-          className={classes.root}
-        >
+        <Container fluid className={classes.root}>
           <Separator>Aggregation</Separator>
           <Row justify="center">
             <Text variant="mediumPlus">
-              Create a valid MongoDB aggregation.
-              Test and verify if it returns valid info below.
-              For more info, refer to MongoDB
-              {' '}
-              <a href="https://docs.mongodb.com/manual/aggregation/" target="_blank" rel="noopener noreferrer">documentation</a>
+              Create a valid MongoDB aggregation. Test and verify if it returns
+              valid info below. For more info, refer to MongoDB{' '}
+              <a
+                href="https://docs.mongodb.com/manual/aggregation/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                documentation
+              </a>
               .
             </Text>
           </Row>
@@ -153,17 +164,18 @@ const CreateTemplatePanel = ({ isOpen, setOpen }) => {
               },
             ]}
             onRenderItem={(item) => item.render()}
-            onToggle={(evt, item, open) => setOpenAccordion((prev) => ({
-              ...prev,
-              [item.key]: open,
-            }))}
+            onToggle={(evt, item, open) =>
+              setOpenAccordion((prev) => ({
+                ...prev,
+                [item.key]: open,
+              }))
+            }
           />
           <Separator>Template</Separator>
           <Row justify="center">
             <Text variant="mediumPlus">
-              Specify your template name, then attach your template file.
-              { ' ' }
-              (Ex: All user info, or Items per user).
+              Specify your template name, then attach your template file. (Ex:
+              All user info, or Items per user).
             </Text>
           </Row>
           <Row>

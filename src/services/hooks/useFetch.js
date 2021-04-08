@@ -9,13 +9,17 @@ const optionsDefault = {
   skipFirst: false,
 };
 
-const useFetch = (url, params = null, optionsUser = {
-  initialData: [],
-  dependencies: [],
-  callback: null,
-  resetDataOnChange: true,
-  skipFirst: false,
-}) => {
+const useFetch = (
+  url,
+  params = null,
+  optionsUser = {
+    initialData: [],
+    dependencies: [],
+    callback: null,
+    resetDataOnChange: true,
+    skipFirst: false,
+  }
+) => {
   const options = {
     ...optionsDefault,
     ...optionsUser,

@@ -20,14 +20,16 @@ const ConnectionService = {
       if (response.status === 200) {
         return response.data;
       }
-      throw new Error(`Server response: ${response.status} - ${response.statusText}`);
+      throw new Error(
+        `Server response: ${response.status} - ${response.statusText}`
+      );
     } catch (err) {
-      NotificationService
-        .notifyError((err.response.data && err.response.data.error) || err.message);
+      NotificationService.notifyError(
+        (err.response.data && err.response.data.error) || err.message
+      );
       throw err;
     }
   },
-
 };
 
 export default ConnectionService;

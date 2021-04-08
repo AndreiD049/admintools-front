@@ -36,20 +36,20 @@ const useStyles = makeStyles((theme) => ({
 
 const AddRule = ({ setRules, setOpen }) => {
   const classes = useStyles();
-  const [users] = useFetch(UserService.teamUsersPath,
-    null, {
-      callback: (dt) => dt.map((user) => ({
+  const [users] = useFetch(UserService.teamUsersPath, null, {
+    callback: (dt) =>
+      dt.map((user) => ({
         key: user.id,
         data: user,
       })),
-    });
-  const [flows] = useFetch(TaskFlowService.baseUrl,
-    null, {
-      callback: (dt) => dt.map((flow) => ({
+  });
+  const [flows] = useFetch(TaskFlowService.baseUrl, null, {
+    callback: (dt) =>
+      dt.map((flow) => ({
         key: flow.id,
         data: flow,
       })),
-    });
+  });
   const [data, setData] = useState({
     title: '',
     description: '',
@@ -57,17 +57,21 @@ const AddRule = ({ setRules, setOpen }) => {
     dailyType: tasks.DayTypes.Workday,
     isBackgroundTask: false,
     isSharedTask: false,
-    taskStartTime: DateUtils.getNearestTimeUTC(DateUtils.transform2UTCDate(new Date())).toJSDate(),
+    taskStartTime: DateUtils.getNearestTimeUTC(
+      DateUtils.transform2UTCDate(new Date())
+    ).toJSDate(),
     validFrom: new Date(),
     taskDuration: 60,
     users: [],
     flows: [],
     zone: DateTime.local().zoneName,
   });
-  const typeOptions = useRef(Object.keys(tasks.types).map((t) => ({
-    key: t,
-    text: t,
-  })));
+  const typeOptions = useRef(
+    Object.keys(tasks.types).map((t) => ({
+      key: t,
+      text: t,
+    }))
+  );
 
   const handleTypeChange = (evt, item) => {
     setData((prev) => ({
@@ -79,11 +83,15 @@ const AddRule = ({ setRules, setOpen }) => {
   const handleSelectDate = (field) => (date) => {
     setData((prev) => ({
       ...prev,
-      [field]: new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0)),
+      [field]: new Date(
+        Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0)
+      ),
     }));
   };
 
-  const handleDataChange = (field, func = (args) => args[0].target.value) => (...args) => {
+  const handleDataChange = (field, func = (args) => args[0].target.value) => (
+    ...args
+  ) => {
     setData((prev) => ({
       ...prev,
       [field]: func(args),
@@ -93,7 +101,9 @@ const AddRule = ({ setRules, setOpen }) => {
   const handleSubmit = async (evt) => {
     evt.preventDefault();
     if (data.validFrom && data.validTo && data.validTo < data.validFrom) {
-      await NotificationService.notifyError("'Valid From' cannot be bigger than 'Valid To'");
+      await NotificationService.notifyError(
+        "'Valid From' cannot be bigger than 'Valid To'"
+      );
       return;
     }
     // Send weeklyDays as an Array of dates instead of numbers
@@ -127,7 +137,11 @@ const AddRule = ({ setRules, setOpen }) => {
   };
 
   return (
-    <form className={classes.form} id="add-task-rule-form" onSubmit={handleSubmit}>
+    <form
+      className={classes.form}
+      id="add-task-rule-form"
+      onSubmit={handleSubmit}
+    >
       <TextField
         required
         label="Title"
@@ -154,8 +168,12 @@ const AddRule = ({ setRules, setOpen }) => {
         label="Start time"
         mask="99:99"
         maskChar="0"
-        value={DateTime.fromJSDate(data.taskStartTime).toUTC().toFormat('HH:mm')}
-        onChange={handleDataChange('taskStartTime', (args) => DateTime.fromISO(DateUtils.getValidTimeStringUTC(args[1])).toJSDate())}
+        value={DateTime.fromJSDate(data.taskStartTime)
+          .toUTC()
+          .toFormat('HH:mm')}
+        onChange={handleDataChange('taskStartTime', (args) =>
+          DateTime.fromISO(DateUtils.getValidTimeStringUTC(args[1])).toJSDate()
+        )}
       />
       <MaskedTextField
         label="End time"
@@ -163,18 +181,16 @@ const AddRule = ({ setRules, setOpen }) => {
         maskChar="0"
         value={DateUtils.getEndTimeTextUTC(
           data.taskStartTime,
-          data.taskDuration,
+          data.taskDuration
         )}
-        onChange={
-              handleDataChange('taskDuration', (args) => {
-                const validTime = DateUtils.getValidTimeStringUTC(args[1]);
-                // Check if end time is after start time
-                const startDT = DateTime.fromJSDate(data.taskStartTime);
-                const endDT = DateTime.fromISO(validTime);
-                if (endDT < startDT) return 0;
-                return endDT.diff(startDT, 'minute')?.values?.minutes ?? 0;
-              })
-        }
+        onChange={handleDataChange('taskDuration', (args) => {
+          const validTime = DateUtils.getValidTimeStringUTC(args[1]);
+          // Check if end time is after start time
+          const startDT = DateTime.fromJSDate(data.taskStartTime);
+          const endDT = DateTime.fromISO(validTime);
+          if (endDT < startDT) return 0;
+          return endDT.diff(startDT, 'minute')?.values?.minutes ?? 0;
+        })}
       />
       <SpinButton
         label="Duration (min)"
@@ -184,9 +200,15 @@ const AddRule = ({ setRules, setOpen }) => {
           if (Number.isNaN(val)) val = 0;
           setData((prev) => ({ ...prev, taskDuration: val }));
         }}
-        onIncrement={(val) => setData((prev) => ({ ...prev, taskDuration: (+val + 10) }))}
+        onIncrement={(val) =>
+          setData((prev) => ({ ...prev, taskDuration: +val + 10 }))
+        }
         onDecrement={(val) => {
-          if (val > 10) setData((prev) => ({ ...prev, taskDuration: (+val - 10) }));
+          if (val > 10)
+            setData((prev) => ({
+              ...prev,
+              taskDuration: +val - 10,
+            }));
         }}
         min={0}
         step={10}
@@ -209,19 +231,23 @@ const AddRule = ({ setRules, setOpen }) => {
         className={classes.checkbox}
         label="Background"
         value={data.isBackgroundTask}
-        onChange={(ev, checked) => setData((prev) => ({
-          ...prev,
-          isBackgroundTask: checked,
-        }))}
+        onChange={(ev, checked) =>
+          setData((prev) => ({
+            ...prev,
+            isBackgroundTask: checked,
+          }))
+        }
       />
       <Checkbox
         className={classes.checkbox}
         label="Shared"
         value={data.isSharedTask}
-        onChange={(ev, checked) => setData((prev) => ({
-          ...prev,
-          isSharedTask: checked,
-        }))}
+        onChange={(ev, checked) =>
+          setData((prev) => ({
+            ...prev,
+            isSharedTask: checked,
+          }))
+        }
       />
       <TooltipHost
         styles={{
@@ -233,20 +259,24 @@ const AddRule = ({ setRules, setOpen }) => {
           data.flows?.length > 0
             ? 'Rule can be assigned to users or flows, but not both'
             : ''
-          }
+        }
       >
         <PeoplePicker
           label="Assigned to (Users)"
           options={users}
           disabled={data.flows?.length > 0}
-          onSelect={(u) => setData((prev) => ({
-            ...prev,
-            users: prev.users.concat(u.data),
-          }))}
-          onRemove={(u) => setData((prev) => ({
-            ...prev,
-            users: prev.users.filter((user) => user.id !== u.data.id),
-          }))}
+          onSelect={(u) =>
+            setData((prev) => ({
+              ...prev,
+              users: prev.users.concat(u.data),
+            }))
+          }
+          onRemove={(u) =>
+            setData((prev) => ({
+              ...prev,
+              users: prev.users.filter((user) => user.id !== u.data.id),
+            }))
+          }
           selected={data.users?.map((u) => ({ key: u.id, data: u }))}
         />
       </TooltipHost>
@@ -261,20 +291,24 @@ const AddRule = ({ setRules, setOpen }) => {
           data.users?.length > 0
             ? 'Rule can be assigned to users or flows, but not both'
             : ''
-          }
+        }
       >
         <FlowPicker
           label="Assigned to (Flows)"
           options={flows}
           disabled={data.users?.length > 0}
-          onSelect={(f) => setData((prev) => ({
-            ...prev,
-            flows: prev.flows?.concat(f.data),
-          }))}
-          onRemove={(u) => setData((prev) => ({
-            ...prev,
-            flows: prev.flows?.filter((flow) => flow.id !== u.data.id),
-          }))}
+          onSelect={(f) =>
+            setData((prev) => ({
+              ...prev,
+              flows: prev.flows?.concat(f.data),
+            }))
+          }
+          onRemove={(u) =>
+            setData((prev) => ({
+              ...prev,
+              flows: prev.flows?.filter((flow) => flow.id !== u.data.id),
+            }))
+          }
           selected={data.flows?.map((f) => ({ key: f.id, data: f }))}
         />
       </TooltipHost>

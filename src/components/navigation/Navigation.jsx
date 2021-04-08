@@ -20,7 +20,10 @@ export default function Navigation() {
   return (
     <div className={classes.root}>
       <AppBar toggleDrawer={() => setOpened(true)} />
-      <Drawer isOpen={navPaneOpened} toggleDrawer={() => setOpened((prev) => !prev)} />
+      <Drawer
+        isOpen={navPaneOpened}
+        toggleDrawer={() => setOpened((prev) => !prev)}
+      />
     </div>
   );
 }

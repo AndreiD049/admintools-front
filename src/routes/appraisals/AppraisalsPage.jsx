@@ -1,10 +1,6 @@
 /* eslint-disable no-param-reassign */
-import React, {
-  useState, useEffect, useContext,
-} from 'react';
-import {
-  Switch, Route, useRouteMatch, useHistory,
-} from 'react-router-dom';
+import React, { useState, useEffect, useContext } from 'react';
+import { Switch, Route, useRouteMatch, useHistory } from 'react-router-dom';
 import {
   Checkbox,
   CommandBar,
@@ -15,9 +11,7 @@ import {
   Text,
   useTheme,
 } from '@fluentui/react';
-import {
-  Col, Container, Row, useScreenClass,
-} from 'react-grid-system';
+import { Col, Container, Row, useScreenClass } from 'react-grid-system';
 import { downloadBlob } from 'download.js';
 import Table from '../../components/shared/table';
 import AppraisalService from '../../services/AppraisalService';
@@ -63,9 +57,10 @@ const AppraisalsPage = () => {
       onRender: (item) => (
         <Chip
           style={{
-            backgroundColor: item.status === 'Finished'
-              ? theme.palette.blue
-              : theme.palette.green,
+            backgroundColor:
+              item.status === 'Finished'
+                ? theme.palette.blue
+                : theme.palette.green,
             padding: '3px',
           }}
         >
@@ -100,11 +95,12 @@ const AppraisalsPage = () => {
       isSortable: true,
       isFilterable: true,
       filterValueAccessor: (i) => i.createdUser.username,
-      sort: (a, b) => (a.createdUser.username < b.createdUser.username ? -1 : 1),
+      sort: (a, b) =>
+        a.createdUser.username < b.createdUser.username ? -1 : 1,
       data: 'string',
       minWidth: 200,
       maxWidth: 300,
-      onRender: (item) => (<div>{item.createdUser.username}</div>),
+      onRender: (item) => <div>{item.createdUser.username}</div>,
     },
     {
       key: 'createdDate',
@@ -116,7 +112,9 @@ const AppraisalsPage = () => {
       data: 'date',
       minWidth: 200,
       maxWidth: 300,
-      onRender: (item) => (<div>{new Date(item.createdDate).toLocaleString()}</div>),
+      onRender: (item) => (
+        <div>{new Date(item.createdDate).toLocaleString()}</div>
+      ),
     },
   ]);
   const [sortedColumn, setSortedColumn] = useState(null);
@@ -138,7 +136,9 @@ const AppraisalsPage = () => {
   }, [columns]);
 
   useEffect(() => {
-    setFilteredItems(showClosed ? items : items.filter((i) => i.status !== 'Finished'));
+    setFilteredItems(
+      showClosed ? items : items.filter((i) => i.status !== 'Finished')
+    );
   }, [showClosed, items]);
 
   const handleItemInvoked = (item) => {
@@ -150,17 +150,23 @@ const AppraisalsPage = () => {
       const item = selectionDetails.items[0];
       const result = await AppraisalService.finishPeriod(item.id);
       if (result) {
-        setItems((prev) => prev.map((i) => (i.id === item.id ? { ...item, status: 'Finished' } : i)));
+        setItems((prev) =>
+          prev.map((i) =>
+            i.id === item.id ? { ...item, status: 'Finished' } : i
+          )
+        );
         NotificationService.notifySuccess(`Period '${item.name}' finished`);
       }
     }
   };
 
   const handleCreate = async (name) => {
-    if (global.user
-      && global.user.id
-      && global.user.organization
-      && global.user.organization.id) {
+    if (
+      global.user &&
+      global.user.id &&
+      global.user.organization &&
+      global.user.organization.id
+    ) {
       const result = await AppraisalService.addPeriod({
         name,
         status: 'Active',
@@ -173,11 +179,13 @@ const AppraisalsPage = () => {
   };
 
   const handleEdit = async (id, name) => {
-    if (global.user
-      && global.user.id
-      && global.user.organization
-      && global.user.organization.id
-      && global.Authorize(AP.code, AP.grants.update)) {
+    if (
+      global.user &&
+      global.user.id &&
+      global.user.organization &&
+      global.user.organization.id &&
+      global.Authorize(AP.code, AP.grants.update)
+    ) {
       const result = await AppraisalService.updatePeriod(id, {
         name,
       });
@@ -215,57 +223,84 @@ const AppraisalsPage = () => {
                 <Stack horizontalAlign="stretch">
                   <Row align="start">
                     <Col xs={12} sm={6}>
-                      <CommandBar items={[
-                        {
-                          key: 'openItem',
-                          text: 'Open',
-                          disabled: selectionDetails.count === 0
-                          || !global.Authorize(AP.code, AP.grants.read),
-                          iconProps: { iconName: 'OpenFile' },
-                          onClick: () => handleItemInvoked(
-                            selectionDetails.count
-                            && selectionDetails.items[0],
-                          ),
-                        },
-                        {
-                          key: 'newItem',
-                          text: 'New',
-                          disabled: !global.Authorize(AP.code, AP.grants.create),
-                          iconProps: { iconName: 'Add' },
-                          onClick: () => setNewPanelOpen(true),
-                        },
-                        {
-                          key: 'editItem',
-                          text: 'Edit',
-                          disabled: selectionDetails.count === 0
-                          || !global.Authorize(AP.code, AP.grants.update),
-                          iconProps: { iconName: 'Edit' },
-                          onClick: () => setEditPanelOpen(true),
-                        },
-                        {
-                          key: 'finishItem',
-                          text: 'Finish',
-                          disabled: selectionDetails.count === 0
-                            || (selectionDetails.count && selectionDetails.items[0].status === 'Finished')
-                            || !global.Authorize(AP.code, AP.grants.finish),
-                          iconProps: { iconName: 'SaveAndClose' },
-                          onClick: clickFinishHandler,
-                        },
-                        {
-                          key: 'generateReport',
-                          text: 'Appraisal report',
-                          disabled: selectionDetails.count === 0
-                            || !global.Authorize(REP.code, REP.grants.read),
-                          iconProps: { iconName: 'MobileReport' },
-                          onClick: () => handleGenerateReport(
-                            selectionDetails.count ? selectionDetails.items[0].id : null,
-                          ),
-                        },
-                      ]}
+                      <CommandBar
+                        items={[
+                          {
+                            key: 'openItem',
+                            text: 'Open',
+                            disabled:
+                              selectionDetails.count === 0 ||
+                              !global.Authorize(AP.code, AP.grants.read),
+                            iconProps: {
+                              iconName: 'OpenFile',
+                            },
+                            onClick: () =>
+                              handleItemInvoked(
+                                selectionDetails.count &&
+                                  selectionDetails.items[0]
+                              ),
+                          },
+                          {
+                            key: 'newItem',
+                            text: 'New',
+                            disabled: !global.Authorize(
+                              AP.code,
+                              AP.grants.create
+                            ),
+                            iconProps: {
+                              iconName: 'Add',
+                            },
+                            onClick: () => setNewPanelOpen(true),
+                          },
+                          {
+                            key: 'editItem',
+                            text: 'Edit',
+                            disabled:
+                              selectionDetails.count === 0 ||
+                              !global.Authorize(AP.code, AP.grants.update),
+                            iconProps: {
+                              iconName: 'Edit',
+                            },
+                            onClick: () => setEditPanelOpen(true),
+                          },
+                          {
+                            key: 'finishItem',
+                            text: 'Finish',
+                            disabled:
+                              selectionDetails.count === 0 ||
+                              (selectionDetails.count &&
+                                selectionDetails.items[0].status ===
+                                  'Finished') ||
+                              !global.Authorize(AP.code, AP.grants.finish),
+                            iconProps: {
+                              iconName: 'SaveAndClose',
+                            },
+                            onClick: clickFinishHandler,
+                          },
+                          {
+                            key: 'generateReport',
+                            text: 'Appraisal report',
+                            disabled:
+                              selectionDetails.count === 0 ||
+                              !global.Authorize(REP.code, REP.grants.read),
+                            iconProps: {
+                              iconName: 'MobileReport',
+                            },
+                            onClick: () =>
+                              handleGenerateReport(
+                                selectionDetails.count
+                                  ? selectionDetails.items[0].id
+                                  : null
+                              ),
+                          },
+                        ]}
                       />
                     </Col>
                     <Col xs={12} sm={6}>
-                      <Stack horizontalAlign={screenClass === 'xs' ? 'start' : 'end'} horizontal>
+                      <Stack
+                        horizontalAlign={screenClass === 'xs' ? 'start' : 'end'}
+                        horizontal
+                      >
                         <Stack verticalAlign="center" horizontalAlign="start">
                           <SearchBox
                             placeholder="Search"
@@ -307,7 +342,9 @@ const AppraisalsPage = () => {
                     handleCreate={handleCreate}
                   />
                   <PanelEdit
-                    item={selectionDetails.count ? selectionDetails.items[0] : null}
+                    item={
+                      selectionDetails.count ? selectionDetails.items[0] : null
+                    }
                     isOpen={editPanelOpen}
                     setOpen={setEditPanelOpen}
                     handleEdit={handleEdit}
@@ -324,7 +361,6 @@ const AppraisalsPage = () => {
           <AppraisalDetailsPage ctx={global} setCtx={global.setContext} />
         </Route>
       </Switch>
-
     </>
   );
 };

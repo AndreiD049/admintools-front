@@ -4,12 +4,8 @@
  */
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import {
-  Container, Row, Col,
-} from 'react-grid-system';
-import {
-  CommandBar, SearchBox, Separator, Stack,
-} from '@fluentui/react';
+import { Container, Row, Col } from 'react-grid-system';
+import { CommandBar, SearchBox, Separator, Stack } from '@fluentui/react';
 import Table from '../table';
 
 const CommandTable = ({ commandItems, tableProps }) => {
@@ -43,28 +39,32 @@ const CommandTable = ({ commandItems, tableProps }) => {
 };
 
 CommandTable.propTypes = {
-  commandItems: PropTypes.arrayOf(PropTypes.shape({
-    key: PropTypes.string,
-    text: PropTypes.string,
-    disabled: PropTypes.bool,
-    iconProps: PropTypes.shape({
-      iconName: PropTypes.string,
-    }),
-    onClick: PropTypes.func,
-  })),
-  tableProps: PropTypes.shape({
-    columns: PropTypes.arrayOf(PropTypes.shape({
+  commandItems: PropTypes.arrayOf(
+    PropTypes.shape({
       key: PropTypes.string,
-      name: PropTypes.string,
-      fieldName: PropTypes.string,
-      minWidth: PropTypes.number,
-      maxWidth: PropTypes.number,
-      isSortable: PropTypes.bool,
-      isFilterable: PropTypes.bool,
-      isResizable: PropTypes.bool,
-      sort: PropTypes.func,
-      onRender: PropTypes.func,
-    })).isRequired,
+      text: PropTypes.string,
+      disabled: PropTypes.bool,
+      iconProps: PropTypes.shape({
+        iconName: PropTypes.string,
+      }),
+      onClick: PropTypes.func,
+    })
+  ),
+  tableProps: PropTypes.shape({
+    columns: PropTypes.arrayOf(
+      PropTypes.shape({
+        key: PropTypes.string,
+        name: PropTypes.string,
+        fieldName: PropTypes.string,
+        minWidth: PropTypes.number,
+        maxWidth: PropTypes.number,
+        isSortable: PropTypes.bool,
+        isFilterable: PropTypes.bool,
+        isResizable: PropTypes.bool,
+        sort: PropTypes.func,
+        onRender: PropTypes.func,
+      })
+    ).isRequired,
     items: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
     searchValue: PropTypes.string,
     sortedCol: PropTypes.shape({

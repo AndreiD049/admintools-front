@@ -1,5 +1,8 @@
 import {
-  DetailsListLayoutMode, Icon, SelectionMode, Separator,
+  DetailsListLayoutMode,
+  Icon,
+  SelectionMode,
+  Separator,
 } from '@fluentui/react';
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
@@ -84,7 +87,8 @@ const ReportTemplates = () => {
       iconName: 'Contact',
       minWidth: 100,
       maxWidth: 300,
-      sort: (a, b) => (a.createdUser.username < b.createdUser.username ? -1 : 1),
+      sort: (a, b) =>
+        a.createdUser.username < b.createdUser.username ? -1 : 1,
       onRender: (item) => item.createdUser.username,
     },
     {
@@ -96,24 +100,22 @@ const ReportTemplates = () => {
       iconName: 'DateTime',
       minWidth: 200,
       maxWidth: 300,
-      onRender: (item) => (new Date(item.createdDate).toLocaleString()),
+      onRender: (item) => new Date(item.createdDate).toLocaleString(),
     },
   ]);
-  const [sortedColumn] = useState(
-    {
-      key: 'createdon',
-      name: ' Created on',
-      fieldName: 'createdDate',
-      isSorted: true,
-      isSortedDescending: true,
-      isSortable: true,
-      isFilterable: true,
-      iconName: 'DateTime',
-      minWidth: 200,
-      maxWidth: 300,
-      onRender: (item) => (new Date(item.createdDate).toLocaleString()),
-    },
-  );
+  const [sortedColumn] = useState({
+    key: 'createdon',
+    name: ' Created on',
+    fieldName: 'createdDate',
+    isSorted: true,
+    isSortedDescending: true,
+    isSortable: true,
+    isFilterable: true,
+    iconName: 'DateTime',
+    minWidth: 200,
+    maxWidth: 300,
+    onRender: (item) => new Date(item.createdDate).toLocaleString(),
+  });
 
   useEffect(() => {
     let mounted = true;
@@ -177,20 +179,22 @@ const ReportTemplates = () => {
       <TemplateDetailsPanel
         isOpen={detailsPanelOpen}
         setOpen={setDetailsPanelOpen}
-        id={selectionDetails.items.length > 0
-          ? selectionDetails.items[0].id
-          : ''}
+        id={
+          selectionDetails.items.length > 0 ? selectionDetails.items[0].id : ''
+        }
         setEdit={setEditPanelOpen}
       />
       <TemplateEditPanel
         isOpen={editPanelOpen}
         setOpen={setEditPanelOpen}
-        updateTemplates={(template) => setTemplates(
-          (prev) => prev.map((t) => (t.id === template.id ? template : t)),
-        )}
-        id={selectionDetails.items.length > 0
-          ? selectionDetails.items[0].id
-          : ''}
+        updateTemplates={(template) =>
+          setTemplates((prev) =>
+            prev.map((t) => (t.id === template.id ? template : t))
+          )
+        }
+        id={
+          selectionDetails.items.length > 0 ? selectionDetails.items[0].id : ''
+        }
       />
     </Container>
   );

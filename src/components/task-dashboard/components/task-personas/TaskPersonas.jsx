@@ -1,7 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  Facepile, makeStyles, OverflowButtonType, PersonaSize,
+  Facepile,
+  makeStyles,
+  OverflowButtonType,
+  PersonaSize,
 } from '@fluentui/react';
 
 const useStyles = makeStyles(() => ({
@@ -43,10 +46,12 @@ const TaskPersonas = ({ task }) => {
 
 TaskPersonas.propTypes = {
   task: PropTypes.shape({
-    assignedTo: PropTypes.arrayOf(PropTypes.shape({
-      id: PropTypes.string,
-      username: PropTypes.string,
-    })),
+    assignedTo: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.string,
+        username: PropTypes.string,
+      })
+    ),
   }).isRequired,
 };
 

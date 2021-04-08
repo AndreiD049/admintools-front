@@ -43,18 +43,23 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const PlanningFlowsDialog = ({
-  planning, options, addFlow, removeFlow, users, user,
+  planning,
+  options,
+  addFlow,
+  removeFlow,
+  users,
+  user,
 }) => {
   const classes = useStyles();
 
   const validOptions = useMemo(() => {
     const selected = new Set(planning?.flows?.map((f) => f.id));
     const userTeams = new Set(
-      users.find((u) => u.id === user)?.teams?.map((t) => t.id),
+      users.find((u) => u.id === user)?.teams?.map((t) => t.id)
     );
     const active = options.filter((o) => o.data.isActive);
     const teamFlows = active.filter(
-      (o) => o.data.teams.filter((t) => userTeams.has(t.id)).length > 0,
+      (o) => o.data.teams.filter((t) => userTeams.has(t.id)).length > 0
     );
     return teamFlows.filter((o) => !selected.has(o.data.id));
   }, [options, planning, users, user]);
@@ -76,7 +81,9 @@ const PlanningFlowsDialog = ({
         showDeleteIcon
         onSelect={handleSelect}
         onRemove={handleRemove}
-        selected={planning ? planning?.flows?.map((f) => ({ key: f.id, data: f })) : []}
+        selected={
+          planning ? planning?.flows?.map((f) => ({ key: f.id, data: f })) : []
+        }
       />
     </div>
   );

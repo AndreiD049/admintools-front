@@ -17,7 +17,4 @@ const useTasks = (params) => {
   return [tasks, setTasks];
 };
 
-export {
-  useTasks,
-  useFetch,
-};
+export { useTasks, useFetch };

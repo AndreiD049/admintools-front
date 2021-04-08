@@ -24,7 +24,10 @@ const AppraisalDetails = ({ context }) => {
    */
   const handleLockButton = async () => {
     if (userId) {
-      const result = await AppraisalService.toggleLockPeriod(periodDetails.id, userId);
+      const result = await AppraisalService.toggleLockPeriod(
+        periodDetails.id,
+        userId
+      );
       setPeriodDetails((prev) => {
         if (prev) {
           return {
@@ -41,35 +44,37 @@ const AppraisalDetails = ({ context }) => {
   if (!userId) {
     display = (
       <>
-        {
-          periodDetails === null
-            ? <AppraisalDetailsInfo periodId={periodId} setPeriodDetails={setPeriodDetails} />
-            : <AppraisalDetailsDisplay context={context} periodDetails={periodDetails} />
-        }
+        {periodDetails === null ? (
+          <AppraisalDetailsInfo
+            periodId={periodId}
+            setPeriodDetails={setPeriodDetails}
+          />
+        ) : (
+          <AppraisalDetailsDisplay
+            context={context}
+            periodDetails={periodDetails}
+          />
+        )}
       </>
     );
   } else {
     display = (
       <>
-        {
-          periodDetails === null || userDetails === null
-            ? (
-              <AppraisalUserInfo
-                periodId={periodId}
-                userId={userId}
-                setUserDetails={setUserDetails}
-                setPeriodDetails={setPeriodDetails}
-              />
-            )
-            : (
-              <AppraisalUserDetails
-                context={context}
-                periodDetails={periodDetails}
-                userDetails={userDetails}
-                handleLockButton={handleLockButton}
-              />
-            )
-}
+        {periodDetails === null || userDetails === null ? (
+          <AppraisalUserInfo
+            periodId={periodId}
+            userId={userId}
+            setUserDetails={setUserDetails}
+            setPeriodDetails={setPeriodDetails}
+          />
+        ) : (
+          <AppraisalUserDetails
+            context={context}
+            periodDetails={periodDetails}
+            userDetails={userDetails}
+            handleLockButton={handleLockButton}
+          />
+        )}
       </>
     );
   }

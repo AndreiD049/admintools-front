@@ -2,7 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {
   makeStyles,
-  Persona, PersonaSize, Separator, Stack, StackItem,
+  Persona,
+  PersonaSize,
+  Separator,
+  Stack,
+  StackItem,
 } from '@fluentui/react';
 import { Transition } from 'react-transition-group';
 import TaskItem from '../task-item';
@@ -38,8 +42,10 @@ const TaskContainer = ({
 }) => {
   const classes = useStyles();
   const handleIn = (status) => {
-    if (status === constants.tasks.status.Finished && !showFinished) return false;
-    if (status === constants.tasks.status.Cancelled && !showCancelled) return false;
+    if (status === constants.tasks.status.Finished && !showFinished)
+      return false;
+    if (status === constants.tasks.status.Cancelled && !showCancelled)
+      return false;
     return true;
   };
 
@@ -62,30 +68,29 @@ const TaskContainer = ({
           <Persona size={PersonaSize.size32} text={user?.username} />
         </StackItem>
         <Separator />
-        {
-          tasks.map((task) => (
-            <Transition
-              key={task.id}
-              in={handleIn(task.status)}
-              timeout={300}
-              unmountOnExit
-            >
-              {(state) => (
-                <div style={{
+        {tasks.map((task) => (
+          <Transition
+            key={task.id}
+            in={handleIn(task.status)}
+            timeout={300}
+            unmountOnExit
+          >
+            {(state) => (
+              <div
+                style={{
                   ...defaultStyle,
                   ...transitionStyles[state],
                 }}
-                >
-                  <TaskItem
-                    task={task}
-                    setTasks={setTasks}
-                    handleStatusChange={handleStatusChange}
-                  />
-                </div>
-              )}
-            </Transition>
-          ))
-        }
+              >
+                <TaskItem
+                  task={task}
+                  setTasks={setTasks}
+                  handleStatusChange={handleStatusChange}
+                />
+              </div>
+            )}
+          </Transition>
+        ))}
       </Stack>
     </div>
   );

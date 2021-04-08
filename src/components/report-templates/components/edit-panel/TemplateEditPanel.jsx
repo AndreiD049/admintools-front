@@ -2,7 +2,15 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   ActionButton,
-  DefaultButton, Icon, makeStyles, Panel, PanelType, PrimaryButton, Separator, Stack, TextField,
+  DefaultButton,
+  Icon,
+  makeStyles,
+  Panel,
+  PanelType,
+  PrimaryButton,
+  Separator,
+  Stack,
+  TextField,
 } from '@fluentui/react';
 import { Col, Container, Row } from 'react-grid-system';
 import ReportingService from '../../../../services/ReportingService';
@@ -15,9 +23,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const TemplateEditPanel = ({
-  id, isOpen, updateTemplates, setOpen,
-}) => {
+const TemplateEditPanel = ({ id, isOpen, updateTemplates, setOpen }) => {
   const classes = useStyles();
   const [template, setTemplate] = useState({});
   const [update, setUpdate] = useState({});
@@ -78,7 +84,10 @@ const TemplateEditPanel = ({
     formData.append('name', update.name);
     formData.append('filename', update.filename);
     if (file) formData.append('template', file);
-    const updateResult = await ReportingService.updateTemplate(template.id, formData);
+    const updateResult = await ReportingService.updateTemplate(
+      template.id,
+      formData
+    );
     setTemplate(updateResult);
     updateTemplates(updateResult);
     setOpen(false);
@@ -93,9 +102,7 @@ const TemplateEditPanel = ({
       htmlFor={controlId}
       id={labelId}
     >
-      <Icon iconName={iconName} />
-      { ' ' }
-      {options.label}
+      <Icon iconName={iconName} /> {options.label}
     </label>
   );
 
@@ -120,102 +127,126 @@ const TemplateEditPanel = ({
       type={PanelType.large}
       onRenderFooterContent={onRenderFooter}
     >
-      <Container
-        fluid
-        className={classes.root}
-      >
+      <Container fluid className={classes.root}>
         <Separator>General</Separator>
-        {
-          template
-          && (
-            <>
-              <Row justify="start">
-                <Col xs={12} sm={8} md={4}>
-                  <TextField
-                    onRenderLabel={onRenderLabel(
-                      'label-aggregation-edit',
-                      'aggregation-edit',
-                      'Edit',
-                    )}
-                    label="Name: "
-                    value={update && update.name}
-                    onChange={handleUpdate('name')}
-                    underlined
-                  />
-                  <TextField label="Created by: " value={template && template.createdUser && template.createdUser.username} readOnly underlined tabIndex={-1} />
-                  <TextField label="Created on: " value={template && new Date(template.createdDate).toLocaleString()} readOnly underlined tabIndex={-1} />
-                  {
-              template.modifiedUser
-              && (
-              <>
-                <TextField label="Modified by: " value={template.modifiedUser.username} readOnly underlined tabIndex={-1} />
-                <TextField label="Modified on: " value={template.modifiedDate && new Date(template.modifiedDate).toLocaleString()} readOnly underlined tabIndex={-1} />
-              </>
-              )
-            }
-                </Col>
-              </Row>
-              <Separator>Details</Separator>
-              <Row justify="start">
-                <Col xs={12} sm={8} md={4}>
-                  <TextField
-                    onRenderLabel={onRenderLabel(
-                      'label-aggregation-edit',
-                      'aggregation-edit',
-                      'Edit',
-                    )}
-                    label="Filename: "
-                    value={update.filename}
-                    onChange={handleUpdate('filename')}
-                    underlined
-                  />
-                </Col>
-                <Col xs={12} sm={8} md={4}>
-                  <ActionButton
-                    iconProps={{
-                      iconName: 'DownloadDocument',
-                    }}
-                    text="Download template"
-                    onClick={handleDownload}
-                  />
-                </Col>
-              </Row>
-              <Row justify="start">
-                <Col xs={12} sm={8} md={4}>
-                  <TextField
-                    styles={{
-                      fieldGroup: {
-                        padding: '8px',
-                        height: 'auto',
-                      },
-                    }}
-                    onChange={handleFileUpload}
-                    type="file"
-                    label="Template file"
-                  />
-                </Col>
-              </Row>
-              <Row justify="start">
-                <Col xs={12} sm={8} md={6}>
-                  <TextField
-                    onRenderLabel={onRenderLabel(
-                      'label-aggregation-edit',
-                      'aggregation-edit',
-                      'Edit',
-                    )}
-                    multiline
-                    autoAdjustHeight
-                    value={update.aggregation || ''}
-                    onChange={handleUpdate('aggregation')}
-                    label="Aggregation"
-                    aria-labelledby="label-aggregation-edit"
-                    id="aggregation-edit"
-                  />
-                </Col>
-              </Row>
-            </>
-          )
-        }
+        {template && (
+          <>
+            <Row justify="start">
+              <Col xs={12} sm={8} md={4}>
+                <TextField
+                  onRenderLabel={onRenderLabel(
+                    'label-aggregation-edit',
+                    'aggregation-edit',
+                    'Edit'
+                  )}
+                  label="Name: "
+                  value={update && update.name}
+                  onChange={handleUpdate('name')}
+                  underlined
+                />
+                <TextField
+                  label="Created by: "
+                  value={
+                    template &&
+                    template.createdUser &&
+                    template.createdUser.username
+                  }
+                  readOnly
+                  underlined
+                  tabIndex={-1}
+                />
+                <TextField
+                  label="Created on: "
+                  value={
+                    template && new Date(template.createdDate).toLocaleString()
+                  }
+                  readOnly
+                  underlined
+                  tabIndex={-1}
+                />
+                {template.modifiedUser && (
+                  <>
+                    <TextField
+                      label="Modified by: "
+                      value={template.modifiedUser.username}
+                      readOnly
+                      underlined
+                      tabIndex={-1}
+                    />
+                    <TextField
+                      label="Modified on: "
+                      value={
+                        template.modifiedDate &&
+                        new Date(template.modifiedDate).toLocaleString()
+                      }
+                      readOnly
+                      underlined
+                      tabIndex={-1}
+                    />
+                  </>
+                )}
+              </Col>
+            </Row>
+            <Separator>Details</Separator>
+            <Row justify="start">
+              <Col xs={12} sm={8} md={4}>
+                <TextField
+                  onRenderLabel={onRenderLabel(
+                    'label-aggregation-edit',
+                    'aggregation-edit',
+                    'Edit'
+                  )}
+                  label="Filename: "
+                  value={update.filename}
+                  onChange={handleUpdate('filename')}
+                  underlined
+                />
+              </Col>
+              <Col xs={12} sm={8} md={4}>
+                <ActionButton
+                  iconProps={{
+                    iconName: 'DownloadDocument',
+                  }}
+                  text="Download template"
+                  onClick={handleDownload}
+                />
+              </Col>
+            </Row>
+            <Row justify="start">
+              <Col xs={12} sm={8} md={4}>
+                <TextField
+                  styles={{
+                    fieldGroup: {
+                      padding: '8px',
+                      height: 'auto',
+                    },
+                  }}
+                  onChange={handleFileUpload}
+                  type="file"
+                  label="Template file"
+                />
+              </Col>
+            </Row>
+            <Row justify="start">
+              <Col xs={12} sm={8} md={6}>
+                <TextField
+                  onRenderLabel={onRenderLabel(
+                    'label-aggregation-edit',
+                    'aggregation-edit',
+                    'Edit'
+                  )}
+                  multiline
+                  autoAdjustHeight
+                  value={update.aggregation || ''}
+                  onChange={handleUpdate('aggregation')}
+                  label="Aggregation"
+                  aria-labelledby="label-aggregation-edit"
+                  id="aggregation-edit"
+                />
+              </Col>
+            </Row>
+          </>
+        )}
       </Container>
     </Panel>
   );

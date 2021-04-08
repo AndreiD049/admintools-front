@@ -3,7 +3,12 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {
-  Panel, PanelType, classNamesFunction, Icon, ActionButton, Nav,
+  Panel,
+  PanelType,
+  classNamesFunction,
+  Icon,
+  ActionButton,
+  Nav,
 } from '@fluentui/react';
 import constants from '../../../../utils/constants';
 import GlobalContext from '../../../../services/GlobalContext';
@@ -11,8 +16,7 @@ import keytipStyles from '../../../../styles/keytipStyles';
 
 const classNames = classNamesFunction();
 const styles = () => ({
-  root: {
-  },
+  root: {},
   icon: {
     height: '40px',
     width: '100%',
@@ -236,9 +240,11 @@ const Drawer = ({ isOpen, toggleDrawer }) => {
   const [visibleLinksGroup, setVisibleLinksGroup] = useState([]);
 
   useEffect(() => {
-    setVisibleLinksGroup([{
-      links: filterLinks(navLinks[0].links),
-    }]);
+    setVisibleLinksGroup([
+      {
+        links: filterLinks(navLinks[0].links),
+      },
+    ]);
   }, [global.security, global.user, global.Authorize]);
 
   return (
@@ -249,14 +255,8 @@ const Drawer = ({ isOpen, toggleDrawer }) => {
       isLightDismiss
       onDismiss={toggleDrawer}
     >
-      <ActionButton
-        className={classes.icon}
-        onClick={toggleDrawer}
-      >
-        <Icon
-          iconName="GlobalNavButton"
-          style={{ marginLeft: 5 }}
-        />
+      <ActionButton className={classes.icon} onClick={toggleDrawer}>
+        <Icon iconName="GlobalNavButton" style={{ marginLeft: 5 }} />
       </ActionButton>
       <Nav
         className={classes.nav}
@@ -266,15 +266,15 @@ const Drawer = ({ isOpen, toggleDrawer }) => {
         onRenderLink={(link) => (
           <ActionButton
             keytipProps={
-                link.keyTipContent
-                && ({
-                  styles: keytipStyles,
-                  content: link.keyTipContent,
-                  onExecute: (el) => (link.links ? link.isExpanded || el.click() : el.click()),
-                  keySequences: link.keyTipSequence,
-                  hasMenu: link.hasMenu || false,
-                })
+              link.keyTipContent && {
+                styles: keytipStyles,
+                content: link.keyTipContent,
+                onExecute: (el) =>
+                  link.links ? link.isExpanded || el.click() : el.click(),
+                keySequences: link.keyTipSequence,
+                hasMenu: link.hasMenu || false,
               }
+            }
           >
             {link.name}
           </ActionButton>

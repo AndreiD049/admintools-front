@@ -7,7 +7,7 @@
 
 const userExists = (user) => async () => ({
   result: Boolean(user),
-  message: 'User doesn\'t exist.',
+  message: "User doesn't exist.",
 });
 
 const userAuthorized = (context, code, grant) => async () => ({

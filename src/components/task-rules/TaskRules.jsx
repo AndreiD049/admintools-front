@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import { Col, Container, Row } from 'react-grid-system';
 import {
-  DetailsListLayoutMode, PanelType, PrimaryButton, SelectionMode, Separator,
+  DetailsListLayoutMode,
+  PanelType,
+  PrimaryButton,
+  SelectionMode,
+  Separator,
 } from '@fluentui/react';
 import PageHeader from '../shared/page-header';
 import CommandTable from '../shared/command-table/CommandTable';
@@ -19,19 +23,22 @@ const TaskRules = () => {
     items: [],
   });
   const newPanel = usePanel(
-    AddRule, {
+    AddRule,
+    {
       headerText: 'Create new rule',
       onRenderFooterContent: () => (
         <PrimaryButton text="Create" type="submit" form="add-task-rule-form" />
       ),
-    }, {
-      setRules,
     },
+    {
+      setRules,
+    }
   );
   const [editing, setEditing] = useState(false);
 
   const detailsPanel = usePanel(
-    RuleDetails, {
+    RuleDetails,
+    {
       headerText: 'Rule Details',
       isLightDismiss: !editing,
       type: PanelType.medium,
@@ -40,29 +47,29 @@ const TaskRules = () => {
         setEditing(false);
         setOpen(false);
       },
-    }, {
-      id: selectionDetails.items.length > 0 ? selectionDetails.items[0].id : null,
+    },
+    {
+      id:
+        selectionDetails.items.length > 0 ? selectionDetails.items[0].id : null,
       editing,
       setEditing,
       setRules,
-    },
+    }
   );
 
-  const [sortedColumn] = useState(
-    {
-      key: 'createdDate',
-      name: ' Created on',
-      fieldName: 'createdDate',
-      isSortable: true,
-      isFilterable: true,
-      isResizable: true,
-      iconName: 'People',
-      minWidth: 100,
-      maxWidth: 300,
-      isSorted: true,
-      isSortedDescending: true,
-    },
-  );
+  const [sortedColumn] = useState({
+    key: 'createdDate',
+    name: ' Created on',
+    fieldName: 'createdDate',
+    isSortable: true,
+    isFilterable: true,
+    isResizable: true,
+    iconName: 'People',
+    minWidth: 100,
+    maxWidth: 300,
+    isSorted: true,
+    isSortedDescending: true,
+  });
 
   const [columns] = useState([
     {
@@ -98,12 +105,13 @@ const TaskRules = () => {
       minWidth: 300,
       maxWidth: 400,
       onRender: (item) => item.users.map((u) => u.username).join(', '),
-      sort: (a, b) => (
-        a.users[0]?.username?.toLowerCase() < b.users[0]?.username?.toLowerCase()
+      sort: (a, b) =>
+        a.users[0]?.username?.toLowerCase() <
+        b.users[0]?.username?.toLowerCase()
           ? -1
-          : 1
-      ),
-      filterValueAccessor: (item) => item.users.map((u) => u.username).join(' '),
+          : 1,
+      filterValueAccessor: (item) =>
+        item.users.map((u) => u.username).join(' '),
     },
     {
       key: 'createdDate',
@@ -115,7 +123,9 @@ const TaskRules = () => {
       iconName: 'People',
       minWidth: 100,
       maxWidth: 300,
-      onRender: (item) => (<div>{new Date(item.createdDate).toLocaleString()}</div>),
+      onRender: (item) => (
+        <div>{new Date(item.createdDate).toLocaleString()}</div>
+      ),
     },
   ]);
 
@@ -131,7 +141,9 @@ const TaskRules = () => {
                 key: 'createItem',
                 text: 'Create',
                 iconProps: { iconName: 'BoxAdditionSolid' },
-                onClick: () => { newPanel.setOpen(true); },
+                onClick: () => {
+                  newPanel.setOpen(true);
+                },
               },
             ]}
             tableProps={{

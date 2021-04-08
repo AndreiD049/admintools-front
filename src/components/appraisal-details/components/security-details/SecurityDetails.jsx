@@ -43,44 +43,40 @@ const SecurityDetails = () => {
       />
       <Container lg>
         <PageHeader text="Permissions" />
-        {
-        loaded
-          ? (
-            <Pivot
-              aria-label="User and Roles permissions"
-              styles={{
-                root: {
-                  display: 'flex',
-                  flexFlow: 'row nowrap',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                },
-              }}
-            >
-              <PivotItem headerText="Roles" itemIcon="SecurityGroup">
-                <SecurityDetailsRoleDisplay
-                  codes={permissionCodes}
-                  roles={roles}
-                  rolePermissions={rolePermissions}
-                  setRolePermissions={setRolePermissions}
-                  selectedRole={selectedRole}
-                  setSelectedRole={setSelectedRole}
-                />
-              </PivotItem>
-              <PivotItem headerText="Users" itemIcon="Contact">
-                <SecurityDetailsUserDisplay
-                  codes={permissionCodes}
-                  users={users}
-                  userPermissions={userPermissions}
-                  setUserPermissions={setUserPermissions}
-                  selectedUser={selectedUser}
-                  setSelectedUser={setSelectedUser}
-                />
-              </PivotItem>
-            </Pivot>
-          )
-          : null
-      }
+        {loaded ? (
+          <Pivot
+            aria-label="User and Roles permissions"
+            styles={{
+              root: {
+                display: 'flex',
+                flexFlow: 'row nowrap',
+                justifyContent: 'center',
+                alignItems: 'center',
+              },
+            }}
+          >
+            <PivotItem headerText="Roles" itemIcon="SecurityGroup">
+              <SecurityDetailsRoleDisplay
+                codes={permissionCodes}
+                roles={roles}
+                rolePermissions={rolePermissions}
+                setRolePermissions={setRolePermissions}
+                selectedRole={selectedRole}
+                setSelectedRole={setSelectedRole}
+              />
+            </PivotItem>
+            <PivotItem headerText="Users" itemIcon="Contact">
+              <SecurityDetailsUserDisplay
+                codes={permissionCodes}
+                users={users}
+                userPermissions={userPermissions}
+                setUserPermissions={setUserPermissions}
+                selectedUser={selectedUser}
+                setSelectedUser={setSelectedUser}
+              />
+            </PivotItem>
+          </Pivot>
+        ) : null}
       </Container>
     </>
   );

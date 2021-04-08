@@ -1,13 +1,18 @@
 import {
   Checkbox,
   ComboBox,
-  CommandBar, DefaultButton, Icon, makeStyles, PrimaryButton, Separator, Stack,
+  CommandBar,
+  DefaultButton,
+  Icon,
+  makeStyles,
+  PrimaryButton,
+  Separator,
+  Stack,
 } from '@fluentui/react';
 import React, { useState, useContext, useEffect } from 'react';
 import { Col, Container, Row } from 'react-grid-system';
 import { DateTime } from 'luxon';
 import { useFetch } from '../../services/hooks';
-import DateUtils from '../../utils/date';
 import TaskService from '../../services/tasks/TaskService';
 import PageHeader from '../shared/page-header';
 import usePanel from '../ui-hooks/usePanel';
@@ -38,38 +43,50 @@ const TaskDashboard = () => {
   const [users] = useFetch(UserService.teamUsersPath);
   const [userOptions, setUserOptions] = useState([]);
   const [reload, setReload] = useState(true);
-  const [selectedUsers, setSelectedUsers] = useLocalStorageState('DTSelectedUsers', [global.user.id]);
-  const [currentDate, setCurrentDate] = useState(DateTime.now().startOf('day').toJSDate());
-  const [hours, setHours] = useLocalStorageState('DTWorkingHours', {
-    from: DateTime.utc().set({
-      hour: 9, minute: 0, second: 0, millisecond: 0,
-    }),
-    to: DateTime.utc().set({
-      hour: 18, minute: 0, second: 0, millisecond: 0,
-    }),
-  }, (h) => h && ({
-    from: DateTime.fromISO(h?.from).toUTC(),
-    to: DateTime.fromISO(h?.to).toUTC(),
-  }));
-  const [showFinsihed, setShowFinished] = useLocalStorageState('DTShowFinished', false);
-  const [showCancelled, setShowCancelled] = useLocalStorageState('DTShowFinished', false);
+  const [
+    selectedUsers,
+    setSelectedUsers,
+  ] = useLocalStorageState('DTSelectedUsers', [global.user.id]);
+  // const [currentDate, setCurrentDate] = useState(DateTime.now().startOf('day').toJSDate());
+  const [hours, setHours] = useLocalStorageState(
+    'DTWorkingHours',
+    {
+      from: DateTime.now().setZone('utc', { keepLocalTime: true }).set({
+        hour: 9,
+        minute: 0,
+        second: 0,
+        millisecond: 0,
+      }),
+      duration: 540,
+    },
+    (h) => h && {
+      from: DateTime.fromISO(h?.from).toUTC(),
+      duration: h?.duration,
+    },
+  );
+
+  const [showFinsihed, setShowFinished] = useLocalStorageState(
+    'DTShowFinished',
+    false,
+  );
+  const [showCancelled, setShowCancelled] = useLocalStorageState(
+    'DTShowFinished',
+    false,
+  );
+
   const options = {
     params: {
       fromDate: hours.from.toJSDate(),
-      toDate: hours.to.toJSDate(),
+      toDate: hours.from.plus({ minute: hours.duration }).toJSDate(),
       users: selectedUsers,
     },
   };
-  const [tasks, setTasks] = useFetch(
-    TaskService.baseUrl,
-    options,
-    {
-      dependencies: [hours, selectedUsers, reload],
-      callback: (data) => data.map((task) => TaskService.createTaskObject(task)),
-      resetDataOnChange: false,
-      skipFirst: true,
-    },
-  );
+
+  const [tasks, setTasks] = useFetch(TaskService.baseUrl, options, {
+    dependencies: [hours, selectedUsers, reload],
+    callback: (data) => data.map((task) => TaskService.createTaskObject(task)),
+    resetDataOnChange: false,
+  });
 
   const handleTaskAdd = (task) => {
     const expectedStart = DateTime.fromISO(task.expectedStartDate);
@@ -81,15 +98,18 @@ const TaskDashboard = () => {
   };
 
   const newPanel = usePanel(
-    AddTask, {
+    AddTask,
+    {
       headerText: 'Create new task',
       onRenderFooterContent: () => (
         <PrimaryButton text="Create" type="submit" form="create-task-form" />
       ),
-    }, {
+    },
+    {
       handleAdd: handleTaskAdd,
     },
   );
+
   const [dialogProps, setDialogProps] = useState({});
   const resolveBusyConflictDialog = useDialog(
     TaskBusyConflict,
@@ -99,41 +119,42 @@ const TaskDashboard = () => {
       dialogFooter: (_accept, cancel) => (
         <>
           <DefaultButton onClick={cancel}>Cancel</DefaultButton>
-          <PrimaryButton style={{ marginLeft: '5px' }} form="task-busy-resolve" type="submit">Continue</PrimaryButton>
+          <PrimaryButton
+            style={{ marginLeft: '5px' }}
+            form="task-busy-resolve"
+            type="submit"
+          >
+            Continue
+          </PrimaryButton>
         </>
       ),
-    }, dialogProps,
+    },
+    dialogProps,
   );
 
   useEffect(() => {
     async function run() {
       if (global.connectionId) {
-        await ConnectionService.subscribe({ to: selectedUsers, connectionId: global.connectionId });
+        await ConnectionService.subscribe({
+          to: selectedUsers,
+          connectionId: global.connectionId,
+        });
       }
     }
     run();
   }, [selectedUsers, global.connectionId]);
 
-  // Update working hours when date is updated
-  useEffect(() => {
-    // Determine the difference between new current date and from hours, to check where we moved
-    // if difference > 0, we moved forward
-    const difference = DateTime.fromJSDate(currentDate).diff(hours.from, 'day').values.days;
-    setHours((prev) => ({
-      from: DateTime.fromJSDate(DateUtils.setDateFromTo(currentDate, prev.from.toJSDate())).toUTC(),
-      to: DateTime.fromJSDate(DateUtils.setDateFromTo(currentDate, prev.to.toJSDate())).toUTC(),
-    }));
-  }, [currentDate]);
-
   /**
    * Update user options
    */
   useEffect(() => {
-    setUserOptions(users.map((user) => ({
-      key: user.id,
-      text: user.username,
-      data: user,
-    })));
+    setUserOptions(
+      users.map((user) => ({
+        key: user.id,
+        text: user.username,
+        data: user,
+      })),
+    );
   }, [users]);
 
   const handleUserSelect = (ev, option) => {
@@ -145,10 +166,15 @@ const TaskDashboard = () => {
   };
 
   const handleStatusChange = async (task, status) => {
-    if (status === constants.tasks.status.InProgress && !task.isBackgroundTask) {
+    if (
+      status === constants.tasks.status.InProgress
+      && !task.isBackgroundTask
+    ) {
       // If status to be updated is in progress:
       // 1. Check for conflicts first,
-      const conflicts = await TaskService.getBusyTasks({ user: global.user.id });
+      const conflicts = await TaskService.getBusyTasks({
+        user: global.user.id,
+      });
       // if found, show the dialog
       if (conflicts.length > 0) {
         setDialogProps({
@@ -162,13 +188,11 @@ const TaskDashboard = () => {
     const updated = await TaskService.updateTaskStatus(task.id, { status });
     // if task was unpaused, update it too
     if (updated.unpaused?.id) {
-      setTasks((ts) => (ts.map((t) => (t.id === updated.unpaused.id
+      setTasks((ts) => ts.map((t) => (t.id === updated.unpaused.id
         ? TaskService.createTaskObject(updated.unpaused)
-        : t))));
+        : t)));
     }
-    setTasks((ts) => (ts.map((t) => (t.id === task.id
-      ? TaskService.createTaskObject(updated.result)
-      : t))));
+    setTasks((ts) => ts.map((t) => (t.id === task.id ? TaskService.createTaskObject(updated.result) : t)));
   };
 
   return (
@@ -178,12 +202,12 @@ const TaskDashboard = () => {
         <PageHeader text="Daily tasks" />
         <Row>
           <Col xs={12}>
-            <CurrentDate currentDate={currentDate} setCurrentDate={setCurrentDate} />
+            <CurrentDate currentDate={hours.from} setCurrentDate={setHours} />
           </Col>
         </Row>
         <Row>
           <Col>
-            <WorkingHours hours={hours} date={currentDate} setHours={setHours} />
+            <WorkingHours hours={hours} setHours={setHours} />
           </Col>
         </Row>
         <Separator />
@@ -197,7 +221,9 @@ const TaskDashboard = () => {
                   iconProps: {
                     iconName: 'Add',
                   },
-                  onClick: () => { newPanel.setOpen(true); },
+                  onClick: () => {
+                    newPanel.setOpen(true);
+                  },
                 },
                 {
                   key: 'users',
@@ -206,8 +232,15 @@ const TaskDashboard = () => {
                     iconName: 'ProfileSearch',
                   },
                   onRender: () => (
-                    <Stack horizontal horizontalAlign="center" verticalAlign="center">
-                      <Icon className={classes.searchIcon} iconName="ProfileSearch" />
+                    <Stack
+                      horizontal
+                      horizontalAlign="center"
+                      verticalAlign="center"
+                    >
+                      <Icon
+                        className={classes.searchIcon}
+                        iconName="ProfileSearch"
+                      />
                       <ComboBox
                         autoComplete="on"
                         options={userOptions}
@@ -230,9 +263,21 @@ const TaskDashboard = () => {
                     iconName: 'RedEye',
                   },
                   onRender: () => (
-                    <Stack tokens={{ childrenGap: 4 }} horizontalAlign="start" verticalAlign="center">
-                      <Checkbox label="Show Finished" checked={showFinsihed} onChange={(ev, checked) => setShowFinished(checked)} />
-                      <Checkbox label="Show Cancelled" checked={showCancelled} onChange={(ev, checked) => setShowCancelled(checked)} />
+                    <Stack
+                      tokens={{ childrenGap: 4 }}
+                      horizontalAlign="start"
+                      verticalAlign="center"
+                    >
+                      <Checkbox
+                        label="Show Finished"
+                        checked={showFinsihed}
+                        onChange={(ev, checked) => setShowFinished(checked)}
+                      />
+                      <Checkbox
+                        label="Show Cancelled"
+                        checked={showCancelled}
+                        onChange={(ev, checked) => setShowCancelled(checked)}
+                      />
                     </Stack>
                   ),
                 },
@@ -242,25 +287,22 @@ const TaskDashboard = () => {
         </Row>
         <Separator />
         <Row justify="around">
-          {
-              selectedUsers.map((selUser) => (
-                <TaskContainer
-                  key={selUser}
-                  tasks={
-                    tasks
-                      .filter((task) => task
-                        .assignedTo
-                        .find((user) => user.id === selUser) !== undefined)
-                      .sort((t1, t2) => (t1.expectedStartDate < t2.expectedStartDate ? -1 : 1))
-                    }
-                  user={users.find((u) => u.id === selUser)}
-                  setTasks={setTasks}
-                  handleStatusChange={handleStatusChange}
-                  showFinished={showFinsihed}
-                  showCancelled={showCancelled}
-                />
-              ))
-            }
+          {selectedUsers.map((selUser) => (
+            <TaskContainer
+              key={selUser}
+              tasks={tasks
+                .filter(
+                  (task) => task.assignedTo.find((user) => user.id === selUser)
+                    !== undefined,
+                )
+                .sort((t1, t2) => (t1.expectedStartDate < t2.expectedStartDate ? -1 : 1))}
+              user={users.find((u) => u.id === selUser)}
+              setTasks={setTasks}
+              handleStatusChange={handleStatusChange}
+              showFinished={showFinsihed}
+              showCancelled={showCancelled}
+            />
+          ))}
         </Row>
       </Container>
       {newPanel.render}

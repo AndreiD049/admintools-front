@@ -18,7 +18,9 @@ const TeamMatesAutocomplete = ({ onUserSelect }) => {
   }, []);
 
   const handleSelect = (value) => {
-    if (onUserSelect) { onUserSelect(value.data); }
+    if (onUserSelect) {
+      onUserSelect(value.data);
+    }
   };
 
   const autocomplete = (
@@ -34,9 +36,7 @@ const TeamMatesAutocomplete = ({ onUserSelect }) => {
     />
   );
 
-  return (
-    autocomplete
-  );
+  return autocomplete;
 };
 
 export default TeamMatesAutocomplete;

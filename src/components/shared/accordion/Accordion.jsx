@@ -1,11 +1,6 @@
-import React, {
-  useEffect,
-  useState,
-} from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import {
-  Icon, Text, concatStyleSets, makeStyles,
-} from '@fluentui/react';
+import { Icon, Text, concatStyleSets, makeStyles } from '@fluentui/react';
 import { Collapse } from 'react-collapse';
 import clsx from 'clsx';
 import './styles.css';
@@ -48,9 +43,10 @@ const defstyles = (theme, compact = false) => ({
  */
 
 const defaultRenderHeaderFold = (item, isOpen, classes) => (
-  <span style={{
-    paddingRight: '8px',
-  }}
+  <span
+    style={{
+      paddingRight: '8px',
+    }}
   >
     <Icon
       className={clsx({
@@ -62,13 +58,11 @@ const defaultRenderHeaderFold = (item, isOpen, classes) => (
   </span>
 );
 
-const defaultRenderHeaderText = (item) => <Text variant="medium">{item.text}</Text>;
-
-const defaultRenderItemContent = (item) => (
-  <p>
-    {item.text}
-  </p>
+const defaultRenderHeaderText = (item) => (
+  <Text variant="medium">{item.text}</Text>
 );
+
+const defaultRenderItemContent = (item) => <p>{item.text}</p>;
 
 /*
       Header has:
@@ -80,11 +74,12 @@ const defaultRenderItemContent = (item) => (
 const defaultRenderHeader = (item, headerProps, classProps) => {
   const classes = classProps;
   return (
-    <div style={{
-      display: 'flex',
-      flexFlow: 'row nowrap',
-      alignItems: 'center',
-    }}
+    <div
+      style={{
+        display: 'flex',
+        flexFlow: 'row nowrap',
+        alignItems: 'center',
+      }}
     >
       {headerProps.onRenderHeaderFold(item, headerProps.isOpen, classes)}
       {headerProps.onRenderHeaderText(item, headerProps.isOpen, classes)}
@@ -93,11 +88,14 @@ const defaultRenderHeader = (item, headerProps, classProps) => {
 };
 
 const AccordionItemContainer = ({
-  item, headerProps, onRenderItem, isOpen, onToggle, classes,
+  item,
+  headerProps,
+  onRenderItem,
+  isOpen,
+  onToggle,
+  classes,
 }) => (
-  <div
-    className={classes.container}
-  >
+  <div className={classes.container}>
     <div
       role="menuitem"
       tabIndex={0}
@@ -108,9 +106,7 @@ const AccordionItemContainer = ({
       {headerProps.onRenderHeader(item, { ...headerProps, isOpen }, classes)}
     </div>
     <Collapse isOpened={isOpen}>
-      <div className={classes.itemContent}>
-        {onRenderItem(item)}
-      </div>
+      <div className={classes.itemContent}>{onRenderItem(item)}</div>
     </Collapse>
   </div>
 );
@@ -132,7 +128,9 @@ const Accordion = ({
   onToggle,
 }) => {
   // Concatenate user provided styles with default styles if needed
-  const classes = makeStyles((theme) => concatStyleSets(defstyles(theme, compact), styles))();
+  const classes = makeStyles((theme) =>
+    concatStyleSets(defstyles(theme, compact), styles)
+  )();
   const [open, setOpen] = useState(() => {
     const result = {};
     items.forEach((item) => {
@@ -150,19 +148,21 @@ const Accordion = ({
 
   const handleSetOpen = (item) => {
     if (!exclusive) {
-      return (evt, i, val) => setOpen((prev) => ({
-        ...prev,
-        [getKey(item)]: val,
-      }));
+      return (evt, i, val) =>
+        setOpen((prev) => ({
+          ...prev,
+          [getKey(item)]: val,
+        }));
     }
-    return (evt, i, val) => setOpen((prev) => {
-      const copy = { ...prev };
-      const itemKey = getKey(item);
-      Object.keys(copy).forEach((key) => {
-        copy[key] = (key === itemKey ? val : false);
+    return (evt, i, val) =>
+      setOpen((prev) => {
+        const copy = { ...prev };
+        const itemKey = getKey(item);
+        Object.keys(copy).forEach((key) => {
+          copy[key] = key === itemKey ? val : false;
+        });
+        return copy;
       });
-      return copy;
-    });
   };
 
   useEffect(() => {
@@ -178,32 +178,32 @@ const Accordion = ({
 
   return (
     <div className={classes.root}>
-      {
-        items.map((item) => (
-          <AccordionItemContainer
-            item={item}
-            headerProps={defHeaderProps}
-            onRenderItem={onRenderItem}
-            isOpen={Boolean(open[getKey(item)])}
-            setOpen={handleSetOpen(item)}
-            getKey={getKey}
-            classes={classes}
-            key={getKey(item)}
-            onToggle={onToggle || handleSetOpen(item)}
-          />
-        ))
-      }
+      {items.map((item) => (
+        <AccordionItemContainer
+          item={item}
+          headerProps={defHeaderProps}
+          onRenderItem={onRenderItem}
+          isOpen={Boolean(open[getKey(item)])}
+          setOpen={handleSetOpen(item)}
+          getKey={getKey}
+          classes={classes}
+          key={getKey(item)}
+          onToggle={onToggle || handleSetOpen(item)}
+        />
+      ))}
     </div>
   );
 };
 
 Accordion.propTypes = {
-  items: PropTypes.arrayOf(PropTypes.shape({
-    key: PropTypes.string,
-    text: PropTypes.string,
-    header: PropTypes.string,
-    isOpen: PropTypes.bool,
-  })).isRequired,
+  items: PropTypes.arrayOf(
+    PropTypes.shape({
+      key: PropTypes.string,
+      text: PropTypes.string,
+      header: PropTypes.string,
+      isOpen: PropTypes.bool,
+    })
+  ).isRequired,
   getKey: PropTypes.func,
   onRenderItem: PropTypes.func,
   exclusive: PropTypes.bool,

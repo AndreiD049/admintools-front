@@ -1,10 +1,6 @@
-import {
-  ComboBox, makeStyles, Stack, Text,
-} from '@fluentui/react';
+import { ComboBox, makeStyles, Stack, Text } from '@fluentui/react';
 import PropTypes from 'prop-types';
 import React from 'react';
-import constants from '../../../../utils/constants';
-import DateUtils from '../../../../utils/date';
 
 const hourOptions = [
   { key: '00:00', text: '00:00' },
@@ -49,41 +45,46 @@ const WorkingHours = ({ hours, setHours }) => {
   const classes = useStyles();
 
   const handleChangeFrom = (evt, option) => {
-    // Change from hours
-    // It's always the same day so just update hours
     const [hour, minute] = option.key.split(':').map((o) => +o);
-    if (Number.isNaN(hour) || Number.isNaN(minute)) throw new Error('Option key is not in correct format. Supposed to be hh:mm.', option.key);
+    if (Number.isNaN(hour) || Number.isNaN(minute))
+      throw new Error(
+        'Option key is not in correct format. Supposed to be hh:mm.',
+        option.key
+      );
     setHours((prev) => ({
-      to: prev.to,
+      ...prev,
       from: prev.from.set({ hour, minute }),
     }));
   };
 
   const handleChangeTo = (evt, option) => {
-    // Change to hours
-    // if new to hours are before from hours - add 24 hours to it
-    // if difference between from and to is more than 24 hours, substract 24 hours from to
     const [hour, minute] = option.key.split(':').map((o) => +o);
-    if (Number.isNaN(hour) || Number.isNaN(minute)) throw new Error('Option key is not in correct format. Supposed to be hh:mm.', option.key);
-    let updatedToHours = hours.to.set({ hour, minute });
-    if (updatedToHours <= hours.from) updatedToHours = updatedToHours.plus({ hour: 24 });
-    const diff = updatedToHours.diff(hours.from, 'hour');
-    if (diff.values.hours > 24) updatedToHours = updatedToHours.minus({ hour: 24 });
+    if (Number.isNaN(hour) || Number.isNaN(minute))
+      throw new Error(
+        'Option key is not in correct format. Supposed to be hh:mm.',
+        option.key
+      );
+    let toHours = hours.from.set({ hour, minute });
+    // If we selected hours in the following day
+    if (toHours <= hours.from) toHours = toHours.plus({ day: 1 });
+    const diff = toHours.diff(hours.from, 'minute');
     setHours((prev) => ({
-      from: prev.from,
-      to: updatedToHours,
+      ...prev,
+      duration: diff.values.minutes,
     }));
   };
 
   return (
     <>
       <Stack horizontalAlign="center">
-        <Text className={classes.text} variant="medium">Working hours</Text>
+        <Text className={classes.text} variant="medium">
+          Working hours
+        </Text>
         <Stack horizontalAlign="center" horizontal verticalAlign="center">
           <ComboBox
             className={classes.combo}
-            options={constants.timeOptions}
-            selectedKey={DateUtils.getNearestTimeUTC(hours.from.toJSDate()).toFormat('HH:mm')}
+            options={hourOptions}
+            selectedKey={hours.from.toFormat('HH:mm')}
             autoComplete="on"
             useComboBoxAsMenuWidth
             calloutProps={{
@@ -95,7 +96,9 @@ const WorkingHours = ({ hours, setHours }) => {
           <ComboBox
             className={classes.combo}
             options={hourOptions}
-            selectedKey={DateUtils.getNearestTimeUTC(hours.to.toJSDate()).toFormat('HH:mm')}
+            selectedKey={hours.from
+              .plus({ minute: hours.duration ?? 0 })
+              .toFormat('HH:mm')}
             autoComplete="on"
             useComboBoxAsMenuWidth
             calloutProps={{
@@ -112,7 +115,7 @@ const WorkingHours = ({ hours, setHours }) => {
 WorkingHours.propTypes = {
   hours: PropTypes.shape({
     from: PropTypes.string,
-    to: PropTypes.string,
+    duration: PropTypes.number,
   }).isRequired,
   setHours: PropTypes.func.isRequired,
 };

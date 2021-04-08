@@ -13,7 +13,11 @@ import {
 import { useScreenClass } from 'react-grid-system';
 import { useParams } from 'react-router-dom';
 import {
-  validate, perform, not, and, or,
+  validate,
+  perform,
+  not,
+  and,
+  or,
 } from '../../../../services/validators';
 
 const useStyles = makeStyles((theme) => ({
@@ -36,32 +40,30 @@ const CustomPrefix = ({ children, id }) => {
         }}
         onClick={() => setIsCalloutVisible((prev) => !prev)}
       />
-      {
-        isCalloutVisible
-          ? (
-            <Callout
-              className={classes.calloutPrefix}
-              target={`#prefix-${id}`}
-              setInitialFocus
-              onDismiss={() => setIsCalloutVisible(false)}
-              role="alertdialog"
-            >
-              <Stack
-                horizontalAlign="start"
-                tokens={{
-                  childrenGap: 4,
-                }}
-                style={{
-                  padding: '20px',
-                }}
-              >
-                {children}
-                <DefaultButton onClick={() => setIsCalloutVisible(false)}>Close</DefaultButton>
-              </Stack>
-            </Callout>
-          )
-          : null
-      }
+      {isCalloutVisible ? (
+        <Callout
+          className={classes.calloutPrefix}
+          target={`#prefix-${id}`}
+          setInitialFocus
+          onDismiss={() => setIsCalloutVisible(false)}
+          role="alertdialog"
+        >
+          <Stack
+            horizontalAlign="start"
+            tokens={{
+              childrenGap: 4,
+            }}
+            style={{
+              padding: '20px',
+            }}
+          >
+            {children}
+            <DefaultButton onClick={() => setIsCalloutVisible(false)}>
+              Close
+            </DefaultButton>
+          </Stack>
+        </Callout>
+      ) : null}
     </>
   );
 };
@@ -97,7 +99,9 @@ const AppraisalInput = ({
   }
   const [value, setValue] = useState({ ...item });
   const [modified, setModified] = useState(false);
-  const [multiline, setMultiline] = useState(item.content.length > multilineTrashold);
+  const [multiline, setMultiline] = useState(
+    item.content.length > multilineTrashold
+  );
   const { userId } = useParams();
   const [validations, setValidations] = useState({
     isRelated: false,
@@ -112,19 +116,20 @@ const AppraisalInput = ({
       const calls = [
         perform(validate.itemRelated(item), false),
         perform(validate.itemStatus(item, 'Finished'), false),
-        perform(and([
-          not(validate.itemRelated(item)),
-          or([
-            not(validate.isTruthy(userId)),
-            validate.isTruthy(userId),
+        perform(
+          and([
+            not(validate.itemRelated(item)),
+            or([not(validate.isTruthy(userId)), validate.isTruthy(userId)]),
           ]),
-        ]), false),
+          false
+        ),
       ];
-      const [checkRelated, checkFinished, checkEditable] = await Promise.all(calls);
+      const [checkRelated, checkFinished, checkEditable] = await Promise.all(
+        calls
+      );
       const isRelated = checkRelated.result;
       const isFinished = checkFinished.result;
-      const inputEditable = (canInsert || canUpdate)
-      && checkEditable.result;
+      const inputEditable = (canInsert || canUpdate) && checkEditable.result;
       const isDeletable = canDelete && !isRelated;
       if (mounted) {
         setValidations({
@@ -162,7 +167,9 @@ const AppraisalInput = ({
   };
 
   const handleTypeChange = (type) => async () => {
-    if (item.id !== 0) { await changeTypeHandler(item.id, type); }
+    if (item.id !== 0) {
+      await changeTypeHandler(item.id, type);
+    }
   };
 
   const handleDelete = async (e) => {
@@ -217,123 +224,116 @@ const AppraisalInput = ({
         childrenGap: '3',
       }}
     >
-      {
-        validations.isRelated
-          ? (
-            <>
-              <Stack.Item>
-                <Text variant="medium">
-                  This item was added automatically from previous appraisals
-                </Text>
-              </Stack.Item>
-              <Stack.Item align="stretch">
-                <Separator />
-              </Stack.Item>
-            </>
-          )
-          : null
-      }
+      {validations.isRelated ? (
+        <>
+          <Stack.Item>
+            <Text variant="medium">
+              This item was added automatically from previous appraisals
+            </Text>
+          </Stack.Item>
+          <Stack.Item align="stretch">
+            <Separator />
+          </Stack.Item>
+        </>
+      ) : null}
       <Text variant="medium">
-        <strong>Created user:</strong>
-        {' '}
+        <strong>Created user:</strong>{' '}
         {item.createdUser && item.createdUser.username}
       </Text>
       <Text variant="medium">
-        <strong>Created date:</strong>
-        {' '}
+        <strong>Created date:</strong>{' '}
         {item.createdDate && new Date(item.createdDate).toLocaleString()}
       </Text>
       <Stack.Item align="stretch">
         <Separator />
       </Stack.Item>
-      {
-        item.modifiedUser
-          ? (
-            <>
-              <Stack.Item>
-                <Text variant="medium">
-                  <strong>Modified user:</strong>
-                  {' '}
-                  {item.modifiedUser && item.modifiedUser.username}
-                </Text>
-              </Stack.Item>
-            </>
-          )
-          : null
-      }
-      {
-        item.modifiedUser
-          ? (
-            <>
-              <Stack.Item>
-                <Text variant="medium">
-                  <strong>Modified date:</strong>
-                  {' '}
-                  {item.modifiedDate && new Date(item.modifiedDate).toLocaleString()}
-                </Text>
-              </Stack.Item>
-              <Stack.Item align="stretch">
-                <Separator />
-              </Stack.Item>
-            </>
-          )
-          : null
-      }
+      {item.modifiedUser ? (
+        <>
+          <Stack.Item>
+            <Text variant="medium">
+              <strong>Modified user:</strong>{' '}
+              {item.modifiedUser && item.modifiedUser.username}
+            </Text>
+          </Stack.Item>
+        </>
+      ) : null}
+      {item.modifiedUser ? (
+        <>
+          <Stack.Item>
+            <Text variant="medium">
+              <strong>Modified date:</strong>{' '}
+              {item.modifiedDate &&
+                new Date(item.modifiedDate).toLocaleString()}
+            </Text>
+          </Stack.Item>
+          <Stack.Item align="stretch">
+            <Separator />
+          </Stack.Item>
+        </>
+      ) : null}
     </Stack>
   );
 
-  return item.type !== 'Feedback'
-    ? (
-      <TextField
-        id={`app-item-${item.type.toLowerCase()}-${idx}`}
-        value={value.content}
-        resizable
-        multiline={multiline}
-        styles={{
-          prefix: {
-            backgroundColor: 'transparent',
-            padding: '0',
-          },
-          suffix: {
-            backgroundColor: 'transparent',
-            padding: '0',
-          },
-          field: {
-            padding: '0',
-          },
-        }}
-        onRenderPrefix={() => (item.id !== 0 ? <CustomPrefix id={`${item.type}-${idx}`}>{tooltip}</CustomPrefix> : null)}
-        onRenderSuffix={() => (item.id !== 0 ? <CustomSuffix menuProps={menuProps} /> : null)}
-        autoAdjustHeight
-        autoComplete="off"
-        onChange={handleChange}
-        onBlur={handleBlur}
-        readOnly={!validations.inputEditable}
-        iconProps={validations.isRelated ? {
-          iconName: 'History',
-          style: {
-            position: 'relative',
-            alignSelf: 'center',
-            bottom: 0,
-            right: 0,
-            paddingRight: 0,
-            marginLeft: '8px',
-          },
-        } : null}
-      />
-    )
-    : (
-      <TextField
-        id={`app-item-${item.type.toLowerCase()}-${idx}`}
-        value={value.content}
-        multiline
-        autoAdjustHeight
-        autoComplete="off"
-        onChange={handleChange}
-        onBlur={handleBlur}
-        disabled={!validations.inputEditable}
-      />
-    );
+  return item.type !== 'Feedback' ? (
+    <TextField
+      id={`app-item-${item.type.toLowerCase()}-${idx}`}
+      value={value.content}
+      resizable
+      multiline={multiline}
+      styles={{
+        prefix: {
+          backgroundColor: 'transparent',
+          padding: '0',
+        },
+        suffix: {
+          backgroundColor: 'transparent',
+          padding: '0',
+        },
+        field: {
+          padding: '0',
+        },
+      }}
+      onRenderPrefix={() =>
+        item.id !== 0 ? (
+          <CustomPrefix id={`${item.type}-${idx}`}>{tooltip}</CustomPrefix>
+        ) : null
+      }
+      onRenderSuffix={() =>
+        item.id !== 0 ? <CustomSuffix menuProps={menuProps} /> : null
+      }
+      autoAdjustHeight
+      autoComplete="off"
+      onChange={handleChange}
+      onBlur={handleBlur}
+      readOnly={!validations.inputEditable}
+      iconProps={
+        validations.isRelated
+          ? {
+              iconName: 'History',
+              style: {
+                position: 'relative',
+                alignSelf: 'center',
+                bottom: 0,
+                right: 0,
+                paddingRight: 0,
+                marginLeft: '8px',
+              },
+            }
+          : null
+      }
+    />
+  ) : (
+    <TextField
+      id={`app-item-${item.type.toLowerCase()}-${idx}`}
+      value={value.content}
+      multiline
+      autoAdjustHeight
+      autoComplete="off"
+      onChange={handleChange}
+      onBlur={handleBlur}
+      disabled={!validations.inputEditable}
+    />
+  );
 };
 
 AppraisalInput.propTypes = {
@@ -343,11 +343,17 @@ AppraisalInput.propTypes = {
     type: PropTypes.string,
     content: PropTypes.string,
     relatedItemId: PropTypes.string,
-    createdUser: PropTypes.oneOfType([PropTypes.string, PropTypes.shape({
-      id: PropTypes.string,
-      username: PropTypes.string,
-    })]),
-    createdDate: PropTypes.oneOfType([PropTypes.string, PropTypes.objectOf(Date)]),
+    createdUser: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.shape({
+        id: PropTypes.string,
+        username: PropTypes.string,
+      }),
+    ]),
+    createdDate: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.objectOf(Date),
+    ]),
     modifiedUser: PropTypes.shape({
       id: PropTypes.string,
       username: PropTypes.string,

@@ -13,9 +13,13 @@ const TaskRuleService = {
       if (response.status === 200) {
         return response.data;
       }
-      throw new Error(`Server response: ${response.data} - ${response.statusText}`);
+      throw new Error(
+        `Server response: ${response.data} - ${response.statusText}`
+      );
     } catch (err) {
-      NotificationService.notifyError((err.response && err.response.data.error) || err.message);
+      NotificationService.notifyError(
+        (err.response && err.response.data.error) || err.message
+      );
       throw err;
     }
   },
@@ -24,7 +28,9 @@ const TaskRuleService = {
     try {
       // pass
     } catch (err) {
-      NotificationService.notifyError((err.response && err.response.data.error) || err.message);
+      NotificationService.notifyError(
+        (err.response && err.response.data.error) || err.message
+      );
       throw err;
     }
   },
@@ -35,9 +41,13 @@ const TaskRuleService = {
       if (response.status === 200) {
         return response.data;
       }
-      throw new Error(`Server response: ${response.data} - ${response.statusText}`);
+      throw new Error(
+        `Server response: ${response.data} - ${response.statusText}`
+      );
     } catch (err) {
-      NotificationService.notifyError((err.response && err.response.data.error) || err.message);
+      NotificationService.notifyError(
+        (err.response && err.response.data.error) || err.message
+      );
       throw err;
     }
   },
@@ -48,9 +58,13 @@ const TaskRuleService = {
       if (response.status === 200) {
         return response.data;
       }
-      throw new Error(`Server response: ${response.data} - ${response.statusText}`);
+      throw new Error(
+        `Server response: ${response.data} - ${response.statusText}`
+      );
     } catch (err) {
-      NotificationService.notifyError((err.response && err.response.data.error) || err.message);
+      NotificationService.notifyError(
+        (err.response && err.response.data.error) || err.message
+      );
       throw err;
     }
   },
@@ -59,7 +73,9 @@ const TaskRuleService = {
     try {
       // pass
     } catch (err) {
-      NotificationService.notifyError((err.response && err.response.data.error) || err.message);
+      NotificationService.notifyError(
+        (err.response && err.response.data.error) || err.message
+      );
       throw err;
     }
   },

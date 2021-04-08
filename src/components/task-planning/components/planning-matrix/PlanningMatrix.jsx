@@ -21,7 +21,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const PlanningMatrix = ({
-  userFlowMap, dates, users, selectedCell, setSelectedCell, handleInvoke,
+  userFlowMap,
+  dates,
+  users,
+  selectedCell,
+  setSelectedCell,
+  handleInvoke,
 }) => {
   const classes = useStyles();
   const theme = useTheme();
@@ -31,18 +36,24 @@ const PlanningMatrix = ({
     name: 'Username',
     fieldName: 'username',
     maxWidth: 300,
-    onRender: (item) => (<Persona size={PersonaSize.size24} text={item.username} />),
+    onRender: (item) => (
+      <Persona size={PersonaSize.size24} text={item.username} />
+    ),
     isResizable: true,
   };
 
-  const isSelected = (date, userId) => Boolean(selectedCell?.date
-      && selectedCell.date === date
-      && selectedCell?.user
-      && selectedCell.user === userId);
+  const isSelected = (date, userId) =>
+    Boolean(
+      selectedCell?.date &&
+        selectedCell.date === date &&
+        selectedCell?.user &&
+        selectedCell.user === userId
+    );
 
   const handleSelectCell = (date, user) => () => {
     setSelectedCell({
-      date, user,
+      date,
+      user,
     });
   };
 
@@ -64,25 +75,31 @@ const PlanningMatrix = ({
             }}
           />
         )}
-        columns={[userCol].concat(dates.map((date) => ({
-          key: DateTime.fromJSDate(date).toISODate(),
-          name: DateTime.fromJSDate(date).toISODate(),
-          minWidth: 100,
-          styles: {
-            root: {
-              border: `1px solid ${DateTime.fromJSDate(date).toISODate() === today ? theme.palette.themePrimary : 'transparent'}`,
+        columns={[userCol].concat(
+          dates.map((date) => ({
+            key: DateTime.fromJSDate(date).toISODate(),
+            name: DateTime.fromJSDate(date).toISODate(),
+            minWidth: 100,
+            styles: {
+              root: {
+                border: `1px solid ${
+                  DateTime.fromJSDate(date).toISODate() === today
+                    ? theme.palette.themePrimary
+                    : 'transparent'
+                }`,
+              },
             },
-          },
-          onRender: (item, idx, col) => (
-            <PlanningCell
-              // eslint-disable-next-line react/prop-types
-              userFlows={userFlowMap.get(item.id)?.get(col.key)}
-              handleClick={handleSelectCell(col.key, item.id)}
-              handleInvoke={handleInvoke}
-              isSelected={isSelected(col.key, item.id)}
-            />
-          ),
-        })))}
+            onRender: (item, idx, col) => (
+              <PlanningCell
+                // eslint-disable-next-line react/prop-types
+                userFlows={userFlowMap.get(item.id)?.get(col.key)}
+                handleClick={handleSelectCell(col.key, item.id)}
+                handleInvoke={handleInvoke}
+                isSelected={isSelected(col.key, item.id)}
+              />
+            ),
+          }))
+        )}
         items={users}
         selectionMode={SelectionMode.none}
       />
@@ -93,10 +110,12 @@ const PlanningMatrix = ({
 PlanningMatrix.propTypes = {
   userFlowMap: PropTypes.instanceOf(Map).isRequired,
   dates: PropTypes.arrayOf(PropTypes.instanceOf(Date)).isRequired,
-  users: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.string,
-    username: PropTypes.string,
-  })).isRequired,
+  users: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string,
+      username: PropTypes.string,
+    })
+  ).isRequired,
   selectedCell: PropTypes.shape({
     date: PropTypes.string,
     user: PropTypes.string,

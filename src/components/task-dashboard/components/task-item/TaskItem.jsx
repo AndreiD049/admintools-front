@@ -1,10 +1,12 @@
-import React, {
-  useEffect, useRef, useState,
-} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {
-  ActionButton, makeStyles, Separator, Text, TooltipHost,
+  ActionButton,
+  makeStyles,
+  Separator,
+  Text,
+  TooltipHost,
 } from '@fluentui/react';
 import { DateTime } from 'luxon';
 import TaskCollapsed from '../task-collapsed/TaskCollapsed';
@@ -157,10 +159,11 @@ const TaskItem = ({ task, handleStatusChange }) => {
   const [collapsed, setCollapsed] = useState(true);
   const timerRef = useRef(null);
 
-  const setIcon = (icon, state) => setIcons((prev) => ({
-    ...prev,
-    [icon]: state,
-  }));
+  const setIcon = (icon, state) =>
+    setIcons((prev) => ({
+      ...prev,
+      [icon]: state,
+    }));
 
   const performChecks = () => {
     const expectedFinishDate = DateTime.fromISO(task.expectedFinishDate);
@@ -202,43 +205,65 @@ const TaskItem = ({ task, handleStatusChange }) => {
 
   return (
     <div className={classes.root}>
-      <div className={clsx(`task-${task.status.toLowerCase()}`, classes.column)}>
-        <span className={clsx([`task-${task.status.toLowerCase()}-status`, classes.status])}>
+      <div
+        className={clsx(`task-${task.status.toLowerCase()}`, classes.column)}
+      >
+        <span
+          className={clsx([
+            `task-${task.status.toLowerCase()}-status`,
+            classes.status,
+          ])}
+        >
           {task.status}
         </span>
-        <div style={{
-          display: 'flex',
-          flexFlow: 'row nowrap',
-          justifyContent: 'space-between',
-          minHeight: 'inherit',
-          alignItems: 'center',
-        }}
+        <div
+          style={{
+            display: 'flex',
+            flexFlow: 'row nowrap',
+            justifyContent: 'space-between',
+            minHeight: 'inherit',
+            alignItems: 'center',
+          }}
         >
           <div className={classes.rows}>
             <div className={classes.taskDescription}>
               <div className={classes.icons}>
-                { icons.expired && (
-                <TooltipHost content="This task is expired">
-                  <ExpiredIcon className={classes.icon_expired} />
-                </TooltipHost>
+                {icons.expired && (
+                  <TooltipHost content="This task is expired">
+                    <ExpiredIcon className={classes.icon_expired} />
+                  </TooltipHost>
                 )}
-                { icons.paused && (
-                <TooltipHost content="This task is paused">
-                  <PausedIcon className={classes.icon_paused} />
-                </TooltipHost>
+                {icons.paused && (
+                  <TooltipHost content="This task is paused">
+                    <PausedIcon className={classes.icon_paused} />
+                  </TooltipHost>
                 )}
               </div>
-              <Text variant="medium" className={clsx([classes.title, collapsed && classes.nowrap])}>{task.title}</Text>
-              <Text variant="smallPlus" className={clsx([classes.description, collapsed ? classes.nowrap : classes.prewrap])}>{task.description}</Text>
+              <Text
+                variant="medium"
+                className={clsx([classes.title, collapsed && classes.nowrap])}
+              >
+                {task.title}
+              </Text>
+              <Text
+                variant="smallPlus"
+                className={clsx([
+                  classes.description,
+                  collapsed ? classes.nowrap : classes.prewrap,
+                ])}
+              >
+                {task.description}
+              </Text>
             </div>
           </div>
           <div className={classes.time}>
             <Text variant="smallPlus">{time.from}</Text>
-            <Separator styles={{
-              root: {
-                padding: 0,
-              },
-            }}
+            <Separator
+              styles={{
+                root: {
+                  padding: 0,
+                },
+              }}
             />
             <Text variant="smallPlus">{time.to}</Text>
           </div>
@@ -252,7 +277,9 @@ const TaskItem = ({ task, handleStatusChange }) => {
         <div
           tabIndex="-1"
           role="button"
-          onKeyDown={(evt) => evt.key === 'Enter' && setCollapsed((prev) => !prev)}
+          onKeyDown={(evt) =>
+            evt.key === 'Enter' && setCollapsed((prev) => !prev)
+          }
           className={clsx(classes.collapse)}
           onClick={() => setCollapsed((prev) => !prev)}
         >
@@ -277,8 +304,14 @@ TaskItem.propTypes = {
     title: PropTypes.string,
     description: PropTypes.string,
     duration: PropTypes.number,
-    expectedStartDate: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
-    expectedFinishDate: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
+    expectedStartDate: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.instanceOf(Date),
+    ]),
+    expectedFinishDate: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.instanceOf(Date),
+    ]),
   }).isRequired,
 };
 

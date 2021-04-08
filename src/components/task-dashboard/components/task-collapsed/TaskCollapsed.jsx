@@ -2,7 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Collapse } from 'react-collapse';
 import {
-  ButtonGrid, DefaultButton, makeStyles, Separator, Text,
+  ButtonGrid,
+  DefaultButton,
+  makeStyles,
+  Separator,
+  Text,
 } from '@fluentui/react';
 import TaskPersonas from '../task-personas/TaskPersonas';
 
@@ -19,7 +23,10 @@ const useStyles = makeStyles(() => ({
 }));
 
 const TaskCollapsed = ({
-  task, collapsed, setCollapsed, handleStatusChange,
+  task,
+  collapsed,
+  setCollapsed,
+  handleStatusChange,
 }) => {
   const classes = useStyles();
 

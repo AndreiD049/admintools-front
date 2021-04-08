@@ -22,7 +22,8 @@ const Tasks = () => {
             to="/"
             failureNotification={{
               header: 'No Access',
-              content: 'No permission to access this page. Please contact your administrator.',
+              content:
+                'No permission to access this page. Please contact your administrator.',
             }}
           >
             <DocumentTitle title="Task Dashboard">
@@ -37,7 +38,8 @@ const Tasks = () => {
             to="/"
             failureNotification={{
               header: 'No Access',
-              content: 'No permission to access this page. Please contact your administrator.',
+              content:
+                'No permission to access this page. Please contact your administrator.',
             }}
           >
             <DocumentTitle title="Planning">
@@ -52,7 +54,8 @@ const Tasks = () => {
             to="/"
             failureNotification={{
               header: 'No Access',
-              content: 'No permission to access this page. Please contact your administrator.',
+              content:
+                'No permission to access this page. Please contact your administrator.',
             }}
           >
             <DocumentTitle title="Task Rules">
@@ -67,7 +70,8 @@ const Tasks = () => {
             to="/"
             failureNotification={{
               header: 'No Access',
-              content: 'No permission to access this page. Please contact your administrator.',
+              content:
+                'No permission to access this page. Please contact your administrator.',
             }}
           >
             <DocumentTitle title="Flows">
@@ -82,7 +86,8 @@ const Tasks = () => {
             to="/"
             failureNotification={{
               header: 'No Access',
-              content: 'No permission to access this page. Please contact your administrator.',
+              content:
+                'No permission to access this page. Please contact your administrator.',
             }}
           >
             <DocumentTitle title="Task">

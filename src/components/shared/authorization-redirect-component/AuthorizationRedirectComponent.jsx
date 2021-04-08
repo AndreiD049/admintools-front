@@ -4,7 +4,11 @@ import GlobalContext from '../../../services/GlobalContext';
 import NotificationService from '../../../services/NotificationService';
 
 const AuthorizationRedirectComponent = ({
-  code, grant, to, failureNotification, ...props
+  code,
+  grant,
+  to,
+  failureNotification,
+  ...props
 }) => {
   const global = useContext(GlobalContext);
   const [access, setAccess] = useState(false);
@@ -30,7 +34,7 @@ const AuthorizationRedirectComponent = ({
   }
 
   if (redirect) {
-    result = (<Redirect to={to || '/'} />);
+    result = <Redirect to={to || '/'} />;
   }
 
   return result;

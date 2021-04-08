@@ -3,7 +3,10 @@ import AppraisalService from '../../../../services/AppraisalService';
 import UserService from '../../../../services/UserService';
 
 const AppraisalUserInfo = ({
-  periodId, userId, setUserDetails, setPeriodDetails,
+  periodId,
+  userId,
+  setUserDetails,
+  setPeriodDetails,
 }) => {
   useEffect(() => {
     async function run() {

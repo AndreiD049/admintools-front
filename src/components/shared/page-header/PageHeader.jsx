@@ -12,7 +12,9 @@ const styles = {
 
 const PageHeader = ({ text }) => (
   <Stack horizontal horizontalAlign="center">
-    <Text variant="xLarge" styles={styles}>{text}</Text>
+    <Text variant="xLarge" styles={styles}>
+      {text}
+    </Text>
   </Stack>
 );
 

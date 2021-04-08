@@ -1,7 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
-  DefaultButton, Dropdown, Label, PrimaryButton, Stack, SwatchColorPicker, TextField,
+  DefaultButton,
+  Dropdown,
+  Label,
+  PrimaryButton,
+  Stack,
+  SwatchColorPicker,
+  TextField,
 } from '@fluentui/react';
 import { PanelContext } from '../../../ui-hooks/usePanel';
 import { useFetch } from '../../../../services/hooks';
@@ -19,7 +25,9 @@ const AddFlow = ({ setFlows }) => {
   });
   const panel = useContext(PanelContext);
 
-  const handleDataChange = (field, func = (args) => args[0].target.value) => (...args) => {
+  const handleDataChange = (field, func = (args) => args[0].target.value) => (
+    ...args
+  ) => {
     setData((prev) => ({
       ...prev,
       [field]: func(args),
@@ -30,9 +38,11 @@ const AddFlow = ({ setFlows }) => {
     evt.preventDefault();
     if (!data.name) {
       return NotificationService.notifyError('Flow Name is missing');
-    } if (data.teams.length === 0) {
+    }
+    if (data.teams.length === 0) {
       return NotificationService.notifyError('Please choose at least one team');
-    } if (!data.color) {
+    }
+    if (!data.color) {
       return NotificationService.notifyError('Color must be provided');
     }
     const createdFlow = await TaskFlowService.createTaskFlow(data);
@@ -45,12 +55,12 @@ const AddFlow = ({ setFlows }) => {
 
   useEffect(() => {
     if (panel.isPanel) {
-      panel.setOnRenderFooter(() => (() => (
+      panel.setOnRenderFooter(() => () => (
         <Stack horizontal tokens={{ childrenGap: 2 }}>
           <PrimaryButton text="Create" type="submit" form="add-flow-form" />
           <DefaultButton text="Close" onClick={() => panel.setOpen(false)} />
         </Stack>
-      )));
+      ));
     }
   }, [panel]);
 

@@ -63,17 +63,21 @@ const FieldSet = ({
       let isLocked = !userId
         ? (await validate.periodLocked(details, user.id)()).result
         : false;
-      const isFinished = (await validate.periodStatus(details, 'Finished')()).result;
+      const isFinished = (await validate.periodStatus(details, 'Finished')())
+        .result;
       // Locked is false by default for finished periods
       if (isFinished) isLocked = false;
       // if period is locked, we cannot insert, update or delete items
       if (!isLocked) {
-        const canInsert = (await perform(validate
-          .canInsert(context, details, userId), false)).result;
-        const canUpdate = (await perform(validate
-          .canUpdate(context, details, userId), false)).result;
-        const canDelete = (await perform(validate
-          .canDelete(context, details, userId), false)).result;
+        const canInsert = (
+          await perform(validate.canInsert(context, details, userId), false)
+        ).result;
+        const canUpdate = (
+          await perform(validate.canUpdate(context, details, userId), false)
+        ).result;
+        const canDelete = (
+          await perform(validate.canDelete(context, details, userId), false)
+        ).result;
         setValidations((prev) => ({
           ...prev,
           canInsert,
@@ -82,113 +86,122 @@ const FieldSet = ({
         }));
       }
     }
-    setItems(AppraisalService.normalizeSet(
-      periodId,
-      context.user,
-      items,
-      min,
-      type,
-    ));
+    setItems(
+      AppraisalService.normalizeSet(periodId, context.user, items, min, type)
+    );
     run();
     // eslint-disable-next-line
   }, []);
 
   // CRUD functions
-  const addItem = useCallback(async (id, item) => {
-    if (!userId) {
-      return AppraisalService.addItemToSet(id, item);
-    }
-    return AppraisalService.addUserItemToSet(id, userId, item);
-  }, [userId]);
-
-  const updateItem = useCallback(async (id, item) => {
-    if (!userId) {
-      return AppraisalService.updateItemInSet(id, item);
-    }
-    return AppraisalService.updateUserItemInSet(id, userId, item);
-  }, [userId]);
-
-  const deleteItem = useCallback(async (id, item) => {
-    if (!userId) {
-      return AppraisalService.deleteItemFromSet(id, item);
-    }
-    return AppraisalService.deleteUserItemFromSet(id, userId, item);
-  }, [userId]);
-
-  const changeHandler = useCallback((item, idx, firstChange) => {
-    if (firstChange) {
-      setItems((prev) => {
-        const copy = prev.slice();
-        copy[idx].content = item.content;
-        return AppraisalService.normalizeSet(
-          periodId, user, copy, min, type,
-        );
-      });
-    }
-  }, [user, periodId, type, min, setItems]);
-
-  const changeTypeHandler = useCallback(async (itemId, itemType) => {
-    if (itemId !== 0 && setOtherItems) {
-      const item = items.find((i) => i.id === itemId);
-      if (item) {
-        item.type = itemType;
-        const result = await updateItem(periodId, item);
-        if (!result.error) {
-          setItems((prev) => (
-            AppraisalService.normalizeSet(
-              periodId,
-              user,
-              prev.filter((i) => i.id !== result.value.id),
-              min,
-              itemType,
-            )));
-          setOtherItems((prev) => AppraisalService.normalizeSet(
-            periodId,
-            user,
-            prev.filter((i) => i.content !== '').concat(result.value),
-            min,
-            itemType,
-          ));
-        }
+  const addItem = useCallback(
+    async (id, item) => {
+      if (!userId) {
+        return AppraisalService.addItemToSet(id, item);
       }
-    }
-  }, [user, setOtherItems, min, items, periodId, setItems, updateItem]);
+      return AppraisalService.addUserItemToSet(id, userId, item);
+    },
+    [userId]
+  );
 
-  // Handle the remove button press
-  const removeHandler = useCallback(async (item, idx) => {
-    try {
-      if (!Number.isNaN(idx) && idx < items.length) {
-        if (item.id !== 0) {
-          const result = await deleteItem(periodId, items[idx]);
-          if (result.error !== null) {
-            throw result.error;
-          }
-        }
+  const updateItem = useCallback(
+    async (id, item) => {
+      if (!userId) {
+        return AppraisalService.updateItemInSet(id, item);
+      }
+      return AppraisalService.updateUserItemInSet(id, userId, item);
+    },
+    [userId]
+  );
+
+  const deleteItem = useCallback(
+    async (id, item) => {
+      if (!userId) {
+        return AppraisalService.deleteItemFromSet(id, item);
+      }
+      return AppraisalService.deleteUserItemFromSet(id, userId, item);
+    },
+    [userId]
+  );
+
+  const changeHandler = useCallback(
+    (item, idx, firstChange) => {
+      if (firstChange) {
         setItems((prev) => {
-          const copy = prev.filter((i) => i.id !== item.id);
-          return AppraisalService.normalizeSet(
-            periodId,
-            user,
-            copy,
-            min,
-            type,
-          );
+          const copy = prev.slice();
+          copy[idx].content = item.content;
+          return AppraisalService.normalizeSet(periodId, user, copy, min, type);
         });
       }
-    } catch (err) {
-      setItems((prev) => {
-        const copy = prev.slice();
-        copy[idx] = item;
-        return AppraisalService.normalizeSet(
-          periodId,
-          user,
-          copy,
-          min,
-          type,
-        );
-      });
-    }
-  }, [user, items, periodId, type, min, deleteItem, setItems]);
+    },
+    [user, periodId, type, min, setItems]
+  );
+
+  const changeTypeHandler = useCallback(
+    async (itemId, itemType) => {
+      if (itemId !== 0 && setOtherItems) {
+        const item = items.find((i) => i.id === itemId);
+        if (item) {
+          item.type = itemType;
+          const result = await updateItem(periodId, item);
+          if (!result.error) {
+            setItems((prev) =>
+              AppraisalService.normalizeSet(
+                periodId,
+                user,
+                prev.filter((i) => i.id !== result.value.id),
+                min,
+                itemType
+              )
+            );
+            setOtherItems((prev) =>
+              AppraisalService.normalizeSet(
+                periodId,
+                user,
+                prev.filter((i) => i.content !== '').concat(result.value),
+                min,
+                itemType
+              )
+            );
+          }
+        }
+      }
+    },
+    [user, setOtherItems, min, items, periodId, setItems, updateItem]
+  );
+
+  // Handle the remove button press
+  const removeHandler = useCallback(
+    async (item, idx) => {
+      try {
+        if (!Number.isNaN(idx) && idx < items.length) {
+          if (item.id !== 0) {
+            const result = await deleteItem(periodId, items[idx]);
+            if (result.error !== null) {
+              throw result.error;
+            }
+          }
+          setItems((prev) => {
+            const copy = prev.filter((i) => i.id !== item.id);
+            return AppraisalService.normalizeSet(
+              periodId,
+              user,
+              copy,
+              min,
+              type
+            );
+          });
+        }
+      } catch (err) {
+        setItems((prev) => {
+          const copy = prev.slice();
+          copy[idx] = item;
+          return AppraisalService.normalizeSet(periodId, user, copy, min, type);
+        });
+      }
+    },
+    [user, items, periodId, type, min, deleteItem, setItems]
+  );
 
   /*
       Following procedure needs to syncronize the current
@@ -199,81 +212,99 @@ const FieldSet = ({
     the group of inputs (index), and a
     flag saiyng whether it was modified.
    */
-  const blurHandler = useCallback(async (item, idx, modified) => {
-    // If the element i want to syncronize is valid, meaning it has correct order number and type.
-    if (idx < items.length && item.type === type) {
-      // I determine if the item is new (if it was earlier saved to the database)
-      const isNew = item.id === 0 && item.content;
-      // I determine if the item needs to be deleted from the database
-      // (is not new and content is empty)
-      const isToBeDeleted = item.id !== 0 && item.content === '';
-      if (isNew) {
-        // I try to add the item to the database.
-        const result = await addItem(periodId, item);
-        // Depending whether the addition succeeded or not, i update the input field accordingly
-        setItems((prev) => {
-          const copy = prev.slice();
-          if (!result.error) {
-            copy[idx] = result.value;
-          } else {
-            copy[idx] = item;
-            copy[idx].content = '';
-          }
-          return AppraisalService.normalizeSet(
-            periodId,
-            user,
-            copy,
-            min,
-            type,
-          );
-        });
-      } else if (isToBeDeleted) {
-        // I try to delete the item from the database:
-        const result = await deleteItem(periodId, item);
-        // Depending whether the addition succeeded or not, i update the input field accordingly
-        setItems((prev) => {
-          let copy = prev.slice();
-          if (!result.error) {
-            copy = copy.filter((i) => i.id !== item.id);
-          } else if (result.value) {
-            copy[idx] = result.value;
-          }
-          return AppraisalService.normalizeSet(
-            periodId,
-            user,
-            copy,
-            min,
-            type,
-          );
-        });
-      } else if (!isNew && !isToBeDeleted && modified && item.content !== '') {
-        // I try to modify item in the database
-        const result = await updateItem(periodId, item);
-        // Depending whether the addition succeeded or not, i update the input field accordingly
-        setItems((prev) => {
-          let copy;
-          if (result.error) {
-            copy = prev.slice();
-            if (result.value) copy[idx] = result.value;
-          } else {
-            copy = prev.map((i) => {
-              if (i.id === item.id) {
-                return result.value;
-              }
-              return i;
-            });
-          }
-          return AppraisalService.normalizeSet(
-            periodId,
-            user,
-            copy,
-            min,
-            type,
-          );
-        });
+  const blurHandler = useCallback(
+    async (item, idx, modified) => {
+      // If the element i want to syncronize is valid, meaning it has correct order number and type.
+      if (idx < items.length && item.type === type) {
+        // I determine if the item is new (if it was earlier saved to the database)
+        const isNew = item.id === 0 && item.content;
+        // I determine if the item needs to be deleted from the database
+        // (is not new and content is empty)
+        const isToBeDeleted = item.id !== 0 && item.content === '';
+        if (isNew) {
+          // I try to add the item to the database.
+          const result = await addItem(periodId, item);
+          // Depending whether the addition succeeded or not, i update the input field accordingly
+          setItems((prev) => {
+            const copy = prev.slice();
+            if (!result.error) {
+              copy[idx] = result.value;
+            } else {
+              copy[idx] = item;
+              copy[idx].content = '';
+            }
+            return AppraisalService.normalizeSet(
+              periodId,
+              user,
+              copy,
+              min,
+              type
+            );
+          });
+        } else if (isToBeDeleted) {
+          // I try to delete the item from the database:
+          const result = await deleteItem(periodId, item);
+          // Depending whether the addition succeeded or not, i update the input field accordingly
+          setItems((prev) => {
+            let copy = prev.slice();
+            if (!result.error) {
+              copy = copy.filter((i) => i.id !== item.id);
+            } else if (result.value) {
+              copy[idx] = result.value;
+            }
+            return AppraisalService.normalizeSet(
+              periodId,
+              user,
+              copy,
+              min,
+              type
+            );
+          });
+        } else if (
+          !isNew &&
+          !isToBeDeleted &&
+          modified &&
+          item.content !== ''
+        ) {
+          // I try to modify item in the database
+          const result = await updateItem(periodId, item);
+          // Depending whether the addition succeeded or not, i update the input field accordingly
+          setItems((prev) => {
+            let copy;
+            if (result.error) {
+              copy = prev.slice();
+              if (result.value) copy[idx] = result.value;
+            } else {
+              copy = prev.map((i) => {
+                if (i.id === item.id) {
+                  return result.value;
+                }
+                return i;
+              });
+            }
+            return AppraisalService.normalizeSet(
+              periodId,
+              user,
+              copy,
+              min,
+              type
+            );
+          });
+        }
       }
-    }
-  }, [user, items, periodId, type, min, addItem, deleteItem, updateItem, setItems]);
+    },
+    [
+      user,
+      items,
+      periodId,
+      type,
+      min,
+      addItem,
+      deleteItem,
+      updateItem,
+      setItems,
+    ]
+  );
 
   return (
     <Box>
@@ -284,10 +315,7 @@ const FieldSet = ({
         {items.map((i, idx) => {
           const key = i.id === 0 ? idx : i.id;
           return (
-            <Stack.Item
-              className={classes.listItem}
-              key={key}
-            >
+            <Stack.Item className={classes.listItem} key={key}>
               <AppraisalInput
                 item={i}
                 idx={idx}

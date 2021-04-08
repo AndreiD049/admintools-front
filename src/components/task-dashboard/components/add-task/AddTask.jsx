@@ -15,26 +15,28 @@ import { useFetch } from '../../../../services/hooks';
 import PeoplePicker from '../../../shared/people-picker/PeoplePicker';
 
 const AddTask = ({ setOpen, handleAdd }) => {
-  const [users] = useFetch(UserService.teamUsersPath,
-    null, {
-      callback: (dt) => dt.map((user) => ({
+  const [users] = useFetch(UserService.teamUsersPath, null, {
+    callback: (dt) =>
+      dt.map((user) => ({
         key: user.id,
         data: user,
       })),
-    });
+  });
   const [data, setData] = useState({
     title: '',
     description: '',
     remarks: '',
     expectedStartDate: DateUtils.getNearestTimeUTC(
-      DateUtils.transform2UTCDate(new Date()),
+      DateUtils.transform2UTCDate(new Date())
     ).toJSDate(),
     duration: 60,
     isBackgroundTask: false,
     assignedTo: [],
   });
 
-  const handleDataChange = (field, func = (args) => args[0].target.value) => (...args) => {
+  const handleDataChange = (field, func = (args) => args[0].target.value) => (
+    ...args
+  ) => {
     setData((prev) => ({
       ...prev,
       [field]: func(args),
@@ -85,22 +87,28 @@ const AddTask = ({ setOpen, handleAdd }) => {
         <DatePicker
           label="Start date"
           value={data.expectedStartDate}
-          onSelectDate={
-            (date) => setData(
-              (prev) => (
-                {
-                  ...prev,
-                  expectedStartDate: DateUtils.setDateFromTo(date, prev.expectedStartDate),
-                }),
-            )
+          onSelectDate={(date) =>
+            setData((prev) => ({
+              ...prev,
+              expectedStartDate: DateUtils.setDateFromTo(
+                date,
+                prev.expectedStartDate
+              ),
+            }))
           }
         />
         <MaskedTextField
           label="Start time"
           mask="99:99"
           maskChar="0"
-          value={DateTime.fromJSDate(data.expectedStartDate).toUTC().toFormat('HH:mm')}
-          onChange={handleDataChange('expectedStartDate', (args) => DateTime.fromISO(DateUtils.getValidTimeStringUTC(args[1], data.expectedStartDate)).toJSDate())}
+          value={DateTime.fromJSDate(data.expectedStartDate)
+            .toUTC()
+            .toFormat('HH:mm')}
+          onChange={handleDataChange('expectedStartDate', (args) =>
+            DateTime.fromISO(
+              DateUtils.getValidTimeStringUTC(args[1], data.expectedStartDate)
+            ).toJSDate()
+          )}
         />
         <MaskedTextField
           label="End time"
@@ -108,18 +116,16 @@ const AddTask = ({ setOpen, handleAdd }) => {
           maskChar="0"
           value={DateUtils.getEndTimeTextUTC(
             data.expectedStartDate,
-            data.duration,
+            data.duration
           )}
-          onChange={
-              handleDataChange('duration', (args) => {
-                const validTime = DateUtils.getValidTimeStringUTC(args[1]);
-                // Check if end time is after start time
-                const startDT = DateTime.fromJSDate(data.expectedStartDate);
-                const endDT = DateTime.fromISO(validTime);
-                if (endDT < startDT) return 0;
-                return endDT.diff(startDT, 'minute')?.values?.minutes ?? 0;
-              })
-        }
+          onChange={handleDataChange('duration', (args) => {
+            const validTime = DateUtils.getValidTimeStringUTC(args[1]);
+            // Check if end time is after start time
+            const startDT = DateTime.fromJSDate(data.expectedStartDate);
+            const endDT = DateTime.fromISO(validTime);
+            if (endDT < startDT) return 0;
+            return endDT.diff(startDT, 'minute')?.values?.minutes ?? 0;
+          })}
         />
         <SpinButton
           label="Duration (min)"
@@ -129,9 +135,15 @@ const AddTask = ({ setOpen, handleAdd }) => {
             if (Number.isNaN(val)) val = 0;
             setData((prev) => ({ ...prev, duration: val }));
           }}
-          onIncrement={(val) => setData((prev) => ({ ...prev, duration: (+val + 10) }))}
+          onIncrement={(val) =>
+            setData((prev) => ({ ...prev, duration: +val + 10 }))
+          }
           onDecrement={(val) => {
-            if (val > 10) setData((prev) => ({ ...prev, duration: (+val - 10) }));
+            if (val > 10)
+              setData((prev) => ({
+                ...prev,
+                duration: +val - 10,
+              }));
           }}
           min={0}
           step={10}
@@ -142,15 +154,24 @@ const AddTask = ({ setOpen, handleAdd }) => {
         <PeoplePicker
           label="Assigned to"
           options={users}
-          onSelect={(u) => setData((prev) => ({
-            ...prev,
-            assignedTo: prev.assignedTo.concat(u.data),
+          onSelect={(u) =>
+            setData((prev) => ({
+              ...prev,
+              assignedTo: prev.assignedTo.concat(u.data),
+            }))
+          }
+          onRemove={(u) =>
+            setData((prev) => ({
+              ...prev,
+              assignedTo: prev.assignedTo.filter(
+                (user) => user.id !== u.data.id
+              ),
+            }))
+          }
+          selected={data.assignedTo?.map((u) => ({
+            key: u.id,
+            data: u,
           }))}
-          onRemove={(u) => setData((prev) => ({
-            ...prev,
-            assignedTo: prev.assignedTo.filter((user) => user.id !== u.data.id),
-          }))}
-          selected={data.assignedTo?.map((u) => ({ key: u.id, data: u }))}
         />
       </form>
     </>

@@ -12,7 +12,9 @@ const ReportsInfoProvider = ({ setReports }) => {
       }
     }
     run();
-    return () => { mounted = false; };
+    return () => {
+      mounted = false;
+    };
   }, [setReports]);
   return null;
 };

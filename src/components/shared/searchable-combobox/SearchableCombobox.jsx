@@ -13,9 +13,11 @@ const SearchableCombobox = (rest) => {
 
   const handlePendingValueChange = (option, idx, value) => {
     if (value) {
-      setOptions(rest.options.filter(
-        (o) => o.text.toLowerCase().indexOf(value.toLowerCase()) !== -1,
-      ));
+      setOptions(
+        rest.options.filter(
+          (o) => o.text.toLowerCase().indexOf(value.toLowerCase()) !== -1
+        )
+      );
     } else if (value === '') {
       setOptions(rest.options);
     }

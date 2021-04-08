@@ -39,24 +39,26 @@ const TaskPlanning = () => {
   const [dates, setDates] = useState(DateUtils.getWeekFromDate(date, 1));
   const [flows] = useFetch(TaskFlowService.baseUrl);
   const [selectedCell, setSelectedCell] = useState(null);
-  const [teams] = useFetch(
-    TeamService.baseUrl,
-    null, {
-      callback: (data) => data.map((team) => ({
+  const [teams] = useFetch(TeamService.baseUrl, null, {
+    callback: (data) =>
+      data.map((team) => ({
         key: team.id,
         text: team.name,
         data: team,
       })),
-    },
+  });
+  const [selectedTeam, setSelectedTeam] = useLocalStorageState(
+    'TaskPlanningSelectedTeam',
+    null
   );
-  const [selectedTeam, setSelectedTeam] = useLocalStorageState('TaskPlanningSelectedTeam', null);
   const [users] = useFetch(
     UserService.baseUrl,
     {
       params: {
         teams: [selectedTeam],
       },
-    }, { dependencies: [selectedTeam] },
+    },
+    { dependencies: [selectedTeam] }
   );
   const [data, setData] = useFetch(
     TaskPlanningService.baseUrl,
@@ -67,7 +69,7 @@ const TaskPlanning = () => {
         teams: [selectedTeam],
       },
     },
-    { dependencies: [selectedTeam, dates] },
+    { dependencies: [selectedTeam, dates] }
   );
 
   const userFlowMap = useMemo(() => {
@@ -77,7 +79,9 @@ const TaskPlanning = () => {
     // For each planning item, assign info to the appropriate user
     data.forEach((item) => {
       if (result.has(item.user?.id)) {
-        result.get(item.user.id).set(DateTime.fromISO(item.date).toUTC().toISODate(), item);
+        result
+          .get(item.user.id)
+          .set(DateTime.fromISO(item.date).toUTC().toISODate(), item);
       }
     });
     return result;
@@ -85,20 +89,32 @@ const TaskPlanning = () => {
 
   const handleAddFlow = async (planning, flow) => {
     if (!planning) {
-      const result = await TaskPlanningService
-        .createPlanning(selectedCell.date, selectedCell.user, [flow]);
+      const result = await TaskPlanningService.createPlanning(
+        selectedCell.date,
+        selectedCell.user,
+        [flow]
+      );
       setData((prev) => prev.concat(result));
     } else {
-      const result = await TaskPlanningService
-        .addFlowToPlanning(planning.id, flow.id);
-      setData((prev) => prev.map((plan) => (plan.id === result.id ? result : plan)));
+      const result = await TaskPlanningService.addFlowToPlanning(
+        planning.id,
+        flow.id
+      );
+      setData((prev) =>
+        prev.map((plan) => (plan.id === result.id ? result : plan))
+      );
     }
   };
 
   const handleRemoveFlow = async (planning, flow) => {
     if (planning?.id) {
-      const result = await TaskPlanningService.removeFromFromPlanning(planning.id, flow.id);
-      setData((prev) => prev.map((plan) => (plan.id === result.id ? result : plan)));
+      const result = await TaskPlanningService.removeFromFromPlanning(
+        planning.id,
+        flow.id
+      );
+      setData((prev) =>
+        prev.map((plan) => (plan.id === result.id ? result : plan))
+      );
     }
   };
 
@@ -109,9 +125,14 @@ const TaskPlanning = () => {
       type: DialogType.largeHeader,
       dialogFooter: () => (
         // eslint-disable-next-line jsx-a11y/tabindex-no-positive
-        <PrimaryButton tabIndex={1} onClick={() => flowsDialog.setVisible(false)} text="Close" />
+        <PrimaryButton
+          tabIndex={1}
+          onClick={() => flowsDialog.setVisible(false)}
+          text="Close"
+        />
       ),
-    }, {
+    },
+    {
       planning: userFlowMap.get(selectedCell?.user)?.get(selectedCell?.date),
       options: flows.map((f) => ({
         key: f.id,
@@ -121,7 +142,7 @@ const TaskPlanning = () => {
       removeFlow: handleRemoveFlow,
       users,
       user: selectedCell?.user,
-    },
+    }
   );
 
   const handleInvoke = () => {

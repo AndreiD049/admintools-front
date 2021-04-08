@@ -2,7 +2,14 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {
   ActionButton,
-  DefaultButton, makeStyles, Panel, PanelType, PrimaryButton, Separator, Stack, TextField,
+  DefaultButton,
+  makeStyles,
+  Panel,
+  PanelType,
+  PrimaryButton,
+  Separator,
+  Stack,
+  TextField,
 } from '@fluentui/react';
 import { Col, Container, Row } from 'react-grid-system';
 import ReportingService from '../../../../services/ReportingService';
@@ -24,9 +31,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ReportsEditPanel = ({
-  id, isOpen, setOpen, setReport,
-}) => {
+const ReportsEditPanel = ({ id, isOpen, setOpen, setReport }) => {
   const classes = useStyles();
   const [details, setDetails] = useState(null);
   const [parameters, setParameters] = useState([]);
@@ -48,14 +53,14 @@ const ReportsEditPanel = ({
 
   const handleChangeParams = (property, param) => (evt) => {
     const { value } = evt.target;
-    setParameters((prev) => prev.map(
-      (parameter) => {
+    setParameters((prev) =>
+      prev.map((parameter) => {
         if (parameter && parameter.path === param.path) {
           return { ...parameter, [property]: value };
         }
         return parameter;
-      },
-    ));
+      })
+    );
   };
 
   const deleteParam = (param) => () => {
@@ -132,7 +137,9 @@ const ReportsEditPanel = ({
         const reportDetails = await ReportingService.getReport(id);
         let params = [];
         if (reportDetails?.template?.id) {
-          params = await ReportingService.getTempalteParameters(reportDetails.template.id);
+          params = await ReportingService.getTempalteParameters(
+            reportDetails.template.id
+          );
         }
         if (mounted) {
           setDetails(reportDetails);
@@ -160,138 +167,143 @@ const ReportsEditPanel = ({
     </Stack>
   );
 
-  return (
-    isOpen && details
-      ? (
-        <Panel
-          isOpen={isOpen}
-          onDismiss={() => setOpen(false)}
-          headerText="Create Report"
-          type={PanelType.large}
-          onRenderFooterContent={onRenderFooter}
-        >
-          <Container fluid className={classes.root}>
-            <Separator>General</Separator>
-            <Row justify="start">
-              <Col xs={12} sm={8} md={6}>
+  return isOpen && details ? (
+    <Panel
+      isOpen={isOpen}
+      onDismiss={() => setOpen(false)}
+      headerText="Create Report"
+      type={PanelType.large}
+      onRenderFooterContent={onRenderFooter}
+    >
+      <Container fluid className={classes.root}>
+        <Separator>General</Separator>
+        <Row justify="start">
+          <Col xs={12} sm={8} md={6}>
+            <TextField
+              label="Name: "
+              value={details.name}
+              underlined
+              disabled
+            />
+            <TextField
+              label="Description: "
+              value={details.description}
+              multiline
+              underlined
+              resizable={false}
+              onChange={handleChangeDetails('description')}
+            />
+            <TextField
+              label="Template: "
+              value={details.template.name}
+              underlined
+              disabled
+            />
+          </Col>
+        </Row>
+        <Separator>Parameters</Separator>
+        <Row justify="start">
+          <Col xs={12} sm={8} md={6}>
+            {parameters.map((parameter) => (
+              <Box className={classes.box}>
                 <TextField
                   label="Name: "
-                  value={details.name}
+                  value={parameter.name}
+                  underlined
+                  onChange={handleChangeParams('name', parameter)}
+                />
+                <TextField
+                  label="Path: "
+                  value={parameter.path}
                   underlined
                   disabled
                 />
                 <TextField
-                  label="Description: "
-                  value={details.description}
-                  multiline
+                  label="Default value: "
+                  value={parameter.defaultValue}
                   underlined
-                  resizable={false}
-                  onChange={handleChangeDetails('description')}
+                  onChange={handleChangeParams('defaultValue', parameter)}
                 />
-                <TextField
-                  label="Template: "
-                  value={details.template.name}
-                  underlined
-                  disabled
+                <ActionButton
+                  onClick={deleteParam(parameter)}
+                  iconProps={{
+                    iconName: 'Delete',
+                  }}
+                  text="Delete"
                 />
-              </Col>
-            </Row>
-            <Separator>Parameters</Separator>
-            <Row justify="start">
-              <Col xs={12} sm={8} md={6}>
-                {
-                  parameters.map((parameter) => (
-                    <Box className={classes.box}>
-                      <TextField
-                        label="Name: "
-                        value={parameter.name}
-                        underlined
-                        onChange={handleChangeParams('name', parameter)}
-                      />
-                      <TextField
-                        label="Path: "
-                        value={parameter.path}
-                        underlined
-                        disabled
-                      />
-                      <TextField
-                        label="Default value: "
-                        value={parameter.defaultValue}
-                        underlined
-                        onChange={handleChangeParams('defaultValue', parameter)}
-                      />
-                      <ActionButton
-                        onClick={deleteParam(parameter)}
-                        iconProps={{
-                          iconName: 'Delete',
-                        }}
-                        text="Delete"
-                      />
-                    </Box>
-                  ))
-                }
-                <Box className={classes.box}>
-                  <SinglePicker
-                    options={parametersList.map((param) => param.paths.map((path) => ({
+              </Box>
+            ))}
+            <Box className={classes.box}>
+              <SinglePicker
+                options={parametersList
+                  .map((param) =>
+                    param.paths.map((path) => ({
                       key: `${param.name}${path}`,
                       data: `${param.name}${path}`,
-                    }))).flat()}
-                    getTextFromItem={(item) => item.data}
-                    onSelect={(item) => setNewParameter((prev) => ({
-                      ...prev,
-                      path: item.data,
-                    }))}
-                    onRenderItem={() => null}
-                    maxHeight="400px"
-                  />
-                  <TextField
-                    label="Name: "
-                    value={newParameter.name || ''}
-                    underlined
-                    onChange={handleChangeNewParam('name')}
-                    required
-                    errorMessage={inputErrorMessages.newParamName || ''}
-                  />
-                  <TextField
-                    label="Path: "
-                    value={newParameter.path || ''}
-                    underlined
-                    required
-                    errorMessage={inputErrorMessages.newParamPath || ''}
-                  />
-                  <TextField
-                    label="Default value: "
-                    value={newParameter.defaultValue || ''}
-                    underlined
-                    onChange={handleChangeNewParam('defaultValue')}
-                  />
-                  <ActionButton
-                    onClick={handleAdd}
-                    iconProps={{
-                      iconName: 'Add',
-                    }}
-                    text="Add"
-                  />
-                </Box>
-              </Col>
-            </Row>
-            <Separator>Aggregation</Separator>
-            <Row justify="start">
-              <Col xs={12} sm={8} md={6}>
-                <TextField
-                  value={JSON.stringify(JSON.parse(details.template.aggregation), null, 4)}
-                  multiline
-                  underlined
-                  disabled
-                  autoAdjustHeight
-                  resizable={false}
-                />
-              </Col>
-            </Row>
-          </Container>
-        </Panel>
-      ) : null
-  );
+                    }))
+                  )
+                  .flat()}
+                getTextFromItem={(item) => item.data}
+                onSelect={(item) =>
+                  setNewParameter((prev) => ({
+                    ...prev,
+                    path: item.data,
+                  }))
+                }
+                onRenderItem={() => null}
+                maxHeight="400px"
+              />
+              <TextField
+                label="Name: "
+                value={newParameter.name || ''}
+                underlined
+                onChange={handleChangeNewParam('name')}
+                required
+                errorMessage={inputErrorMessages.newParamName || ''}
+              />
+              <TextField
+                label="Path: "
+                value={newParameter.path || ''}
+                underlined
+                required
+                errorMessage={inputErrorMessages.newParamPath || ''}
+              />
+              <TextField
+                label="Default value: "
+                value={newParameter.defaultValue || ''}
+                underlined
+                onChange={handleChangeNewParam('defaultValue')}
+              />
+              <ActionButton
+                onClick={handleAdd}
+                iconProps={{
+                  iconName: 'Add',
+                }}
+                text="Add"
+              />
+            </Box>
+          </Col>
+        </Row>
+        <Separator>Aggregation</Separator>
+        <Row justify="start">
+          <Col xs={12} sm={8} md={6}>
+            <TextField
+              value={JSON.stringify(
+                JSON.parse(details.template.aggregation),
+                null,
+                4
+              )}
+              multiline
+              underlined
+              disabled
+              autoAdjustHeight
+              resizable={false}
+            />
+          </Col>
+        </Row>
+      </Container>
+    </Panel>
+  ) : null;
 };
 
 ReportsEditPanel.propTypes = {

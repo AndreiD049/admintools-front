@@ -13,15 +13,16 @@ const LoginService = {
       }
       return null;
     } catch (err) {
-      NotificationService.notify(`Not logged in. ${(err.response.data && err.response.data.error) || err.message}`,
-        'error', (
-          // eslint-disable-next-line react/jsx-filename-extension
-          <DefaultButton
-            as="a"
-            href="/auth/login"
-          >
-            Log in
-          </DefaultButton>));
+      NotificationService.notify(
+        `Not logged in. ${
+          (err.response.data && err.response.data.error) || err.message
+        }`,
+        'error',
+        // eslint-disable-next-line react/jsx-filename-extension
+        <DefaultButton as="a" href="/auth/login">
+          Log in
+        </DefaultButton>
+      );
       return null;
     }
   },
