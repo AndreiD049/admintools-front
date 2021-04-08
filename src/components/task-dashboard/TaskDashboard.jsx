@@ -39,7 +39,7 @@ const TaskDashboard = () => {
   const [userOptions, setUserOptions] = useState([]);
   const [reload, setReload] = useState(true);
   const [selectedUsers, setSelectedUsers] = useLocalStorageState('DTSelectedUsers', [global.user.id]);
-  const [currentDate, setCurrentDate] = useState(new Date());
+  const [currentDate, setCurrentDate] = useState(DateTime.now().startOf('day').toJSDate());
   const [hours, setHours] = useLocalStorageState('DTWorkingHours', {
     from: DateTime.utc().set({
       hour: 9, minute: 0, second: 0, millisecond: 0,
@@ -121,7 +121,7 @@ const TaskDashboard = () => {
     const difference = DateTime.fromJSDate(currentDate).diff(hours.from, 'day').values.days;
     setHours((prev) => ({
       from: DateTime.fromJSDate(DateUtils.setDateFromTo(currentDate, prev.from.toJSDate())).toUTC(),
-      to: difference < 0 ? prev.to.minus({ day: 1 }) : prev.to.plus({ day: 1 }),
+      to: DateTime.fromJSDate(DateUtils.setDateFromTo(currentDate, prev.to.toJSDate())).toUTC(),
     }));
   }, [currentDate]);
 
