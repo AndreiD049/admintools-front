@@ -89,7 +89,7 @@ const Table = ({
         return false;
       });
     },
-    [_columns, searchValue]
+    [_columns, searchValue],
   );
 
   useEffect(() => {
@@ -105,17 +105,13 @@ const Table = ({
 
   useEffect(() => {
     if (sortedCol) {
-      setColumns((prev) =>
-        prev.map((col) =>
-          col.key === sortedCol.key
-            ? {
-                ...col,
-                isSorted: sortedCol.isSorted,
-                isSortedDescending: sortedCol.isSortedDescending,
-              }
-            : col
-        )
-      );
+      setColumns((prev) => prev.map((col) => (col.key === sortedCol.key
+        ? {
+          ...col,
+          isSorted: sortedCol.isSorted,
+          isSortedDescending: sortedCol.isSortedDescending,
+        }
+        : col)));
       setSortedColumn(sortedCol);
     }
   }, [sortedCol]);
@@ -144,7 +140,7 @@ Table.propTypes = {
       isResizable: PropTypes.bool,
       sort: PropTypes.func,
       onRender: PropTypes.func,
-    })
+    }),
   ).isRequired,
   items: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   searchValue: PropTypes.string,

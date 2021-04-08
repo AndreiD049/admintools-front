@@ -38,7 +38,7 @@ const TaskFlows = () => {
         }
       },
     },
-    { setFlows }
+    { setFlows },
   );
 
   const editFlowPanel = usePanel(
@@ -50,7 +50,7 @@ const TaskFlows = () => {
       type: PanelType.smallFixedFar,
       isLightDismiss: false,
     },
-    { id: selectionDetails.items[0]?.id, setFlows }
+    { id: selectionDetails.items[0]?.id, setFlows },
   );
 
   const [columns] = useState([

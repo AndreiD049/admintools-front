@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { DefaultButton, Modal, Stack, StackItem } from '@fluentui/react';
+import {
+  DefaultButton, Modal, Stack, StackItem,
+} from '@fluentui/react';
 import SelectTheme from '../../../shared/select-theme/SelectTheme';
 
 const ChooseThemeModal = ({ isOpen, setOpen }) => (

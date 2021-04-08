@@ -87,8 +87,7 @@ const ReportTemplates = () => {
       iconName: 'Contact',
       minWidth: 100,
       maxWidth: 300,
-      sort: (a, b) =>
-        a.createdUser.username < b.createdUser.username ? -1 : 1,
+      sort: (a, b) => (a.createdUser.username < b.createdUser.username ? -1 : 1),
       onRender: (item) => item.createdUser.username,
     },
     {
@@ -187,9 +186,9 @@ const ReportTemplates = () => {
       <TemplateEditPanel
         isOpen={editPanelOpen}
         setOpen={setEditPanelOpen}
-        updateTemplates={(template) =>
-          setTemplates((prev) =>
-            prev.map((t) => (t.id === template.id ? template : t))
+        updateTemplates={
+          (template) => setTemplates(
+            (prev) => prev.map((t) => (t.id === template.id ? template : t)),
           )
         }
         id={

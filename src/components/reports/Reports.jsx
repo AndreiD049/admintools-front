@@ -54,8 +54,7 @@ const ReportsList = () => {
       iconName: 'Contact',
       minWidth: 100,
       maxWidth: 300,
-      sort: (a, b) =>
-        a.createdUser.username < b.createdUser.username ? -1 : 1,
+      sort: (a, b) => (a.createdUser.username < b.createdUser.username ? -1 : 1),
       onRender: (item) => item.createdUser.username,
     },
     {
@@ -142,9 +141,9 @@ const ReportsList = () => {
         id={selectionDetails.count > 0 ? selectionDetails.items[0].id : null}
         isOpen={editPanelOpen}
         setOpen={setEditPanelOpen}
-        setReport={(report) =>
-          setReports((prev) =>
-            prev.map((r) => (r.id === report.id ? report : r))
+        setReport={
+          (report) => setReports(
+            (prev) => prev.map((r) => (r.id === report.id ? report : r)),
           )
         }
       />

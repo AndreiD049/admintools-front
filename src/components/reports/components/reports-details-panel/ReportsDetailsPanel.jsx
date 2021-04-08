@@ -44,7 +44,7 @@ const ReportsDetailsPanel = ({ id, isOpen, setOpen }) => {
               name: p.name,
               value: p.defaultValue,
               path: p.path,
-            }))
+            })),
           );
         }
       }
@@ -136,7 +136,7 @@ const ReportsDetailsPanel = ({ id, isOpen, setOpen }) => {
               value={JSON.stringify(
                 JSON.parse(details.template.aggregation),
                 null,
-                4
+                4,
               )}
               multiline
               underlined

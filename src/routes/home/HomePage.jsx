@@ -6,9 +6,7 @@ import '../../../node_modules/flexlayout-react/style/dark.css';
 import PageHeader from '../../components/shared/page-header';
 import LoginRequired from '../../components/shared/login-required';
 
-const HomePlannedItems = React.lazy(() =>
-  import('../../components/widgets/home-planned-items')
-);
+const HomePlannedItems = React.lazy(() => import('../../components/widgets/home-planned-items'));
 
 const useStyles = makeStyles((theme) => ({
   panel: {

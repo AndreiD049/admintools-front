@@ -55,11 +55,11 @@ const PlanningFlowsDialog = ({
   const validOptions = useMemo(() => {
     const selected = new Set(planning?.flows?.map((f) => f.id));
     const userTeams = new Set(
-      users.find((u) => u.id === user)?.teams?.map((t) => t.id)
+      users.find((u) => u.id === user)?.teams?.map((t) => t.id),
     );
     const active = options.filter((o) => o.data.isActive);
     const teamFlows = active.filter(
-      (o) => o.data.teams.filter((t) => userTeams.has(t.id)).length > 0
+      (o) => o.data.teams.filter((t) => userTeams.has(t.id)).length > 0,
     );
     return teamFlows.filter((o) => !selected.has(o.data.id));
   }, [options, planning, users, user]);

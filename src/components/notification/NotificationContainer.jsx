@@ -30,9 +30,8 @@ const NotificationContainer = ({ timeout = 5000 }) => {
           onRender: item.onRender.bind({}, onDismiss(idx)),
           id: idx,
           timer: setTimeout(
-            () =>
-              setItems((prevState) => prevState.filter((i) => i.id !== idx)),
-            timeout
+            () => setItems((prevState) => prevState.filter((i) => i.id !== idx)),
+            timeout,
           ),
         },
       ]);

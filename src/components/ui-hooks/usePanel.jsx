@@ -23,7 +23,7 @@ const PanelContext = createContext({
 const usePanel = (Component, options = {}, componentProps = {}) => {
   const [isOpen, setOpen] = useState(false);
   const [onRenderFooter, setOnRenderFooter] = useState(
-    () => options.onRenderFooterContent
+    () => options.onRenderFooterContent,
   );
   const componentRef = useRef(null);
   const [ctx] = useState({
@@ -41,8 +41,8 @@ const usePanel = (Component, options = {}, componentProps = {}) => {
         componentRef={componentRef}
         isOpen={isOpen}
         onDismiss={
-          (options?.onDismiss && options.onDismiss(isOpen, setOpen)) ??
-          (() => setOpen(false))
+          (options?.onDismiss && options.onDismiss(isOpen, setOpen))
+          ?? (() => setOpen(false))
         }
         type={options.type ?? PanelType.smallFixedFar}
         headerText={options.headerText ?? 'Panel'}

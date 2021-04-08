@@ -32,7 +32,7 @@ const TaskRules = () => {
     },
     {
       setRules,
-    }
+    },
   );
   const [editing, setEditing] = useState(false);
 
@@ -54,7 +54,7 @@ const TaskRules = () => {
       editing,
       setEditing,
       setRules,
-    }
+    },
   );
 
   const [sortedColumn] = useState({
@@ -105,13 +105,11 @@ const TaskRules = () => {
       minWidth: 300,
       maxWidth: 400,
       onRender: (item) => item.users.map((u) => u.username).join(', '),
-      sort: (a, b) =>
-        a.users[0]?.username?.toLowerCase() <
-        b.users[0]?.username?.toLowerCase()
-          ? -1
-          : 1,
-      filterValueAccessor: (item) =>
-        item.users.map((u) => u.username).join(' '),
+      sort: (a, b) => (a.users[0]?.username?.toLowerCase()
+        < b.users[0]?.username?.toLowerCase()
+        ? -1
+        : 1),
+      filterValueAccessor: (item) => item.users.map((u) => u.username).join(' '),
     },
     {
       key: 'createdDate',

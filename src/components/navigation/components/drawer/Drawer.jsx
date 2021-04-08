@@ -1,5 +1,7 @@
 /* eslint-disable react/prop-types */
-import React, { useContext, useEffect, useState } from 'react';
+import React, {
+  useCallback, useContext, useEffect, useState,
+} from 'react';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {
@@ -269,8 +271,7 @@ const Drawer = ({ isOpen, toggleDrawer }) => {
               link.keyTipContent && {
                 styles: keytipStyles,
                 content: link.keyTipContent,
-                onExecute: (el) =>
-                  link.links ? link.isExpanded || el.click() : el.click(),
+                onExecute: (el) => (link.links ? link.isExpanded || el.click() : el.click()),
                 keySequences: link.keyTipSequence,
                 hasMenu: link.hasMenu || false,
               }

@@ -87,7 +87,7 @@ const SecurityDetailsUserDisplay = ({
   const handleUpdate = async (permission) => {
     const result = await AuthorizationService.updatePermission(
       permission.id,
-      permission
+      permission,
     );
     return result;
   };
@@ -105,8 +105,8 @@ const SecurityDetailsUserDisplay = ({
     e.persist();
     // check if it's a new permission
     if (
-      !userPermissions[user.username] ||
-      !userPermissions[user.username][code.code]
+      !userPermissions[user.username]
+      || !userPermissions[user.username][code.code]
     ) {
       const result = await handleAdd(user, code, grant);
       result && handleSetPermission(user, code, result);
@@ -123,7 +123,7 @@ const SecurityDetailsUserDisplay = ({
       result && handleSetPermission(user, code, result);
     } else if (!e.target.checked) {
       const grants = userPermissions[user.username][code.code].grants.filter(
-        (g) => g !== grant
+        (g) => g !== grant,
       );
       if (grants.length === 0) {
         await handleDelete(userPermissions[user.username][code.code]);
@@ -139,9 +139,8 @@ const SecurityDetailsUserDisplay = ({
   };
 
   const getPermissionChecked = (user, code, grant) => {
-    const permission =
-      userPermissions[user.username] &&
-      userPermissions[user.username][code.code];
+    const permission = userPermissions[user.username]
+      && userPermissions[user.username][code.code];
     if (permission) {
       return permission.grants.indexOf(grant) !== -1;
     }
@@ -151,7 +150,7 @@ const SecurityDetailsUserDisplay = ({
   const renderPermissions = () => {
     if (selectedUser) {
       const render = codes.filter(
-        (el) => el.code.toLowerCase().indexOf(filter.toLowerCase()) !== -1
+        (el) => el.code.toLowerCase().indexOf(filter.toLowerCase()) !== -1,
       );
       return (
         <Accordion
@@ -266,12 +265,12 @@ SecurityDetailsUserDisplay.propTypes = {
   codes: PropTypes.arrayOf(
     PropTypes.shape({
       code: PropTypes.string,
-    })
+    }),
   ).isRequired,
   users: PropTypes.arrayOf(
     PropTypes.shape({
       username: PropTypes.string,
-    })
+    }),
   ).isRequired,
   userPermissions: PropTypes.shape({}).isRequired,
   setUserPermissions: PropTypes.func.isRequired,

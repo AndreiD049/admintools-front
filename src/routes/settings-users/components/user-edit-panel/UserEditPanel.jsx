@@ -69,8 +69,8 @@ const UserEditPanel = ({
 
   useEffect(() => {
     if (
-      selPrimaryTeam?.id &&
-      !selTeams.find((t) => t.id === selPrimaryTeam?.id)
+      selPrimaryTeam?.id
+      && !selTeams.find((t) => t.id === selPrimaryTeam?.id)
     ) {
       setSelPrimaryTeam(null);
     }
@@ -172,19 +172,19 @@ UserEditPanel.propTypes = {
     PropTypes.shape({
       id: PropTypes.string,
       name: PropTypes.string,
-    })
+    }),
   ),
   organizations: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string,
       name: PropTypes.string,
-    })
+    }),
   ),
   roles: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string,
       name: PropTypes.string,
-    })
+    }),
   ),
 };
 

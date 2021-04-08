@@ -18,7 +18,7 @@ const useFetch = (
     callback: null,
     resetDataOnChange: true,
     skipFirst: false,
-  }
+  },
 ) => {
   const options = {
     ...optionsDefault,

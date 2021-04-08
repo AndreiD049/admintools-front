@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Icon, Text, concatStyleSets, makeStyles } from '@fluentui/react';
+import {
+  Icon, Text, concatStyleSets, makeStyles,
+} from '@fluentui/react';
 import { Collapse } from 'react-collapse';
 import clsx from 'clsx';
 import './styles.css';
@@ -128,9 +130,7 @@ const Accordion = ({
   onToggle,
 }) => {
   // Concatenate user provided styles with default styles if needed
-  const classes = makeStyles((theme) =>
-    concatStyleSets(defstyles(theme, compact), styles)
-  )();
+  const classes = makeStyles((theme) => concatStyleSets(defstyles(theme, compact), styles))();
   const [open, setOpen] = useState(() => {
     const result = {};
     items.forEach((item) => {
@@ -148,21 +148,19 @@ const Accordion = ({
 
   const handleSetOpen = (item) => {
     if (!exclusive) {
-      return (evt, i, val) =>
-        setOpen((prev) => ({
-          ...prev,
-          [getKey(item)]: val,
-        }));
+      return (evt, i, val) => setOpen((prev) => ({
+        ...prev,
+        [getKey(item)]: val,
+      }));
     }
-    return (evt, i, val) =>
-      setOpen((prev) => {
-        const copy = { ...prev };
-        const itemKey = getKey(item);
-        Object.keys(copy).forEach((key) => {
-          copy[key] = key === itemKey ? val : false;
-        });
-        return copy;
+    return (evt, i, val) => setOpen((prev) => {
+      const copy = { ...prev };
+      const itemKey = getKey(item);
+      Object.keys(copy).forEach((key) => {
+        copy[key] = key === itemKey ? val : false;
       });
+      return copy;
+    });
   };
 
   useEffect(() => {
@@ -202,7 +200,7 @@ Accordion.propTypes = {
       text: PropTypes.string,
       header: PropTypes.string,
       isOpen: PropTypes.bool,
-    })
+    }),
   ).isRequired,
   getKey: PropTypes.func,
   onRenderItem: PropTypes.func,

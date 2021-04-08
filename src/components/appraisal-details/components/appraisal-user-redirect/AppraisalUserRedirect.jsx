@@ -13,7 +13,7 @@ const AppraisalUserRedirect = ({ defaultValue }) => {
       if (user) return history.push(`/appraisals/${id}/user/${user.id}`);
       return setSelectedUser(user);
     },
-    [history, id]
+    [history, id],
   );
 
   return (

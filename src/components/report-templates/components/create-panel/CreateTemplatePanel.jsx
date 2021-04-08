@@ -114,7 +114,8 @@ const CreateTemplatePanel = ({ isOpen, setOpen }) => {
           <Row justify="center">
             <Text variant="mediumPlus">
               Create a valid MongoDB aggregation. Test and verify if it returns
-              valid info below. For more info, refer to MongoDB{' '}
+              valid info below. For more info, refer to MongoDB
+              {' '}
               <a
                 href="https://docs.mongodb.com/manual/aggregation/"
                 target="_blank"
@@ -164,12 +165,10 @@ const CreateTemplatePanel = ({ isOpen, setOpen }) => {
               },
             ]}
             onRenderItem={(item) => item.render()}
-            onToggle={(evt, item, open) =>
-              setOpenAccordion((prev) => ({
-                ...prev,
-                [item.key]: open,
-              }))
-            }
+            onToggle={(evt, item, open) => setOpenAccordion((prev) => ({
+              ...prev,
+              [item.key]: open,
+            }))}
           />
           <Separator>Template</Separator>
           <Row justify="center">

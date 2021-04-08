@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
-import { BasePicker, Checkbox, makeStyles, Text } from '@fluentui/react';
+import {
+  BasePicker, Checkbox, makeStyles, Text,
+} from '@fluentui/react';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -92,9 +94,7 @@ const Autocomplete = ({
         onItemSelected={(item) => {
           toggleSelect(item);
         }}
-        onResolveSuggestions={(filter) =>
-          options.filter((option) => option.text.indexOf(filter) !== -1)
-        }
+        onResolveSuggestions={(filter) => options.filter((option) => option.text.indexOf(filter) !== -1)}
         onRenderSuggestionsItem={(suggestion) => (
           <div
             style={{
@@ -134,13 +134,13 @@ Autocomplete.propTypes = {
     PropTypes.shape({
       key: PropTypes.string,
       text: PropTypes.string,
-    })
+    }),
   ).isRequired,
   selected: PropTypes.arrayOf(
     PropTypes.shape({
       key: PropTypes.string,
       text: PropTypes.string,
-    })
+    }),
   ).isRequired,
   onItemSelected: PropTypes.func.isRequired,
   label: PropTypes.string.isRequired,

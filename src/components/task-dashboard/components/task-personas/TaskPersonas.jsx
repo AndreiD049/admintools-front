@@ -50,7 +50,7 @@ TaskPersonas.propTypes = {
       PropTypes.shape({
         id: PropTypes.string,
         username: PropTypes.string,
-      })
+      }),
     ),
   }).isRequired,
 };

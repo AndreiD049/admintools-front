@@ -87,7 +87,7 @@ const SecurityDetailsRoleDisplay = ({
   const handleUpdate = async (permission) => {
     const result = await AuthorizationService.updatePermission(
       permission.id,
-      permission
+      permission,
     );
     return result;
   };
@@ -117,7 +117,7 @@ const SecurityDetailsRoleDisplay = ({
       result && handleSetPermission(role, code, result);
     } else if (!e.target.checked) {
       const grants = rolePermissions[role.name][code.code].grants.filter(
-        (g) => g !== grant
+        (g) => g !== grant,
       );
       if (grants.length === 0) {
         await handleDelete(rolePermissions[role.name][code.code]);
@@ -133,8 +133,7 @@ const SecurityDetailsRoleDisplay = ({
   };
 
   const getPermissionChecked = (role, code, grant) => {
-    const permission =
-      rolePermissions[role.name] && rolePermissions[role.name][code.code];
+    const permission = rolePermissions[role.name] && rolePermissions[role.name][code.code];
     if (permission) {
       return permission.grants.indexOf(grant) !== -1;
     }
@@ -144,7 +143,7 @@ const SecurityDetailsRoleDisplay = ({
   const renderPermissions = () => {
     if (selectedRole) {
       const render = codes.filter(
-        (el) => el.code.toLowerCase().indexOf(filter.toLowerCase()) !== -1
+        (el) => el.code.toLowerCase().indexOf(filter.toLowerCase()) !== -1,
       );
       return (
         <Accordion
@@ -255,12 +254,12 @@ SecurityDetailsRoleDisplay.propTypes = {
   codes: PropTypes.arrayOf(
     PropTypes.shape({
       code: PropTypes.string,
-    })
+    }),
   ).isRequired,
   roles: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string,
-    })
+    }),
   ).isRequired,
   rolePermissions: PropTypes.shape({}).isRequired,
   setRolePermissions: PropTypes.func.isRequired,

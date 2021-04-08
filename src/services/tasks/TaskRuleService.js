@@ -14,11 +14,11 @@ const TaskRuleService = {
         return response.data;
       }
       throw new Error(
-        `Server response: ${response.data} - ${response.statusText}`
+        `Server response: ${response.data} - ${response.statusText}`,
       );
     } catch (err) {
       NotificationService.notifyError(
-        (err.response && err.response.data.error) || err.message
+        (err.response && err.response.data.error) || err.message,
       );
       throw err;
     }
@@ -29,7 +29,7 @@ const TaskRuleService = {
       // pass
     } catch (err) {
       NotificationService.notifyError(
-        (err.response && err.response.data.error) || err.message
+        (err.response && err.response.data.error) || err.message,
       );
       throw err;
     }
@@ -42,11 +42,11 @@ const TaskRuleService = {
         return response.data;
       }
       throw new Error(
-        `Server response: ${response.data} - ${response.statusText}`
+        `Server response: ${response.data} - ${response.statusText}`,
       );
     } catch (err) {
       NotificationService.notifyError(
-        (err.response && err.response.data.error) || err.message
+        (err.response && err.response.data.error) || err.message,
       );
       throw err;
     }
@@ -59,11 +59,11 @@ const TaskRuleService = {
         return response.data;
       }
       throw new Error(
-        `Server response: ${response.data} - ${response.statusText}`
+        `Server response: ${response.data} - ${response.statusText}`,
       );
     } catch (err) {
       NotificationService.notifyError(
-        (err.response && err.response.data.error) || err.message
+        (err.response && err.response.data.error) || err.message,
       );
       throw err;
     }
@@ -74,7 +74,7 @@ const TaskRuleService = {
       // pass
     } catch (err) {
       NotificationService.notifyError(
-        (err.response && err.response.data.error) || err.message
+        (err.response && err.response.data.error) || err.message,
       );
       throw err;
     }

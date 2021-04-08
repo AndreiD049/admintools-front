@@ -61,14 +61,13 @@ const SinglePicker = ({
   const inputRef = useRef();
   const getText = getTextFromItem || defaultGetText;
   const renderItem = onRenderItem || defaultRenderItem(getText, classes);
-  const renderSuggestionsItem =
-    onRenderSuggestionsItem || defaultRenderSuggestionItem(getText, classes);
+  const renderSuggestionsItem = onRenderSuggestionsItem
+    || defaultRenderSuggestionItem(getText, classes);
 
   const handleFilter = (filter, suggestions) => {
     if (filter === '') return suggestions;
     return options.filter(
-      (option) =>
-        getText(option).toLowerCase().indexOf(filter.toLowerCase()) !== -1
+      (option) => getText(option).toLowerCase().indexOf(filter.toLowerCase()) !== -1,
     );
   };
 
@@ -122,7 +121,7 @@ SinglePicker.propTypes = {
   options: PropTypes.arrayOf(
     PropTypes.shape({
       key: PropTypes.string,
-    })
+    }),
   ).isRequired,
   getTextFromItem: PropTypes.func,
   selected: PropTypes.shape({

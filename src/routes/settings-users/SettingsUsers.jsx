@@ -58,8 +58,7 @@ const SettingsUsers = () => {
       isSortable: true,
       isFilterable: true,
       isResizable: true,
-      sort: (a, b) =>
-        a.organizations[0]?.name > b.organizations[0]?.name ? -1 : 1,
+      sort: (a, b) => (a.organizations[0]?.name > b.organizations[0]?.name ? -1 : 1),
       filterValueAccessor: (i) => i.organizations.map((o) => o.name).join(','),
       iconName: 'Org',
       minWidth: 50,

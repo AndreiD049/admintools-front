@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react';
+import { useCallback, useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { DateTime } from 'luxon';
 import GlobalContext from '../../../../services/GlobalContext';
@@ -14,21 +14,16 @@ const TaskLiveUpdate = ({ setTasks, hours, setReload }) => {
       if (info.action === constants.connections.actions.INSERT) {
         const newTask = info.data;
         const expStart = DateTime.fromISO(newTask.expectedStartDate);
-        if (expStart >= hours.from && expStart <= hours.to) {
-          setTasks((prev) =>
-            prev
-              .filter((t) => t.id !== newTask.id)
-              .concat(TaskService.createTaskObject(newTask))
-          );
+        const diff = expStart.diff(hours.from, 'minute').values.minutes;
+        if (diff > 0 && diff <= hours.duration) {
+          setTasks((prev) => prev
+            .filter((t) => t.id !== newTask.id)
+            .concat(TaskService.createTaskObject(newTask)));
         }
       } else if (info.action === constants.connections.actions.UPDATE) {
-        setTasks((prev) =>
-          prev.map((task) =>
-            task.id === info.data.id
-              ? TaskService.createTaskObject(info.data)
-              : task
-          )
-        );
+        setTasks((prev) => prev.map((task) => (task.id === info.data.id
+          ? TaskService.createTaskObject(info.data)
+          : task)));
       } else if (info.action === constants.connections.actions.RELOAD) {
         // Just reset the current date so backend is queried again
         setReload((prev) => !prev);

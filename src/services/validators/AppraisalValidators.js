@@ -9,7 +9,9 @@ import userVal from './UserValidators';
 import generalVal from './General';
 import constants from '../../utils/constants';
 
-const { and, or, not, perform } = operators;
+const {
+  and, or, not, perform,
+} = operators;
 const AD = constants.securities.APPRAISAL_DETAILS;
 const ADO = constants.securities.APPRAISAL_DETAILS_OTHER;
 
@@ -99,13 +101,13 @@ const canInsert = (context, period, userId) => async () => {
             userVal.userAuthorized(
               context,
               ADO.code,
-              ADO.grants.createFinished
+              ADO.grants.createFinished,
             ),
           ]),
         ]),
       ]),
     ]),
-    false
+    false,
   );
   return result;
 };
@@ -138,13 +140,13 @@ const canUpdate = (context, period, userId) => async () => {
             userVal.userAuthorized(
               context,
               ADO.code,
-              ADO.grants.updateFinished
+              ADO.grants.updateFinished,
             ),
           ]),
         ]),
       ]),
     ]),
-    false
+    false,
   );
   return result;
 };
@@ -177,13 +179,13 @@ const canDelete = (context, period, userId) => async () => {
             userVal.userAuthorized(
               context,
               ADO.code,
-              ADO.grants.deleteFinished
+              ADO.grants.deleteFinished,
             ),
           ]),
         ]),
       ]),
     ]),
-    false
+    false,
   );
   return result;
 };

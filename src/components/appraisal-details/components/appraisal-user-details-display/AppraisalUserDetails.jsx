@@ -54,31 +54,31 @@ const AppraisalUserDetails = ({
 }) => {
   const classes = userStyles();
   const [achieved, setAchieved] = useState(
-    periodDetails.items.filter((el) => el.type === 'Achieved')
+    periodDetails.items.filter((el) => el.type === 'Achieved'),
   );
   const [planned, setPlanned] = useState(
-    periodDetails.items.filter((el) => el.type === 'Planned')
+    periodDetails.items.filter((el) => el.type === 'Planned'),
   );
   const [trainingPlanned, setTrainingPlanned] = useState(
-    periodDetails.items.filter((el) => el.type === 'Training_Planned')
+    periodDetails.items.filter((el) => el.type === 'Training_Planned'),
   );
   const [trainingAchieved, setTrainingAchieved] = useState(
-    periodDetails.items.filter((el) => el.type === 'Training_Achieved')
+    periodDetails.items.filter((el) => el.type === 'Training_Achieved'),
   );
   const [swotS, setSWOTS] = useState(
-    periodDetails.items.filter((el) => el.type === 'SWOT_S')
+    periodDetails.items.filter((el) => el.type === 'SWOT_S'),
   );
   const [swotW, setSWOTW] = useState(
-    periodDetails.items.filter((el) => el.type === 'SWOT_W')
+    periodDetails.items.filter((el) => el.type === 'SWOT_W'),
   );
   const [swotO, setSWOTO] = useState(
-    periodDetails.items.filter((el) => el.type === 'SWOT_O')
+    periodDetails.items.filter((el) => el.type === 'SWOT_O'),
   );
   const [swotT, setSWOTT] = useState(
-    periodDetails.items.filter((el) => el.type === 'SWOT_T')
+    periodDetails.items.filter((el) => el.type === 'SWOT_T'),
   );
   const [feedBack, setFeedBack] = useState(
-    periodDetails.items.filter((el) => el.type === 'Feedback')
+    periodDetails.items.filter((el) => el.type === 'Feedback'),
   );
   const [locked, setLocked] = useState(false);
   const [finished, setFinished] = useState(false);
@@ -278,7 +278,7 @@ AppraisalUserDetails.propTypes = {
     items: PropTypes.arrayOf(
       PropTypes.shape({
         type: PropTypes.string,
-      })
+      }),
     ),
   }).isRequired,
   handleLockButton: PropTypes.func.isRequired,

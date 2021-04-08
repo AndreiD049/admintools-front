@@ -42,13 +42,12 @@ const PlanningMatrix = ({
     isResizable: true,
   };
 
-  const isSelected = (date, userId) =>
-    Boolean(
-      selectedCell?.date &&
-        selectedCell.date === date &&
-        selectedCell?.user &&
-        selectedCell.user === userId
-    );
+  const isSelected = (date, userId) => Boolean(
+    selectedCell?.date
+        && selectedCell.date === date
+        && selectedCell?.user
+        && selectedCell.user === userId,
+  );
 
   const handleSelectCell = (date, user) => () => {
     setSelectedCell({
@@ -98,7 +97,7 @@ const PlanningMatrix = ({
                 isSelected={isSelected(col.key, item.id)}
               />
             ),
-          }))
+          })),
         )}
         items={users}
         selectionMode={SelectionMode.none}
@@ -114,7 +113,7 @@ PlanningMatrix.propTypes = {
     PropTypes.shape({
       id: PropTypes.string,
       username: PropTypes.string,
-    })
+    }),
   ).isRequired,
   selectedCell: PropTypes.shape({
     date: PropTypes.string,

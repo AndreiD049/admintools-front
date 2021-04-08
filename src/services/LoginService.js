@@ -21,7 +21,7 @@ const LoginService = {
         // eslint-disable-next-line react/jsx-filename-extension
         <DefaultButton as="a" href="/auth/login">
           Log in
-        </DefaultButton>
+        </DefaultButton>,
       );
       return null;
     }

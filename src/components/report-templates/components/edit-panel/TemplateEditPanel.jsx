@@ -23,7 +23,9 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const TemplateEditPanel = ({ id, isOpen, updateTemplates, setOpen }) => {
+const TemplateEditPanel = ({
+  id, isOpen, updateTemplates, setOpen,
+}) => {
   const classes = useStyles();
   const [template, setTemplate] = useState({});
   const [update, setUpdate] = useState({});
@@ -86,7 +88,7 @@ const TemplateEditPanel = ({ id, isOpen, updateTemplates, setOpen }) => {
     if (file) formData.append('template', file);
     const updateResult = await ReportingService.updateTemplate(
       template.id,
-      formData
+      formData,
     );
     setTemplate(updateResult);
     updateTemplates(updateResult);
@@ -102,7 +104,9 @@ const TemplateEditPanel = ({ id, isOpen, updateTemplates, setOpen }) => {
       htmlFor={controlId}
       id={labelId}
     >
-      <Icon iconName={iconName} /> {options.label}
+      <Icon iconName={iconName} />
+      {' '}
+      {options.label}
     </label>
   );
 
@@ -137,7 +141,7 @@ const TemplateEditPanel = ({ id, isOpen, updateTemplates, setOpen }) => {
                   onRenderLabel={onRenderLabel(
                     'label-aggregation-edit',
                     'aggregation-edit',
-                    'Edit'
+                    'Edit',
                   )}
                   label="Name: "
                   value={update && update.name}
@@ -147,9 +151,9 @@ const TemplateEditPanel = ({ id, isOpen, updateTemplates, setOpen }) => {
                 <TextField
                   label="Created by: "
                   value={
-                    template &&
-                    template.createdUser &&
-                    template.createdUser.username
+                    template
+                    && template.createdUser
+                    && template.createdUser.username
                   }
                   readOnly
                   underlined
@@ -176,8 +180,8 @@ const TemplateEditPanel = ({ id, isOpen, updateTemplates, setOpen }) => {
                     <TextField
                       label="Modified on: "
                       value={
-                        template.modifiedDate &&
-                        new Date(template.modifiedDate).toLocaleString()
+                        template.modifiedDate
+                        && new Date(template.modifiedDate).toLocaleString()
                       }
                       readOnly
                       underlined
@@ -194,7 +198,7 @@ const TemplateEditPanel = ({ id, isOpen, updateTemplates, setOpen }) => {
                   onRenderLabel={onRenderLabel(
                     'label-aggregation-edit',
                     'aggregation-edit',
-                    'Edit'
+                    'Edit',
                   )}
                   label="Filename: "
                   value={update.filename}
@@ -233,7 +237,7 @@ const TemplateEditPanel = ({ id, isOpen, updateTemplates, setOpen }) => {
                   onRenderLabel={onRenderLabel(
                     'label-aggregation-edit',
                     'aggregation-edit',
-                    'Edit'
+                    'Edit',
                   )}
                   multiline
                   autoAdjustHeight

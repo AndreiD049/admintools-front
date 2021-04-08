@@ -1,4 +1,6 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, {
+  useCallback, useContext, useEffect, useState,
+} from 'react';
 import PropTypes from 'prop-types';
 import {
   Checkbox,
@@ -225,7 +227,9 @@ RuleTypeDetails.propTypes = {
   }).isRequired,
 };
 
-const RuleDetails = ({ id, editing, setEditing, setRules }) => {
+const RuleDetails = ({
+  id, editing, setEditing, setRules,
+}) => {
   const classes = useStyles();
   const global = useContext(GlobalContext);
   const [rule] = useFetch(id && TaskRuleService.taskRulePath(id), null, {
@@ -241,19 +245,17 @@ const RuleDetails = ({ id, editing, setEditing, setRules }) => {
       },
     },
     {
-      callback: (dt) =>
-        dt.map((u) => ({
-          key: u.id,
-          data: u,
-        })),
-    }
+      callback: (dt) => dt.map((u) => ({
+        key: u.id,
+        data: u,
+      })),
+    },
   );
   const [flows] = useFetch(TaskFlowService.baseUrl, null, {
-    callback: (flowsData) =>
-      flowsData.map((flow) => ({
-        key: flow.id,
-        data: flow,
-      })),
+    callback: (flowsData) => flowsData.map((flow) => ({
+      key: flow.id,
+      data: flow,
+    })),
   });
 
   const handleUpdate = useCallback(async () => {
@@ -300,7 +302,7 @@ const RuleDetails = ({ id, editing, setEditing, setRules }) => {
         </DefaultButton>
       </>
     ),
-    [panel, editing, handleUpdate]
+    [panel, editing, handleUpdate],
   );
 
   /**
@@ -340,14 +342,14 @@ const RuleDetails = ({ id, editing, setEditing, setRules }) => {
           mask="99:99"
           maskChar="0"
           value={DateUtils.getTimeText(
-            data.taskStartTime ?? new Date(rule.taskStartTime)
+            data.taskStartTime ?? new Date(rule.taskStartTime),
           )}
           onChange={
             editing
               ? handleDataChange(
-                  'taskStartTime',
-                  (args) => new Date(DateUtils.getValidTimeStringUTC(args[1]))
-                )
+                'taskStartTime',
+                (args) => new Date(DateUtils.getValidTimeStringUTC(args[1])),
+              )
               : null
           }
         />
@@ -358,20 +360,20 @@ const RuleDetails = ({ id, editing, setEditing, setRules }) => {
           maskChar="0"
           value={DateUtils.getEndTimeTextUTC(
             data.taskStartTime ?? new Date(rule.taskStartTime),
-            data.taskDuration ?? rule.taskDuration
+            data.taskDuration ?? rule.taskDuration,
           )}
           onChange={
             editing
               ? handleDataChange('taskDuration', (args) => {
-                  const validTime = DateUtils.getValidTimeStringUTC(args[1]);
-                  // Check if end time is after start time
-                  const startDT = DateTime.fromJSDate(
-                    data.taskStartTime ?? new Date(rule.taskStartTime)
-                  );
-                  const endDT = DateTime.fromISO(validTime);
-                  if (endDT < startDT) return 0;
-                  return endDT.diff(startDT, 'minute').values.minutes;
-                })
+                const validTime = DateUtils.getValidTimeStringUTC(args[1]);
+                // Check if end time is after start time
+                const startDT = DateTime.fromJSDate(
+                  data.taskStartTime ?? new Date(rule.taskStartTime),
+                );
+                const endDT = DateTime.fromISO(validTime);
+                if (endDT < startDT) return 0;
+                return endDT.diff(startDT, 'minute').values.minutes;
+              })
               : null
           }
         />
@@ -380,21 +382,18 @@ const RuleDetails = ({ id, editing, setEditing, setRules }) => {
             label="Duration"
             labelPosition={Position.top}
             value={data.taskDuration ?? rule.taskDuration}
-            onChange={handleDataChange('taskDuration', (args) =>
-              Number.isNaN(+args[0].target.value) ? 0 : +args[0].target.value
-            )}
-            onIncrement={(val) =>
-              setData((prev) => ({
-                ...prev,
-                taskDuration: +val + 10,
-              }))
-            }
+            onChange={handleDataChange('taskDuration', (args) => (Number.isNaN(+args[0].target.value) ? 0 : +args[0].target.value))}
+            onIncrement={(val) => setData((prev) => ({
+              ...prev,
+              taskDuration: +val + 10,
+            }))}
             onDecrement={(val) => {
-              if (val > 10)
+              if (val > 10) {
                 setData((prev) => ({
                   ...prev,
                   taskDuration: +val - 10,
                 }));
+              }
             }}
             type="number"
             min={0}
@@ -417,17 +416,13 @@ const RuleDetails = ({ id, editing, setEditing, setRules }) => {
           value={data.validFrom ?? new Date(rule.validFrom)}
           disabled={!editing}
           label="Valid from"
-          onSelectDate={handleDataChange('validFrom', (args) =>
-            DateUtils.makeUTC(args[0])
-          )}
+          onSelectDate={handleDataChange('validFrom', (args) => DateUtils.makeUTC(args[0]))}
         />
         <DatePicker
           borderless={!editing}
           value={data.validTo ?? (rule.validTo && new Date(rule.validTo))}
           disabled={!editing}
-          onSelectDate={handleDataChange('validTo', (args) =>
-            DateUtils.makeUTC(args[0])
-          )}
+          onSelectDate={handleDataChange('validTo', (args) => DateUtils.makeUTC(args[0]))}
           label="Valid to"
           allowTextInput
         />
@@ -461,48 +456,44 @@ const RuleDetails = ({ id, editing, setEditing, setRules }) => {
                         ? data.flows?.length > 0
                         : rule.flows?.length > 0
                     }
-                    onSelect={(item) =>
-                      setData((prev) => {
-                        if (prev.users) {
-                          return {
-                            ...prev,
-                            users: prev.users.concat(item.data),
-                          };
-                        }
+                    onSelect={(item) => setData((prev) => {
+                      if (prev.users) {
                         return {
                           ...prev,
-                          users: rule.users.concat(item.data),
+                          users: prev.users.concat(item.data),
                         };
-                      })
-                    }
-                    onRemove={(item) =>
-                      setData((prev) => {
-                        if (prev.users) {
-                          return {
-                            ...prev,
-                            users: prev.users.filter(
-                              (u) => u.id !== item.data.id
-                            ),
-                          };
-                        }
+                      }
+                      return {
+                        ...prev,
+                        users: rule.users.concat(item.data),
+                      };
+                    })}
+                    onRemove={(item) => setData((prev) => {
+                      if (prev.users) {
                         return {
                           ...prev,
-                          users: rule.users.filter(
-                            (u) => u.id !== item.data.id
+                          users: prev.users.filter(
+                            (u) => u.id !== item.data.id,
                           ),
                         };
-                      })
-                    }
+                      }
+                      return {
+                        ...prev,
+                        users: rule.users.filter(
+                          (u) => u.id !== item.data.id,
+                        ),
+                      };
+                    })}
                     selected={
                       data.users
                         ? data.users.map((u) => ({
-                            key: u.id,
-                            data: u,
-                          }))
+                          key: u.id,
+                          data: u,
+                        }))
                         : rule.users.map((u) => ({
-                            key: u.id,
-                            data: u,
-                          }))
+                          key: u.id,
+                          data: u,
+                        }))
                     }
                   />
                 </TooltipHost>
@@ -546,48 +537,44 @@ const RuleDetails = ({ id, editing, setEditing, setRules }) => {
                     }
                     showCheckboxes
                     showDeleteIcon={false}
-                    onSelect={(item) =>
-                      setData((prev) => {
-                        if (prev.flows) {
-                          return {
-                            ...prev,
-                            flows: prev.flows.concat(item.data),
-                          };
-                        }
+                    onSelect={(item) => setData((prev) => {
+                      if (prev.flows) {
                         return {
                           ...prev,
-                          flows: rule.flows.concat(item.data),
+                          flows: prev.flows.concat(item.data),
                         };
-                      })
-                    }
-                    onRemove={(item) =>
-                      setData((prev) => {
-                        if (prev.flows) {
-                          return {
-                            ...prev,
-                            flows: prev.flows.filter(
-                              (u) => u.id !== item.data.id
-                            ),
-                          };
-                        }
+                      }
+                      return {
+                        ...prev,
+                        flows: rule.flows.concat(item.data),
+                      };
+                    })}
+                    onRemove={(item) => setData((prev) => {
+                      if (prev.flows) {
                         return {
                           ...prev,
-                          flows: rule.flows.filter(
-                            (u) => u.id !== item.data.id
+                          flows: prev.flows.filter(
+                            (u) => u.id !== item.data.id,
                           ),
                         };
-                      })
-                    }
+                      }
+                      return {
+                        ...prev,
+                        flows: rule.flows.filter(
+                          (u) => u.id !== item.data.id,
+                        ),
+                      };
+                    })}
                     selected={
                       data.flows
                         ? data.flows.map((u) => ({
-                            key: u.id,
-                            data: u,
-                          }))
+                          key: u.id,
+                          data: u,
+                        }))
                         : rule.flows.map((u) => ({
-                            key: u.id,
-                            data: u,
-                          }))
+                          key: u.id,
+                          data: u,
+                        }))
                     }
                   />
                 </TooltipHost>
@@ -617,7 +604,7 @@ const RuleDetails = ({ id, editing, setEditing, setRules }) => {
           disabled={!editing}
           onChange={handleDataChange(
             'isBackgroundTask',
-            (args) => args[0].target.checked
+            (args) => args[0].target.checked,
           )}
         />
         <Checkbox checked={rule.isSharedTask} label="Shared" disabled />

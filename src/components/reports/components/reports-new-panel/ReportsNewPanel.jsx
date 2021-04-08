@@ -223,12 +223,10 @@ const ReportsNewPanel = ({ isOpen, setOpen, addReport }) => {
               <Label>Select parameter</Label>
               <SinglePicker
                 options={parameters
-                  .map((param) =>
-                    param.paths.map((path) => ({
-                      key: `${param.name}${path}`,
-                      data: `${param.name}${path}`,
-                    }))
-                  )
+                  .map((param) => param.paths.map((path) => ({
+                    key: `${param.name}${path}`,
+                    data: `${param.name}${path}`,
+                  })))
                   .flat()}
                 getTextFromItem={(item) => item.data}
                 onSelect={(item) => handleChangeParameter(item)}

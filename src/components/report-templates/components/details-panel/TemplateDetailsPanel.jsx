@@ -22,7 +22,9 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const TemplateDetailsPanel = ({ id, isOpen, setOpen, setEdit }) => {
+const TemplateDetailsPanel = ({
+  id, isOpen, setOpen, setEdit,
+}) => {
   const classes = useStyles();
   const [template, setTemplate] = useState(null);
 
@@ -86,9 +88,9 @@ const TemplateDetailsPanel = ({ id, isOpen, setOpen, setEdit }) => {
                 <TextField
                   label="Created by: "
                   value={
-                    template &&
-                    template.createdUser &&
-                    template.createdUser.username
+                    template
+                    && template.createdUser
+                    && template.createdUser.username
                   }
                   readOnly
                   underlined
@@ -112,8 +114,8 @@ const TemplateDetailsPanel = ({ id, isOpen, setOpen, setEdit }) => {
                     <TextField
                       label="Modified on: "
                       value={
-                        template.modifiedDate &&
-                        new Date(template.modifiedDate).toLocaleString()
+                        template.modifiedDate
+                        && new Date(template.modifiedDate).toLocaleString()
                       }
                       readOnly
                       underlined

@@ -4,7 +4,6 @@ import GlobalContext from '../../../services/GlobalContext';
 
 const ConnectionManager = () => {
   const global = useContext(GlobalContext);
-  // ConnectionService.connectSSE();
 
   useEffect(() => {
     async function run() {

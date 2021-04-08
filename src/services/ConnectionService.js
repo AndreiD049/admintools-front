@@ -21,11 +21,11 @@ const ConnectionService = {
         return response.data;
       }
       throw new Error(
-        `Server response: ${response.status} - ${response.statusText}`
+        `Server response: ${response.status} - ${response.statusText}`,
       );
     } catch (err) {
       NotificationService.notifyError(
-        (err.response.data && err.response.data.error) || err.message
+        (err.response.data && err.response.data.error) || err.message,
       );
       throw err;
     }

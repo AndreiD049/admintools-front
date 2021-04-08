@@ -87,7 +87,7 @@ const FieldSet = ({
       }
     }
     setItems(
-      AppraisalService.normalizeSet(periodId, context.user, items, min, type)
+      AppraisalService.normalizeSet(periodId, context.user, items, min, type),
     );
     run();
     // eslint-disable-next-line
@@ -101,7 +101,7 @@ const FieldSet = ({
       }
       return AppraisalService.addUserItemToSet(id, userId, item);
     },
-    [userId]
+    [userId],
   );
 
   const updateItem = useCallback(
@@ -111,7 +111,7 @@ const FieldSet = ({
       }
       return AppraisalService.updateUserItemInSet(id, userId, item);
     },
-    [userId]
+    [userId],
   );
 
   const deleteItem = useCallback(
@@ -121,7 +121,7 @@ const FieldSet = ({
       }
       return AppraisalService.deleteUserItemFromSet(id, userId, item);
     },
-    [userId]
+    [userId],
   );
 
   const changeHandler = useCallback(
@@ -134,7 +134,7 @@ const FieldSet = ({
         });
       }
     },
-    [user, periodId, type, min, setItems]
+    [user, periodId, type, min, setItems],
   );
 
   const changeTypeHandler = useCallback(
@@ -145,29 +145,25 @@ const FieldSet = ({
           item.type = itemType;
           const result = await updateItem(periodId, item);
           if (!result.error) {
-            setItems((prev) =>
-              AppraisalService.normalizeSet(
-                periodId,
-                user,
-                prev.filter((i) => i.id !== result.value.id),
-                min,
-                itemType
-              )
-            );
-            setOtherItems((prev) =>
-              AppraisalService.normalizeSet(
-                periodId,
-                user,
-                prev.filter((i) => i.content !== '').concat(result.value),
-                min,
-                itemType
-              )
-            );
+            setItems((prev) => AppraisalService.normalizeSet(
+              periodId,
+              user,
+              prev.filter((i) => i.id !== result.value.id),
+              min,
+              itemType,
+            ));
+            setOtherItems((prev) => AppraisalService.normalizeSet(
+              periodId,
+              user,
+              prev.filter((i) => i.content !== '').concat(result.value),
+              min,
+              itemType,
+            ));
           }
         }
       }
     },
-    [user, setOtherItems, min, items, periodId, setItems, updateItem]
+    [user, setOtherItems, min, items, periodId, setItems, updateItem],
   );
 
   // Handle the remove button press
@@ -188,7 +184,7 @@ const FieldSet = ({
               user,
               copy,
               min,
-              type
+              type,
             );
           });
         }
@@ -200,7 +196,7 @@ const FieldSet = ({
         });
       }
     },
-    [user, items, periodId, type, min, deleteItem, setItems]
+    [user, items, periodId, type, min, deleteItem, setItems],
   );
 
   /*
@@ -238,7 +234,7 @@ const FieldSet = ({
               user,
               copy,
               min,
-              type
+              type,
             );
           });
         } else if (isToBeDeleted) {
@@ -257,14 +253,14 @@ const FieldSet = ({
               user,
               copy,
               min,
-              type
+              type,
             );
           });
         } else if (
-          !isNew &&
-          !isToBeDeleted &&
-          modified &&
-          item.content !== ''
+          !isNew
+          && !isToBeDeleted
+          && modified
+          && item.content !== ''
         ) {
           // I try to modify item in the database
           const result = await updateItem(periodId, item);
@@ -287,7 +283,7 @@ const FieldSet = ({
               user,
               copy,
               min,
-              type
+              type,
             );
           });
         }
@@ -303,7 +299,7 @@ const FieldSet = ({
       deleteItem,
       updateItem,
       setItems,
-    ]
+    ],
   );
 
   return (

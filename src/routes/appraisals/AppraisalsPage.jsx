@@ -1,6 +1,8 @@
 /* eslint-disable no-param-reassign */
 import React, { useState, useEffect, useContext } from 'react';
-import { Switch, Route, useRouteMatch, useHistory } from 'react-router-dom';
+import {
+  Switch, Route, useRouteMatch, useHistory,
+} from 'react-router-dom';
 import {
   Checkbox,
   CommandBar,
@@ -11,7 +13,9 @@ import {
   Text,
   useTheme,
 } from '@fluentui/react';
-import { Col, Container, Row, useScreenClass } from 'react-grid-system';
+import {
+  Col, Container, Row, useScreenClass,
+} from 'react-grid-system';
 import { downloadBlob } from 'download.js';
 import Table from '../../components/shared/table';
 import AppraisalService from '../../services/AppraisalService';
@@ -95,8 +99,7 @@ const AppraisalsPage = () => {
       isSortable: true,
       isFilterable: true,
       filterValueAccessor: (i) => i.createdUser.username,
-      sort: (a, b) =>
-        a.createdUser.username < b.createdUser.username ? -1 : 1,
+      sort: (a, b) => (a.createdUser.username < b.createdUser.username ? -1 : 1),
       data: 'string',
       minWidth: 200,
       maxWidth: 300,
@@ -137,7 +140,7 @@ const AppraisalsPage = () => {
 
   useEffect(() => {
     setFilteredItems(
-      showClosed ? items : items.filter((i) => i.status !== 'Finished')
+      showClosed ? items : items.filter((i) => i.status !== 'Finished'),
     );
   }, [showClosed, items]);
 
@@ -150,11 +153,7 @@ const AppraisalsPage = () => {
       const item = selectionDetails.items[0];
       const result = await AppraisalService.finishPeriod(item.id);
       if (result) {
-        setItems((prev) =>
-          prev.map((i) =>
-            i.id === item.id ? { ...item, status: 'Finished' } : i
-          )
-        );
+        setItems((prev) => prev.map((i) => (i.id === item.id ? { ...item, status: 'Finished' } : i)));
         NotificationService.notifySuccess(`Period '${item.name}' finished`);
       }
     }
@@ -162,10 +161,10 @@ const AppraisalsPage = () => {
 
   const handleCreate = async (name) => {
     if (
-      global.user &&
-      global.user.id &&
-      global.user.organization &&
-      global.user.organization.id
+      global.user
+      && global.user.id
+      && global.user.organization
+      && global.user.organization.id
     ) {
       const result = await AppraisalService.addPeriod({
         name,
@@ -180,11 +179,11 @@ const AppraisalsPage = () => {
 
   const handleEdit = async (id, name) => {
     if (
-      global.user &&
-      global.user.id &&
-      global.user.organization &&
-      global.user.organization.id &&
-      global.Authorize(AP.code, AP.grants.update)
+      global.user
+      && global.user.id
+      && global.user.organization
+      && global.user.organization.id
+      && global.Authorize(AP.code, AP.grants.update)
     ) {
       const result = await AppraisalService.updatePeriod(id, {
         name,
@@ -229,23 +228,22 @@ const AppraisalsPage = () => {
                             key: 'openItem',
                             text: 'Open',
                             disabled:
-                              selectionDetails.count === 0 ||
-                              !global.Authorize(AP.code, AP.grants.read),
+                              selectionDetails.count === 0
+                              || !global.Authorize(AP.code, AP.grants.read),
                             iconProps: {
                               iconName: 'OpenFile',
                             },
-                            onClick: () =>
-                              handleItemInvoked(
-                                selectionDetails.count &&
-                                  selectionDetails.items[0]
-                              ),
+                            onClick: () => handleItemInvoked(
+                              selectionDetails.count
+                                  && selectionDetails.items[0],
+                            ),
                           },
                           {
                             key: 'newItem',
                             text: 'New',
                             disabled: !global.Authorize(
                               AP.code,
-                              AP.grants.create
+                              AP.grants.create,
                             ),
                             iconProps: {
                               iconName: 'Add',
@@ -256,8 +254,8 @@ const AppraisalsPage = () => {
                             key: 'editItem',
                             text: 'Edit',
                             disabled:
-                              selectionDetails.count === 0 ||
-                              !global.Authorize(AP.code, AP.grants.update),
+                              selectionDetails.count === 0
+                              || !global.Authorize(AP.code, AP.grants.update),
                             iconProps: {
                               iconName: 'Edit',
                             },
@@ -267,11 +265,11 @@ const AppraisalsPage = () => {
                             key: 'finishItem',
                             text: 'Finish',
                             disabled:
-                              selectionDetails.count === 0 ||
-                              (selectionDetails.count &&
-                                selectionDetails.items[0].status ===
-                                  'Finished') ||
-                              !global.Authorize(AP.code, AP.grants.finish),
+                              selectionDetails.count === 0
+                              || (selectionDetails.count
+                                && selectionDetails.items[0].status
+                                  === 'Finished')
+                              || !global.Authorize(AP.code, AP.grants.finish),
                             iconProps: {
                               iconName: 'SaveAndClose',
                             },
@@ -281,17 +279,16 @@ const AppraisalsPage = () => {
                             key: 'generateReport',
                             text: 'Appraisal report',
                             disabled:
-                              selectionDetails.count === 0 ||
-                              !global.Authorize(REP.code, REP.grants.read),
+                              selectionDetails.count === 0
+                              || !global.Authorize(REP.code, REP.grants.read),
                             iconProps: {
                               iconName: 'MobileReport',
                             },
-                            onClick: () =>
-                              handleGenerateReport(
-                                selectionDetails.count
-                                  ? selectionDetails.items[0].id
-                                  : null
-                              ),
+                            onClick: () => handleGenerateReport(
+                              selectionDetails.count
+                                ? selectionDetails.items[0].id
+                                : null,
+                            ),
                           },
                         ]}
                       />

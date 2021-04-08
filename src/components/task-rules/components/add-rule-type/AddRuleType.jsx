@@ -116,12 +116,10 @@ const AddRuleType = ({ data, setData }) => {
             label="Day type"
             defaultSelectedKey={data.dailyType}
             options={options}
-            onChange={(ev, option) =>
-              setData((prev) => ({
-                ...prev,
-                dailyType: option.key,
-              }))
-            }
+            onChange={(ev, option) => setData((prev) => ({
+              ...prev,
+              dailyType: option.key,
+            }))}
           />
         </>
       );
@@ -195,12 +193,10 @@ const AddRuleType = ({ data, setData }) => {
             className={classes.monthlyDropdown}
             options={monthlyOptions}
             placeHolder="Select"
-            onChange={(evt, option) =>
-              setData((prev) => ({
-                ...prev,
-                monthlyOnType: option.key,
-              }))
-            }
+            onChange={(evt, option) => setData((prev) => ({
+              ...prev,
+              monthlyOnType: option.key,
+            }))}
             label="Type"
           />
           <Checkbox

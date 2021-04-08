@@ -17,7 +17,7 @@ export default {
       date.getDate(),
       hours.h,
       hours.m,
-      hours.s
+      hours.s,
     );
   },
 
@@ -30,8 +30,8 @@ export default {
         date.getDate(),
         date.getHours(),
         date.getMinutes(),
-        date.getSeconds()
-      )
+        date.getSeconds(),
+      ),
     );
   },
 
@@ -55,7 +55,7 @@ export default {
   makeUTCDateOnly(date) {
     if (Number.isNaN(+new Date(date)) || date === null) return null;
     return new Date(
-      Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0)
+      Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0),
     );
   },
 
@@ -150,7 +150,7 @@ export default {
       exp.hour,
       exp.minute,
       0,
-      0
+      0,
     ).toJSDate();
   },
 

@@ -31,7 +31,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ReportsEditPanel = ({ id, isOpen, setOpen, setReport }) => {
+const ReportsEditPanel = ({
+  id, isOpen, setOpen, setReport,
+}) => {
   const classes = useStyles();
   const [details, setDetails] = useState(null);
   const [parameters, setParameters] = useState([]);
@@ -53,14 +55,12 @@ const ReportsEditPanel = ({ id, isOpen, setOpen, setReport }) => {
 
   const handleChangeParams = (property, param) => (evt) => {
     const { value } = evt.target;
-    setParameters((prev) =>
-      prev.map((parameter) => {
-        if (parameter && parameter.path === param.path) {
-          return { ...parameter, [property]: value };
-        }
-        return parameter;
-      })
-    );
+    setParameters((prev) => prev.map((parameter) => {
+      if (parameter && parameter.path === param.path) {
+        return { ...parameter, [property]: value };
+      }
+      return parameter;
+    }));
   };
 
   const deleteParam = (param) => () => {
@@ -138,7 +138,7 @@ const ReportsEditPanel = ({ id, isOpen, setOpen, setReport }) => {
         let params = [];
         if (reportDetails?.template?.id) {
           params = await ReportingService.getTempalteParameters(
-            reportDetails.template.id
+            reportDetails.template.id,
           );
         }
         if (mounted) {
@@ -236,20 +236,16 @@ const ReportsEditPanel = ({ id, isOpen, setOpen, setReport }) => {
             <Box className={classes.box}>
               <SinglePicker
                 options={parametersList
-                  .map((param) =>
-                    param.paths.map((path) => ({
-                      key: `${param.name}${path}`,
-                      data: `${param.name}${path}`,
-                    }))
-                  )
+                  .map((param) => param.paths.map((path) => ({
+                    key: `${param.name}${path}`,
+                    data: `${param.name}${path}`,
+                  })))
                   .flat()}
                 getTextFromItem={(item) => item.data}
-                onSelect={(item) =>
-                  setNewParameter((prev) => ({
-                    ...prev,
-                    path: item.data,
-                  }))
-                }
+                onSelect={(item) => setNewParameter((prev) => ({
+                  ...prev,
+                  path: item.data,
+                }))}
                 onRenderItem={() => null}
                 maxHeight="400px"
               />
@@ -291,7 +287,7 @@ const ReportsEditPanel = ({ id, isOpen, setOpen, setReport }) => {
               value={JSON.stringify(
                 JSON.parse(details.template.aggregation),
                 null,
-                4
+                4,
               )}
               multiline
               underlined

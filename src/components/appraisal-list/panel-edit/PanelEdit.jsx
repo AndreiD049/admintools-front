@@ -9,7 +9,9 @@ import {
   TextField,
 } from '@fluentui/react';
 
-const PanelEdit = ({ item, isOpen, setOpen, handleEdit }) => {
+const PanelEdit = ({
+  item, isOpen, setOpen, handleEdit,
+}) => {
   const [val, setVal] = useState(item ? item.name : '');
 
   const handleSubmit = (e) => {

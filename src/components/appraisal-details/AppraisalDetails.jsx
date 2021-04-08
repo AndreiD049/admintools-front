@@ -26,7 +26,7 @@ const AppraisalDetails = ({ context }) => {
     if (userId) {
       const result = await AppraisalService.toggleLockPeriod(
         periodDetails.id,
-        userId
+        userId,
       );
       setPeriodDetails((prev) => {
         if (prev) {

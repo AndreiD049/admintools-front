@@ -3,10 +3,10 @@ import { useEffect, useState } from 'react';
 const useLocalStorageState = (
   label,
   initialValue = [],
-  transform = (d) => d
+  transform = (d) => d,
 ) => {
   const [data, setData] = useState(
-    transform(JSON.parse(localStorage.getItem(label))) ?? initialValue
+    transform(JSON.parse(localStorage.getItem(label))) ?? initialValue,
   );
 
   useEffect(() => {

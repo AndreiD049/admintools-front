@@ -10,7 +10,7 @@ import NotificationService from '../services/NotificationService';
 const serviceRequestWrapper = async (
   requestFunc,
   successStatusCode = 200,
-  showNotification = true
+  showNotification = true,
 ) => {
   try {
     const response = await requestFunc();
@@ -18,12 +18,12 @@ const serviceRequestWrapper = async (
       return response.data;
     }
     throw new Error(
-      `Server response: ${response.status} - ${response.statusText}`
+      `Server response: ${response.status} - ${response.statusText}`,
     );
   } catch (err) {
     if (showNotification) {
       NotificationService.notifyError(
-        (err.response.data && err.response.data.error) || err.message
+        (err.response.data && err.response.data.error) || err.message,
       );
     }
     throw err;

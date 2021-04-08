@@ -1,4 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, {
+  useCallback, useEffect, useRef, useState,
+} from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {
@@ -159,11 +161,10 @@ const TaskItem = ({ task, handleStatusChange }) => {
   const [collapsed, setCollapsed] = useState(true);
   const timerRef = useRef(null);
 
-  const setIcon = (icon, state) =>
-    setIcons((prev) => ({
-      ...prev,
-      [icon]: state,
-    }));
+  const setIcon = (icon, state) => setIcons((prev) => ({
+    ...prev,
+    [icon]: state,
+  }));
 
   const performChecks = () => {
     const expectedFinishDate = DateTime.fromISO(task.expectedFinishDate);
@@ -277,9 +278,7 @@ const TaskItem = ({ task, handleStatusChange }) => {
         <div
           tabIndex="-1"
           role="button"
-          onKeyDown={(evt) =>
-            evt.key === 'Enter' && setCollapsed((prev) => !prev)
-          }
+          onKeyDown={(evt) => evt.key === 'Enter' && setCollapsed((prev) => !prev)}
           className={clsx(classes.collapse)}
           onClick={() => setCollapsed((prev) => !prev)}
         >

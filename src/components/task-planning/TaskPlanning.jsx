@@ -40,16 +40,15 @@ const TaskPlanning = () => {
   const [flows] = useFetch(TaskFlowService.baseUrl);
   const [selectedCell, setSelectedCell] = useState(null);
   const [teams] = useFetch(TeamService.baseUrl, null, {
-    callback: (data) =>
-      data.map((team) => ({
-        key: team.id,
-        text: team.name,
-        data: team,
-      })),
+    callback: (data) => data.map((team) => ({
+      key: team.id,
+      text: team.name,
+      data: team,
+    })),
   });
   const [selectedTeam, setSelectedTeam] = useLocalStorageState(
     'TaskPlanningSelectedTeam',
-    null
+    null,
   );
   const [users] = useFetch(
     UserService.baseUrl,
@@ -58,7 +57,7 @@ const TaskPlanning = () => {
         teams: [selectedTeam],
       },
     },
-    { dependencies: [selectedTeam] }
+    { dependencies: [selectedTeam] },
   );
   const [data, setData] = useFetch(
     TaskPlanningService.baseUrl,
@@ -69,7 +68,7 @@ const TaskPlanning = () => {
         teams: [selectedTeam],
       },
     },
-    { dependencies: [selectedTeam, dates] }
+    { dependencies: [selectedTeam, dates] },
   );
 
   const userFlowMap = useMemo(() => {
@@ -92,17 +91,15 @@ const TaskPlanning = () => {
       const result = await TaskPlanningService.createPlanning(
         selectedCell.date,
         selectedCell.user,
-        [flow]
+        [flow],
       );
       setData((prev) => prev.concat(result));
     } else {
       const result = await TaskPlanningService.addFlowToPlanning(
         planning.id,
-        flow.id
+        flow.id,
       );
-      setData((prev) =>
-        prev.map((plan) => (plan.id === result.id ? result : plan))
-      );
+      setData((prev) => prev.map((plan) => (plan.id === result.id ? result : plan)));
     }
   };
 
@@ -110,11 +107,9 @@ const TaskPlanning = () => {
     if (planning?.id) {
       const result = await TaskPlanningService.removeFromFromPlanning(
         planning.id,
-        flow.id
+        flow.id,
       );
-      setData((prev) =>
-        prev.map((plan) => (plan.id === result.id ? result : plan))
-      );
+      setData((prev) => prev.map((plan) => (plan.id === result.id ? result : plan)));
     }
   };
 
@@ -141,7 +136,7 @@ const TaskPlanning = () => {
       removeFlow: handleRemoveFlow,
       users,
       user: selectedCell?.user,
-    }
+    },
   );
 
   const handleInvoke = () => {

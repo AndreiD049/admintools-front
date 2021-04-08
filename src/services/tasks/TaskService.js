@@ -17,11 +17,11 @@ const TaskService = {
         return response.data;
       }
       throw new Error(
-        `Server response: ${response.data} - ${response.statusText}`
+        `Server response: ${response.data} - ${response.statusText}`,
       );
     } catch (err) {
       NotificationService.notifyError(
-        (err.response && err.response.data.error) || err.message
+        (err.response && err.response.data.error) || err.message,
       );
       throw err;
     }
@@ -36,11 +36,11 @@ const TaskService = {
         return response.data;
       }
       throw new Error(
-        `Server response: ${response.data} - ${response.statusText}`
+        `Server response: ${response.data} - ${response.statusText}`,
       );
     } catch (err) {
       NotificationService.notifyError(
-        (err.response && err.response.data.error) || err.message
+        (err.response && err.response.data.error) || err.message,
       );
       throw err;
     }
@@ -51,7 +51,7 @@ const TaskService = {
       // pass
     } catch (err) {
       NotificationService.notifyError(
-        (err.response && err.response.data.error) || err.message
+        (err.response && err.response.data.error) || err.message,
       );
       throw err;
     }
@@ -64,11 +64,11 @@ const TaskService = {
         return response.data;
       }
       throw new Error(
-        `Server response: ${response.data} - ${response.statusText}`
+        `Server response: ${response.data} - ${response.statusText}`,
       );
     } catch (err) {
       NotificationService.notifyError(
-        (err.response && err.response.data.error) || err.message
+        (err.response && err.response.data.error) || err.message,
       );
       throw err;
     }
@@ -81,11 +81,11 @@ const TaskService = {
         return response.data;
       }
       throw new Error(
-        `Server response: ${response.data} - ${response.statusText}`
+        `Server response: ${response.data} - ${response.statusText}`,
       );
     } catch (err) {
       NotificationService.notifyError(
-        (err.response && err.response.data.error) || err.message
+        (err.response && err.response.data.error) || err.message,
       );
       throw err;
     }
@@ -98,11 +98,11 @@ const TaskService = {
         return response.data;
       }
       throw new Error(
-        `Server response: ${response.data} - ${response.statusText}`
+        `Server response: ${response.data} - ${response.statusText}`,
       );
     } catch (err) {
       NotificationService.notifyError(
-        (err.response && err.response.data.error) || err.message
+        (err.response && err.response.data.error) || err.message,
       );
       throw err;
     }
@@ -113,7 +113,7 @@ const TaskService = {
       // pass
     } catch (err) {
       NotificationService.notifyError(
-        (err.response && err.response.data.error) || err.message
+        (err.response && err.response.data.error) || err.message,
       );
       throw err;
     }

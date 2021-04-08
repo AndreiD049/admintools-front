@@ -100,7 +100,7 @@ const AppraisalInput = ({
   const [value, setValue] = useState({ ...item });
   const [modified, setModified] = useState(false);
   const [multiline, setMultiline] = useState(
-    item.content.length > multilineTrashold
+    item.content.length > multilineTrashold,
   );
   const { userId } = useParams();
   const [validations, setValidations] = useState({
@@ -121,11 +121,11 @@ const AppraisalInput = ({
             not(validate.itemRelated(item)),
             or([not(validate.isTruthy(userId)), validate.isTruthy(userId)]),
           ]),
-          false
+          false,
         ),
       ];
       const [checkRelated, checkFinished, checkEditable] = await Promise.all(
-        calls
+        calls,
       );
       const isRelated = checkRelated.result;
       const isFinished = checkFinished.result;
@@ -237,11 +237,13 @@ const AppraisalInput = ({
         </>
       ) : null}
       <Text variant="medium">
-        <strong>Created user:</strong>{' '}
+        <strong>Created user:</strong>
+        {' '}
         {item.createdUser && item.createdUser.username}
       </Text>
       <Text variant="medium">
-        <strong>Created date:</strong>{' '}
+        <strong>Created date:</strong>
+        {' '}
         {item.createdDate && new Date(item.createdDate).toLocaleString()}
       </Text>
       <Stack.Item align="stretch">
@@ -251,7 +253,8 @@ const AppraisalInput = ({
         <>
           <Stack.Item>
             <Text variant="medium">
-              <strong>Modified user:</strong>{' '}
+              <strong>Modified user:</strong>
+              {' '}
               {item.modifiedUser && item.modifiedUser.username}
             </Text>
           </Stack.Item>
@@ -261,9 +264,10 @@ const AppraisalInput = ({
         <>
           <Stack.Item>
             <Text variant="medium">
-              <strong>Modified date:</strong>{' '}
-              {item.modifiedDate &&
-                new Date(item.modifiedDate).toLocaleString()}
+              <strong>Modified date:</strong>
+              {' '}
+              {item.modifiedDate
+                && new Date(item.modifiedDate).toLocaleString()}
             </Text>
           </Stack.Item>
           <Stack.Item align="stretch">
@@ -293,14 +297,10 @@ const AppraisalInput = ({
           padding: '0',
         },
       }}
-      onRenderPrefix={() =>
-        item.id !== 0 ? (
-          <CustomPrefix id={`${item.type}-${idx}`}>{tooltip}</CustomPrefix>
-        ) : null
-      }
-      onRenderSuffix={() =>
-        item.id !== 0 ? <CustomSuffix menuProps={menuProps} /> : null
-      }
+      onRenderPrefix={() => (item.id !== 0 ? (
+        <CustomPrefix id={`${item.type}-${idx}`}>{tooltip}</CustomPrefix>
+      ) : null)}
+      onRenderSuffix={() => (item.id !== 0 ? <CustomSuffix menuProps={menuProps} /> : null)}
       autoAdjustHeight
       autoComplete="off"
       onChange={handleChange}
@@ -309,16 +309,16 @@ const AppraisalInput = ({
       iconProps={
         validations.isRelated
           ? {
-              iconName: 'History',
-              style: {
-                position: 'relative',
-                alignSelf: 'center',
-                bottom: 0,
-                right: 0,
-                paddingRight: 0,
-                marginLeft: '8px',
-              },
-            }
+            iconName: 'History',
+            style: {
+              position: 'relative',
+              alignSelf: 'center',
+              bottom: 0,
+              right: 0,
+              paddingRight: 0,
+              marginLeft: '8px',
+            },
+          }
           : null
       }
     />

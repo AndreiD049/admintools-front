@@ -15,8 +15,8 @@ const SearchableCombobox = (rest) => {
     if (value) {
       setOptions(
         rest.options.filter(
-          (o) => o.text.toLowerCase().indexOf(value.toLowerCase()) !== -1
-        )
+          (o) => o.text.toLowerCase().indexOf(value.toLowerCase()) !== -1,
+        ),
       );
     } else if (value === '') {
       setOptions(rest.options);

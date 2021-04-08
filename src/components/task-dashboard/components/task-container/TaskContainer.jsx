@@ -17,8 +17,8 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexFlow: 'column nowrap',
     alignContent: 'center',
-    width: '400px',
-    minWidth: '400px',
+    width: '350px',
+    minWidth: '350px',
     minHeight: '400px',
     maxHeight: '600px',
     padding: '5px',
@@ -42,10 +42,8 @@ const TaskContainer = ({
 }) => {
   const classes = useStyles();
   const handleIn = (status) => {
-    if (status === constants.tasks.status.Finished && !showFinished)
-      return false;
-    if (status === constants.tasks.status.Cancelled && !showCancelled)
-      return false;
+    if (status === constants.tasks.status.Finished && !showFinished) return false;
+    if (status === constants.tasks.status.Cancelled && !showCancelled) return false;
     return true;
   };
 

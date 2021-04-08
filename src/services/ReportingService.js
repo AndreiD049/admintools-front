@@ -20,11 +20,11 @@ const ReportingService = {
         return response.data;
       }
       throw new Error(
-        `Server response: ${response.status} - ${response.statusText}`
+        `Server response: ${response.status} - ${response.statusText}`,
       );
     } catch (err) {
       NotificationService.notifyError(
-        err.response && err.response.data && err.response.data.error
+        err.response && err.response.data && err.response.data.error,
       );
       throw err;
     }
@@ -37,11 +37,11 @@ const ReportingService = {
         return response.data;
       }
       throw new Error(
-        `Server response: ${response.status} - ${response.statusText}`
+        `Server response: ${response.status} - ${response.statusText}`,
       );
     } catch (err) {
       NotificationService.notifyError(
-        err.response && err.response.data && err.response.data.error
+        err.response && err.response.data && err.response.data.error,
       );
       throw err;
     }
@@ -59,11 +59,11 @@ const ReportingService = {
         return response.data;
       }
       throw new Error(
-        `Server response: ${response.status} - ${response.statusText}`
+        `Server response: ${response.status} - ${response.statusText}`,
       );
     } catch (err) {
       NotificationService.notifyError(
-        err.response && err.response.data && err.response.data.error
+        err.response && err.response.data && err.response.data.error,
       );
       throw err;
     }
@@ -80,11 +80,11 @@ const ReportingService = {
         return response.data;
       }
       throw new Error(
-        `Server response: ${response.status} - ${response.statusText}`
+        `Server response: ${response.status} - ${response.statusText}`,
       );
     } catch (err) {
       NotificationService.notifyError(
-        err.response && err.response.data && err.response.data.error
+        err.response && err.response.data && err.response.data.error,
       );
       throw err;
     }
@@ -100,7 +100,7 @@ const ReportingService = {
       }
     } catch (err) {
       NotificationService.notifyError(
-        err.response && err.response.data && err.response.data.error
+        err.response && err.response.data && err.response.data.error,
       );
       throw err;
     }
@@ -113,11 +113,11 @@ const ReportingService = {
         return response.data;
       }
       throw new Error(
-        `Server response: ${response.status} - ${response.statusText}`
+        `Server response: ${response.status} - ${response.statusText}`,
       );
     } catch (err) {
       NotificationService.notifyError(
-        err.response && err.response.data && err.response.data.error
+        err.response && err.response.data && err.response.data.error,
       );
       throw err;
     }
@@ -136,11 +136,11 @@ const ReportingService = {
         return response.data;
       }
       throw new Error(
-        `Server response: ${response.status} - ${response.statusText}`
+        `Server response: ${response.status} - ${response.statusText}`,
       );
     } catch (err) {
       NotificationService.notifyError(
-        err.response && err.response.data && err.response.data.error
+        err.response && err.response.data && err.response.data.error,
       );
       throw err;
     }
@@ -155,11 +155,11 @@ const ReportingService = {
         return response.data;
       }
       throw new Error(
-        `Server response: ${response.status} - ${response.statusText}`
+        `Server response: ${response.status} - ${response.statusText}`,
       );
     } catch (err) {
       NotificationService.notifyError(
-        err.response && err.response.data && err.response.data.error
+        err.response && err.response.data && err.response.data.error,
       );
       throw err;
     }
@@ -186,7 +186,7 @@ const ReportingService = {
         return null;
       }
       throw new Error(
-        `Server response: ${response.status} - ${response.statusText}`
+        `Server response: ${response.status} - ${response.statusText}`,
       );
     } catch (err) {
       if (err.response && err.response.status === 400) {
@@ -205,11 +205,11 @@ const ReportingService = {
         return response.data;
       }
       throw new Error(
-        `Server response: ${response.status} - ${response.statusText}`
+        `Server response: ${response.status} - ${response.statusText}`,
       );
     } catch (err) {
       NotificationService.notifyError(
-        err.response && err.response.data && err.response.data.error
+        err.response && err.response.data && err.response.data.error,
       );
       throw err;
     }
@@ -222,11 +222,11 @@ const ReportingService = {
         return response.data;
       }
       throw new Error(
-        `Server response: ${response.status} - ${response.statusText}`
+        `Server response: ${response.status} - ${response.statusText}`,
       );
     } catch (err) {
       NotificationService.notifyError(
-        err.response && err.response.data && err.response.data.error
+        err.response && err.response.data && err.response.data.error,
       );
       throw err;
     }
@@ -242,7 +242,7 @@ const ReportingService = {
       return result.data;
     } catch (err) {
       NotificationService.notifyError(
-        err.response && err.response.data && err.response.data.error
+        err.response && err.response.data && err.response.data.error,
       );
       throw err;
     }
@@ -254,7 +254,7 @@ const ReportingService = {
       return result.data;
     } catch (err) {
       NotificationService.notifyError(
-        err.response && err.response.data && err.response.data.error
+        err.response && err.response.data && err.response.data.error,
       );
       throw err;
     }
@@ -267,17 +267,17 @@ const ReportingService = {
         params,
         {
           responseType: 'blob',
-        }
+        },
       );
       if (response.status === 200) {
         return response.data;
       }
       throw new Error(
-        `Server response: ${response.status} - ${response.statusText}`
+        `Server response: ${response.status} - ${response.statusText}`,
       );
     } catch (err) {
       NotificationService.notifyError(
-        err.response && err.response.data && err.response.data.error
+        err.response && err.response.data && err.response.data.error,
       );
       throw err;
     }

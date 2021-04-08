@@ -2,7 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { MessageBar, MessageBarType, Text } from '@fluentui/react';
 
-const Notification = ({ type, text, actions, onDismiss }) => {
+const Notification = ({
+  type, text, actions, onDismiss,
+}) => {
   let typeMessage;
   switch (type) {
     case 'success':

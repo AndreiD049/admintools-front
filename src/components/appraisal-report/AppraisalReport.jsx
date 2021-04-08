@@ -45,7 +45,7 @@ const AppraisalReport = () => {
   const handleGenerate = async () => {
     if (dateFrom && dateTo && dateTo < dateFrom) {
       return NotificationService.notifySevereWarning(
-        "'Date to' should be bigger than 'Date from'"
+        "'Date to' should be bigger than 'Date from'",
       );
     }
     // if any of the fields are set, generate the report
@@ -62,7 +62,7 @@ const AppraisalReport = () => {
     }
     // otherwise, notify user
     return NotificationService.notifySevereWarning(
-      'At least one field should be set'
+      'At least one field should be set',
     );
   };
 
@@ -76,7 +76,7 @@ const AppraisalReport = () => {
             key: r.id,
             text: r.name,
             data: r,
-          }))
+          })),
         );
       }
     }

@@ -1,4 +1,6 @@
-import { makeStyles, Text, Stack, PrimaryButton } from '@fluentui/react';
+import {
+  makeStyles, Text, Stack, PrimaryButton,
+} from '@fluentui/react';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Container } from 'react-grid-system';

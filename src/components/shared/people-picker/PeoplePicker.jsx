@@ -74,9 +74,7 @@ const PeoplePicker = ({
         className={classes.suggestionCheck}
         role="button"
         tabIndex={-1}
-        onKeyDown={(evt) =>
-          evt.key === 'Space' ? renderSuggestionsItem(item)() : null
-        }
+        onKeyDown={(evt) => (evt.key === 'Space' ? renderSuggestionsItem(item)() : null)}
         onClick={handleCheckboxClick(item)}
       >
         <Checkbox checked={selectedSet.has(item.key)} />
@@ -116,12 +114,9 @@ const PeoplePicker = ({
         disabled={disabled}
         className={classes.picker}
         onRenderSuggestionsItem={renderSuggestionsItem}
-        onResolveSuggestions={(filter) =>
-          options.filter(
-            (o) =>
-              o.data.username.toLowerCase().indexOf(filter.toLowerCase()) !== -1
-          )
-        }
+        onResolveSuggestions={(filter) => options.filter(
+          (o) => o.data.username.toLowerCase().indexOf(filter.toLowerCase()) !== -1,
+        )}
         resolveDelay={300}
         onRenderItem={renderItem}
         selectedItems={selected}

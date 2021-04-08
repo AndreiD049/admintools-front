@@ -28,7 +28,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const PlanningCell = ({ userFlows, handleClick, handleInvoke, isSelected }) => {
+const PlanningCell = ({
+  userFlows, handleClick, handleInvoke, isSelected,
+}) => {
   const classes = useStyles();
 
   return (
