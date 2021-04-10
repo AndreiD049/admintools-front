@@ -42,6 +42,7 @@ jobs:
     # Rebuild nginx container
     - name: SSH Remote Commands
       uses: appleboy/ssh-action@v0.1.4
+      with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
