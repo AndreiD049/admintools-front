@@ -482,7 +482,7 @@ const HomePage = () => {
   return (
     <>
       <LoginRequired />
-      <PageHeader text="Home Page" />
+      <PageHeader text="Home Page test" />
       <Container
         fluid
         style={{
