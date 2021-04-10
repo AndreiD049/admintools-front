@@ -15,7 +15,9 @@ import {
 import React, {
   useState, useContext, useEffect, useMemo,
 } from 'react';
-import { Col, Container, Row, useScreenClass } from 'react-grid-system';
+import {
+  Col, Container, Row, useScreenClass,
+} from 'react-grid-system';
 import { DateTime } from 'luxon';
 import { useFetch } from '../../services/hooks';
 import TaskService from '../../services/tasks/TaskService';
