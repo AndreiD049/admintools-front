@@ -24,7 +24,7 @@ jobs:
         host: ${{ secrets.SSH_HOST_TEST }}
         username: ${{ secrets.SSH_USERNAME }}
         password: ${{ secrets.SSH_PASSWORD_TEST }}
-        script: ls && cd /home/admintools/${{ secrets.SSH_USERNAME }} && ls
+        script: ls && cd /home/${{ secrets.SSH_USERNAME }} && ls
     # - name: run deploymend script
     #   run: cd /home/root
     # - uses: actions/checkout@v2
