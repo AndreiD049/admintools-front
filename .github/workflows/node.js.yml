@@ -25,7 +25,7 @@ jobs:
         username: ${{ secrets.SSH_USERNAME }}
         password: ${{ secrets.SSH_PASSWORD_TEST }}
     - name: run deploymend script
-    - run: ls && cd /home/${{ secrets.SSH_USERNAME }}/appraisal-web-base && ls
+      run: ls && cd /home/${{ secrets.SSH_USERNAME }}/appraisal-web-base && ls
     # - uses: actions/checkout@v2
     # - name: Use Node.js ${{ matrix.node-version }}
     #   uses: actions/setup-node@v2
