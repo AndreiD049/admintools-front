@@ -40,7 +40,7 @@ jobs:
       uses: actions/download-artifact@v2
       with:
         name: build-admintools-test
-    - run: ls
+    - run: cd .. && ls
     # Copying files and artifacts via SSH
     - name: SCP Files
       uses: appleboy/scp-action@master
