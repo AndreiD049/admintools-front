@@ -24,7 +24,13 @@ jobs:
         host: ${{ secrets.SSH_HOST_TEST }}
         username: ${{ secrets.SSH_USERNAME }}
         password: ${{ secrets.SSH_PASSWORD_TEST }}
-        script: ls && cd /home/${{ secrets.SSH_USERNAME }} && ls
+        script: | 
+          cd appraisal-web-base/admintools-front
+          git checkout -b testing
+          git pull origin testing
+          npm run build
+          cd ..
+          docker-compose -f docker-compose-test.yml up --build nginx 
     # - name: run deploymend script
     #   run: cd /home/root
     # - uses: actions/checkout@v2
