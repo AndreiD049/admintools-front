@@ -24,8 +24,9 @@ jobs:
         host: ${{ secrets.SSH_HOST_TEST }}
         username: ${{ secrets.SSH_USERNAME }}
         password: ${{ secrets.SSH_PASSWORD_TEST }}
-    - name: run deploymend script
-      run: cd /home/root
+        script: ls && cd /admintools/${{ secrets.SSH_USERNAME }} && ls
+    # - name: run deploymend script
+    #   run: cd /home/root
     # - uses: actions/checkout@v2
     # - name: Use Node.js ${{ matrix.node-version }}
     #   uses: actions/setup-node@v2
