@@ -50,7 +50,11 @@ jobs:
         rm: true
         source: "."
         target: "${{ secrets.SSH_BUILDDIR_TEST }}"
-    # Rebuild nginx container
+
+  rebuild:
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
     - name: SSH Remote Commands
       uses: appleboy/ssh-action@master
       with:
