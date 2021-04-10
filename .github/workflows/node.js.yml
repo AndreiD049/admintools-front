@@ -41,15 +41,15 @@ jobs:
       with:
         name: build-admintools-test
     # Copying files and artifacts via SSH
-    - name: SCP Files
-      uses: appleboy/scp-action@master
-      with:
-        host: ${{ secrets.SSH_HOST_TEST }}
-        username: ${{ secrets.SSH_USERNAME }}
-        password: ${{ secrets.SSH_PASSWORD_TEST }}
-        rm: true
-        source: "."
-        target: "${{ secrets.SSH_BUILDDIR_TEST }}"
+    # - name: SCP Files
+    #   uses: appleboy/scp-action@master
+    #   with:
+    #     host: ${{ secrets.SSH_HOST_TEST }}
+    #     username: ${{ secrets.SSH_USERNAME }}
+    #     password: ${{ secrets.SSH_PASSWORD_TEST }}
+    #     rm: true
+    #     source: "."
+    #     target: "${{ secrets.SSH_BUILDDIR_TEST }}"
     # Rebuild nginx container
     - name: SSH Remote Commands
       uses: appleboy/ssh-action@master
