@@ -124,6 +124,16 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     justifyContent: 'flex-start',
   },
+  dateChip: {
+    marginBottom: theme.spacing.s1,
+    marginRight: theme.spacing.s2,
+    backgroundColor: theme.palette.themePrimary,
+    padding: theme.spacing.s2,
+    borderRadius: 8,
+  },
+  dateChipText: {
+    color: theme.palette.accent,
+  },
   icon_expired: {
     '& #expired_clock_border': {
       fill: theme.palette.themePrimary,
@@ -165,6 +175,7 @@ const TaskItem = ({ task, handleStatusChange, selected }) => {
   });
   const [collapsed, setCollapsed] = useState(true);
   const timerRef = useRef(null);
+  const startDT = DateTime.fromISO(task.expectedStartDate);
 
   const setIcon = (icon, state) => setIcons((prev) => ({
     ...prev,
@@ -196,7 +207,7 @@ const TaskItem = ({ task, handleStatusChange, selected }) => {
     return () => {
       clearInterval(timerRef.current);
     };
-  }, [task, icons.expired, icons.paused]);
+  }, [task, icons]);
 
   useEffect(() => {
     if (task) {
@@ -234,6 +245,19 @@ const TaskItem = ({ task, handleStatusChange, selected }) => {
           <div className={classes.rows}>
             <div className={classes.taskDescription}>
               <div className={classes.icons}>
+                {
+                  startDT.toRelativeCalendar() !== 'today'
+                  && task.status !== status.Finished
+                  && task.status !== status.Cancelled
+                    ? (
+                      <div className={classes.dateChip}>
+                        <Text className={classes.dateChipText} variant="xSmall">
+                          {startDT.toFormat('EEE - dd MMM')}
+                        </Text>
+                      </div>
+                    )
+                    : null
+                }
                 {icons.expired && (
                   <TooltipHost content="This task is overdue">
                     <ExpiredIcon className={classes.icon_expired} />

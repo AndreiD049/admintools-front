@@ -207,9 +207,9 @@ const TaskDashboard = () => {
     }
   };
 
-  const handleStatusChange = async (task, status) => {
+  const handleStatusChange = async (task, newStatus) => {
     if (
-      status === constants.tasks.status.InProgress
+      newStatus === constants.tasks.status.InProgress
       && !task.isBackgroundTask
     ) {
       // If status to be updated is in progress:
@@ -227,7 +227,7 @@ const TaskDashboard = () => {
         if (answer === constants.dialogAnswers.No) return;
       }
     }
-    const updated = await TaskService.updateTaskStatus(task.id, { status });
+    const updated = await TaskService.updateTaskStatus(task.id, { status: newStatus });
     // if task was unpaused, update it too
     if (updated.unpaused?.id) {
       setTasks((ts) => ts.map((t) => (t.id === updated.unpaused.id
@@ -236,13 +236,15 @@ const TaskDashboard = () => {
     }
     setTasks((ts) => ts
       .map(
-        (t) => (t.id === task.id ? TaskService.createTaskObject(updated.result) : t),
+        (t) => (t.id === task.id
+          ? TaskService.createTaskObject(updated.result)
+          : t),
       ));
   };
 
   return (
     <>
-      <TaskLiveUpdate setTasks={setTasks} hours={hours} setReload={setReload} />
+      <TaskLiveUpdate tasks={tasks} setTasks={setTasks} hours={hours} setReload={setReload} />
       <Container lg>
         <PageHeader text="Daily tasks" />
         <Row>

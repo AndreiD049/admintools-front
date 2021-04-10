@@ -114,7 +114,7 @@ const AddTask = ({ setOpen, handleAdd }) => {
             data.duration,
           )}
           onChange={handleDataChange('duration', (args) => {
-            const validTime = DateUtils.getValidTimeStringUTC(args[1]);
+            const validTime = DateUtils.getValidTimeStringUTC(args[1], data.expectedStartDate);
             // Check if end time is after start time
             const startDT = DateTime.fromJSDate(data.expectedStartDate);
             const endDT = DateTime.fromISO(validTime);

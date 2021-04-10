@@ -3,6 +3,7 @@ import {
   ComboBox, makeStyles, Stack, Text,
 } from '@fluentui/react';
 import PropTypes from 'prop-types';
+import { DateTime } from 'luxon';
 
 const hourOptions = [
   { key: '00:00', text: '00:00' },
@@ -122,7 +123,7 @@ const WorkingHours = ({ hours, setHours }) => {
 
 WorkingHours.propTypes = {
   hours: PropTypes.shape({
-    from: PropTypes.string,
+    from: PropTypes.instanceOf(DateTime),
     duration: PropTypes.number,
   }).isRequired,
   setHours: PropTypes.func.isRequired,

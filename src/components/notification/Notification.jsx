@@ -43,8 +43,12 @@ const Notification = ({
 Notification.propTypes = {
   type: PropTypes.string.isRequired,
   text: PropTypes.string.isRequired,
-  actions: PropTypes.shape({}).isRequired,
+  actions: PropTypes.shape({}),
   onDismiss: PropTypes.func.isRequired,
+};
+
+Notification.defaultProps = {
+  actions: null,
 };
 
 export default Notification;

@@ -4,8 +4,11 @@ import { DateTime } from 'luxon';
 import GlobalContext from '../../../../services/GlobalContext';
 import constants from '../../../../utils/constants';
 import TaskService from '../../../../services/tasks/TaskService';
+import ObjectUtils from '../../../../utils/object';
 
-const TaskLiveUpdate = ({ setTasks, hours, setReload }) => {
+const TaskLiveUpdate = ({
+  tasks, setTasks, hours, setReload,
+}) => {
   const global = useContext(GlobalContext);
 
   useEffect(() => {
@@ -14,6 +17,8 @@ const TaskLiveUpdate = ({ setTasks, hours, setReload }) => {
       if (info) {
         if (info.action === constants.connections.actions.INSERT) {
           const newTask = info.data;
+          // Task is already added, return early
+          if (tasks.find((t) => newTask.id) !== undefined) return;
           const expStart = DateTime.fromISO(newTask.expectedStartDate);
           const diff = expStart.diff(hours.from, 'minute').values.minutes;
           if (diff >= 0 && diff <= hours.duration) {
@@ -22,9 +27,20 @@ const TaskLiveUpdate = ({ setTasks, hours, setReload }) => {
               .concat(TaskService.createTaskObject(newTask)));
           }
         } else if (info.action === constants.connections.actions.UPDATE) {
-          setTasks((prev) => prev.map((task) => (task.id === info.data.id
-            ? TaskService.createTaskObject(info.data)
-            : task)));
+          const taskObj = TaskService.createTaskObject(info.data);
+          // Give a small timeout to the update function, then compare the objects
+          // If object already updated, do not update it once more
+          if (info.initiator === global.user.id) {
+            setTimeout(() => setTasks((prev) => {
+              const found = prev.find((t) => t.id === info.data.id);
+              if (ObjectUtils.deepEqual(found, taskObj)) return prev;
+              return prev.map((task) => (task.id === info.data.id
+                ? taskObj
+                : task));
+            }), 100);
+          } else {
+            setTasks((prev) => prev.map((task) => (task.id === taskObj.id ? taskObj : task)));
+          }
         } else if (info.action === constants.connections.actions.RELOAD) {
         // Just reset the current date so backend is queried again
           setReload((prev) => !prev);
@@ -40,12 +56,15 @@ const TaskLiveUpdate = ({ setTasks, hours, setReload }) => {
         global.connection.removeEventListener('message', handleMessage);
       }
     };
-  }, [global.connection, hours.duration, hours.from, setReload, setTasks]);
+  }, [global.connection, hours.duration, hours.from, setReload, setTasks, tasks]);
 
   return null;
 };
 
 TaskLiveUpdate.propTypes = {
+  tasks: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.string,
+  })).isRequired,
   setTasks: PropTypes.func.isRequired,
   hours: PropTypes.shape({
     from: PropTypes.instanceOf(DateTime),
