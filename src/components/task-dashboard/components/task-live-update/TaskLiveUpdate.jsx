@@ -56,7 +56,7 @@ const TaskLiveUpdate = ({
         global.connection.removeEventListener('message', handleMessage);
       }
     };
-  }, [global.connection, hours.duration, hours.from, setReload, setTasks, tasks]);
+  }, [global.connection, global.user.id, hours.duration, hours.from, setReload, setTasks, tasks]);
 
   return null;
 };
