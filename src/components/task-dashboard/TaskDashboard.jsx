@@ -9,7 +9,9 @@ import {
   Separator,
   Stack,
 } from '@fluentui/react';
-import React, { useState, useContext, useEffect } from 'react';
+import React, {
+  useState, useContext, useEffect, useMemo,
+} from 'react';
 import { Col, Container, Row } from 'react-grid-system';
 import { DateTime } from 'luxon';
 import { useFetch } from '../../services/hooks';
@@ -80,23 +82,25 @@ const TaskDashboard = () => {
     false,
   );
   const [showCancelled, setShowCancelled] = useLocalStorageState(
-    'DTShowFinished',
+    'DTShowCancelled',
     false,
   );
 
-  const options = {
+  const taskParams = useMemo(() => ({
     params: {
       fromDate: hours.from.toJSDate(),
       toDate: hours.from.plus({ minute: hours.duration }).toJSDate(),
       users: selectedUsers,
     },
-  };
+  }), [hours, selectedUsers]);
 
-  const [tasks, setTasks] = useFetch(TaskService.baseUrl, options, {
+  const taskOptions = useMemo(() => ({
     dependencies: [hours, selectedUsers, reload],
     callback: (data) => data.map((task) => TaskService.createTaskObject(task)),
     resetDataOnChange: false,
-  });
+  }), [hours, selectedUsers, reload]);
+
+  const [tasks, setTasks] = useFetch(TaskService.baseUrl, taskParams, taskOptions);
 
   const handleTaskAdd = (task) => {
     const expectedStart = DateTime.fromISO(task.expectedStartDate);

@@ -26,4 +26,5 @@ export default createTheme({
     white: '#fdf6e3',
     accent: '#ffffff',
   },
+  name: 'warm',
 });

@@ -18,6 +18,7 @@ const UserSecuritiesProvider = () => {
       }
     }
     run();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [global.user, global.security, global.setContext]);
 
   return null;

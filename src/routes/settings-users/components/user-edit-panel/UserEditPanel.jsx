@@ -74,7 +74,7 @@ const UserEditPanel = ({
     ) {
       setSelPrimaryTeam(null);
     }
-  }, [selTeams]);
+  }, [selTeams, selPrimaryTeam?.id]);
 
   return (
     <>

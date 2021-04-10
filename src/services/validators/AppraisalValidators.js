@@ -190,7 +190,7 @@ const canDelete = (context, period, userId) => async () => {
   return result;
 };
 
-export default {
+const exp = {
   periodExists,
   itemExists,
   periodStatus,
@@ -204,3 +204,5 @@ export default {
   canUpdate,
   canDelete,
 };
+
+export default exp;

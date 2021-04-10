@@ -11,7 +11,7 @@ const useLocalStorageState = (
 
   useEffect(() => {
     localStorage.setItem(label, JSON.stringify(data));
-  }, [data]);
+  }, [data, label]);
 
   return [data, setData];
 };

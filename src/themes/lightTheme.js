@@ -26,5 +26,6 @@ export default createTheme({
     white: '#ffffff',
     accent: '#ffffff',
   },
+  name: 'light',
   type: 'light',
 });

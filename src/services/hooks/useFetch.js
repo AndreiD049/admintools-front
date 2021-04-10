@@ -1,4 +1,6 @@
-import { useState, useEffect, useRef } from 'react';
+import {
+  useState, useEffect, useRef, useMemo,
+} from 'react';
 import axios from 'axios';
 
 const optionsDefault = {
@@ -12,18 +14,12 @@ const optionsDefault = {
 const useFetch = (
   url,
   params = null,
-  optionsUser = {
-    initialData: [],
-    dependencies: [],
-    callback: null,
-    resetDataOnChange: true,
-    skipFirst: false,
-  },
+  optionsUser,
 ) => {
-  const options = {
+  const options = useMemo(() => ({
     ...optionsDefault,
     ...optionsUser,
-  };
+  }), [optionsUser]);
   const [data, setData] = useState(options.initialData);
   const first = useRef(true);
 
@@ -43,6 +39,7 @@ const useFetch = (
     if (url) {
       run();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [url, ...options.dependencies]);
 
   return [data, setData];

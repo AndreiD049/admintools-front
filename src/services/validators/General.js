@@ -14,6 +14,8 @@ const isTruthy = (obj) => () => ({
   message: `${obj} is not true`,
 });
 
-export default {
+const exp = {
   isTruthy,
 };
+
+export default exp;

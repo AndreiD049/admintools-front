@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import React, {
-  useCallback, useContext, useEffect, useState,
+  useContext, useEffect, useMemo, useState,
 } from 'react';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -35,6 +35,9 @@ const styles = () => ({
 const Drawer = ({ isOpen, toggleDrawer }) => {
   const classes = classNames(styles);
   const global = useContext(GlobalContext);
+  const user = useMemo(() => global.user, [global.user]);
+  const security = useMemo(() => global.security, [global.security]);
+  const Authorize = useMemo(() => global.Authorize.bind(global), [global]);
   const history = useHistory();
 
   const handleLinkClick = (evt, link) => {
@@ -221,33 +224,32 @@ const Drawer = ({ isOpen, toggleDrawer }) => {
     },
   ]);
 
-  const filterLinks = (links) => {
-    const result = [];
-    links.forEach((link) => {
-      if (link.code && link.grant) {
-        if (global.Authorize(link.code, link.grant)) {
-          if (link.links) {
-            // eslint-disable-next-line no-param-reassign
-            link.links = filterLinks(link.links);
-          }
-          result.push(link);
-        }
-      } else {
-        result.push(link);
-      }
-    });
-    return result;
-  };
-
   const [visibleLinksGroup, setVisibleLinksGroup] = useState([]);
 
   useEffect(() => {
+    const filterLinks = (links) => {
+      const result = [];
+      links.forEach((link) => {
+        if (link.code && link.grant) {
+          if (Authorize(link.code, link.grant)) {
+            if (link.links) {
+            // eslint-disable-next-line no-param-reassign
+              link.links = filterLinks(link.links);
+            }
+            result.push(link);
+          }
+        } else {
+          result.push(link);
+        }
+      });
+      return result;
+    };
     setVisibleLinksGroup([
       {
         links: filterLinks(navLinks[0].links),
       },
     ]);
-  }, [global.security, global.user, global.Authorize]);
+  }, [security, user, Authorize, navLinks]);
 
   return (
     <Panel

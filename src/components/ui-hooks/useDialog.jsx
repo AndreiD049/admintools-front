@@ -36,7 +36,7 @@ const useDialog = (Component, options = {}, componentProps = {}) => {
     if (resolve && !visible) {
       resolve(constants.dialogAnswers.No);
     }
-  }, [resolve]);
+  }, [resolve, visible]);
 
   const show = async () => {
     setVisible(true);

@@ -9,7 +9,7 @@ import blackWhiteImg from './theme_blackwhite_icon.png';
 
 const SelectTheme = () => {
   const global = useContext(GlobalContext);
-  const [theme, setTheme] = useState(global.userPreferences.theme.type);
+  const [theme, setTheme] = useState(global.userPreferences.theme.name);
   const [items] = useState([
     {
       key: 'light',

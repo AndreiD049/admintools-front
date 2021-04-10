@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon';
 
-export default {
+const utils = {
   getHoursFromText(text) {
     const [hours, minutes, seconds] = text.split(':').map((t) => +t);
     return {
@@ -171,3 +171,5 @@ export default {
       .toJSDate();
   },
 };
+
+export default utils;

@@ -272,7 +272,7 @@ const RuleDetails = ({
     setRules((prev) => prev.map((r) => (r.id === result.id ? result : r)));
     panel.setOpen(false);
     setEditing(false);
-  }, [rule, data]);
+  }, [rule, data, panel, setEditing, setRules]);
 
   const handleDataChange = (field, func = (args) => args[0].target.value) => (
     ...args
@@ -302,7 +302,7 @@ const RuleDetails = ({
         </DefaultButton>
       </>
     ),
-    [panel, editing, handleUpdate],
+    [panel, editing, handleUpdate, setEditing],
   );
 
   /**

@@ -1,16 +1,18 @@
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useMemo } from 'react';
 import ConnectionService from '../../../services/ConnectionService';
 import GlobalContext from '../../../services/GlobalContext';
 
 const ConnectionManager = () => {
   const global = useContext(GlobalContext);
+  const user = useMemo(() => global.user, [global.user]);
+  const setGlobalContext = useMemo(() => global.setContext, [global.setContext]);
 
   useEffect(() => {
     async function run() {
-      if (global.user) {
+      if (user) {
         const con = await ConnectionService.connectSSE();
         con.addEventListener('init', (evt) => {
-          global.setContext((prev) => ({
+          setGlobalContext((prev) => ({
             ...prev,
             connectionId: JSON.parse(evt.data)[0],
             connection: con,
@@ -19,7 +21,7 @@ const ConnectionManager = () => {
       }
     }
     run();
-  }, [global.user]);
+  }, [user, setGlobalContext]);
 
   return null;
 };

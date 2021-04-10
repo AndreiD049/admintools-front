@@ -26,6 +26,7 @@ const theme = createTheme({
     white: '#171717',
     accent: '#ffffff',
   },
+  name: 'dark',
   type: 'dark',
   isInverted: true,
 });

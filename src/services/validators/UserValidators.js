@@ -15,7 +15,9 @@ const userAuthorized = (context, code, grant) => async () => ({
   message: `Access denied. Code: ${code}, Grant: ${grant}`,
 });
 
-export default {
+const exp = {
   userExists,
   userAuthorized,
 };
+
+export default exp;

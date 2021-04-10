@@ -163,7 +163,7 @@ const performSync = (validation, throwExceptions = true) => {
   }
 };
 
-export default {
+const exp = {
   and,
   andSync,
   or,
@@ -173,3 +173,5 @@ export default {
   perform,
   performSync,
 };
+
+export default exp;

@@ -1,5 +1,5 @@
 import React, {
-  useCallback, useEffect, useRef, useState,
+  useEffect, useRef, useState,
 } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
@@ -166,32 +166,32 @@ const TaskItem = ({ task, handleStatusChange }) => {
     [icon]: state,
   }));
 
-  const performChecks = () => {
-    const expectedFinishDate = DateTime.fromISO(task.expectedFinishDate);
-    // check paused
-    if (task.status === status.Paused && !icons.paused) {
-      setIcon('paused', true);
-    } else if (task.status !== status.Paused && icons.paused) {
-      setIcon('paused', false);
-    }
-    // Check expired
-    if (task.status !== status.Finished && task.status !== status.Cancelled) {
-      if (!icons.expired && expectedFinishDate < DateTime.utc()) {
-        setIcon('expired', true);
-      }
-    } else if (icons.expired) {
-      setIcon('expired', false);
-    }
-  };
-
   // Register task timer, perform checks every minute
   useEffect(() => {
+    const performChecks = () => {
+      const expectedFinishDate = DateTime.fromISO(task.expectedFinishDate);
+      // check paused
+      if (task.status === status.Paused && !icons.paused) {
+        setIcon('paused', true);
+      } else if (task.status !== status.Paused && icons.paused) {
+        setIcon('paused', false);
+      }
+      // Check expired
+      if (task.status !== status.Finished && task.status !== status.Cancelled) {
+        if (!icons.expired && expectedFinishDate < DateTime.utc()) {
+          setIcon('expired', true);
+        }
+      } else if (icons.expired) {
+        setIcon('expired', false);
+      }
+    };
+
     performChecks();
     timerRef.current = setInterval(performChecks, 30000);
     return () => {
       clearInterval(timerRef.current);
     };
-  }, [task]);
+  }, [task, icons.expired, icons.paused]);
 
   useEffect(() => {
     if (task) {
@@ -230,7 +230,7 @@ const TaskItem = ({ task, handleStatusChange }) => {
             <div className={classes.taskDescription}>
               <div className={classes.icons}>
                 {icons.expired && (
-                  <TooltipHost content="This task is expired">
+                  <TooltipHost content="This task is overdue">
                     <ExpiredIcon className={classes.icon_expired} />
                   </TooltipHost>
                 )}

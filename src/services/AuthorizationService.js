@@ -160,7 +160,7 @@ const AuthorizationService = {
       return false;
     } catch (err) {
       NotificationService.notifyError(
-        (err.response.data && err.response.data.error) || err.message,
+        (err.response?.data && err.response?.data?.error) || err.message,
       );
       return false;
     }
