@@ -39,6 +39,7 @@ const TaskContainer = ({
   user,
   showFinished,
   showCancelled,
+  selectedId,
 }) => {
   const classes = useStyles();
   const handleIn = (status) => {
@@ -75,12 +76,15 @@ const TaskContainer = ({
           >
             {(state) => (
               <div
+                data-is-focusable
+                data-selection-index={task.idx}
                 style={{
                   ...defaultStyle,
                   ...transitionStyles[state],
                 }}
               >
                 <TaskItem
+                  selected={selectedId === task.id}
                   task={task}
                   setTasks={setTasks}
                   handleStatusChange={handleStatusChange}
@@ -103,6 +107,7 @@ TaskContainer.propTypes = {
   setTasks: PropTypes.func.isRequired,
   showFinished: PropTypes.bool.isRequired,
   showCancelled: PropTypes.bool.isRequired,
+  selectedId: PropTypes.string.isRequired,
 };
 
 TaskContainer.defaultProps = {

@@ -9,6 +9,7 @@ import {
   Separator,
   Text,
   TooltipHost,
+  useTheme,
 } from '@fluentui/react';
 import { DateTime } from 'luxon';
 import TaskCollapsed from '../task-collapsed/TaskCollapsed';
@@ -62,6 +63,9 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: '#66aee8',
       },
     },
+  },
+  rootSelected: {
+    backgroundColor: theme.palette.themeLighterAlt,
   },
   status: {
     alignSelf: 'center',
@@ -148,7 +152,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const TaskItem = ({ task, handleStatusChange }) => {
+const TaskItem = ({ task, handleStatusChange, selected }) => {
+  const theme = useTheme();
   const classes = useStyles();
   const [time, setTime] = useState({
     from: '',
@@ -205,7 +210,7 @@ const TaskItem = ({ task, handleStatusChange }) => {
   }, [task]);
 
   return (
-    <div className={classes.root}>
+    <div className={clsx(classes.root, selected && classes.rootSelected)}>
       <div
         className={clsx(`task-${task.status.toLowerCase()}`, classes.column)}
       >
@@ -263,6 +268,9 @@ const TaskItem = ({ task, handleStatusChange }) => {
               styles={{
                 root: {
                   padding: 0,
+                  '&::before': {
+                    backgroundColor: theme.palette.black,
+                  },
                 },
               }}
             />
@@ -312,6 +320,11 @@ TaskItem.propTypes = {
       PropTypes.instanceOf(Date),
     ]),
   }).isRequired,
+  selected: PropTypes.bool,
+};
+
+TaskItem.defaultProps = {
+  selected: false,
 };
 
 export default TaskItem;

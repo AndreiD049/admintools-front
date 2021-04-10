@@ -6,13 +6,16 @@ import {
   Icon,
   makeStyles,
   PrimaryButton,
+  SelectionMode,
   Separator,
   Stack,
+  Selection,
+  SelectionZone,
 } from '@fluentui/react';
 import React, {
   useState, useContext, useEffect, useMemo,
 } from 'react';
-import { Col, Container, Row } from 'react-grid-system';
+import { Col, Container, Row, useScreenClass } from 'react-grid-system';
 import { DateTime } from 'luxon';
 import { useFetch } from '../../services/hooks';
 import TaskService from '../../services/tasks/TaskService';
@@ -37,9 +40,13 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: theme.spacing.s1,
     marginRight: theme.spacing.s1,
   },
+  marginRight: {
+    marginRight: theme.spacing.l1,
+  },
 }));
 
 const TaskDashboard = () => {
+  const sc = useScreenClass();
   const classes = useStyles();
   const global = useContext(GlobalContext);
   const [users] = useFetch(UserService.teamUsersPath);
@@ -49,7 +56,6 @@ const TaskDashboard = () => {
     selectedUsers,
     setSelectedUsers,
   ] = useLocalStorageState('DTSelectedUsers', [global.user.id]);
-  // const [currentDate, setCurrentDate] = useState(DateTime.now().startOf('day').toJSDate());
   const [hours, setHours] = useLocalStorageState(
     'DTWorkingHours',
     {
@@ -96,11 +102,27 @@ const TaskDashboard = () => {
 
   const taskOptions = useMemo(() => ({
     dependencies: [hours, selectedUsers, reload],
-    callback: (data) => data.map((task) => TaskService.createTaskObject(task)),
+    callback: (data) => data.map((task, idx) => TaskService.createTaskObject(task)),
     resetDataOnChange: false,
   }), [hours, selectedUsers, reload]);
 
   const [tasks, setTasks] = useFetch(TaskService.baseUrl, taskParams, taskOptions);
+  const tasksWithIdx = useMemo(() => tasks.map((task, idx) => ({ ...task, idx })), [tasks]);
+  // Selection data
+  const [selectedKey, setSelectedKey] = useState(null);
+  const selection = useMemo(() => new Selection({
+    selectionMode: SelectionMode.single,
+    items: tasks.map((t) => ({
+      key: t.id,
+      data: t,
+    }), [tasks]),
+    onSelectionChanged: () => {
+      const sel = selection.getSelection();
+      if (sel.length > 0) {
+        setSelectedKey(sel[0].key);
+      }
+    },
+  }), [tasks]);
 
   const handleTaskAdd = (task) => {
     const expectedStart = DateTime.fromISO(task.expectedStartDate);
@@ -173,7 +195,11 @@ const TaskDashboard = () => {
 
   const handleUserSelect = (ev, option) => {
     if (option.selected) {
-      setSelectedUsers((prev) => prev.concat(option.key));
+      if (option.key === global.user.id) {
+        setSelectedUsers((prev) => [option.key].concat(prev));
+      } else {
+        setSelectedUsers((prev) => prev.concat(option.key));
+      }
     } else {
       setSelectedUsers((prev) => prev.filter((user) => user !== option.key));
     }
@@ -242,6 +268,8 @@ const TaskDashboard = () => {
                     newPanel.setOpen(true);
                   },
                 },
+              ]}
+              farItems={[
                 {
                   key: 'users',
                   text: 'Users',
@@ -253,6 +281,7 @@ const TaskDashboard = () => {
                       horizontal
                       horizontalAlign="center"
                       verticalAlign="center"
+                      className={classes.marginRight}
                     >
                       <Icon
                         className={classes.searchIcon}
@@ -272,8 +301,6 @@ const TaskDashboard = () => {
                     </Stack>
                   ),
                 },
-              ]}
-              farItems={[
                 {
                   key: 'showFinished',
                   iconProps: {
@@ -286,12 +313,12 @@ const TaskDashboard = () => {
                       verticalAlign="center"
                     >
                       <Checkbox
-                        label="Show Finished"
+                        label={['xs', 'sm'].indexOf(sc) !== -1 ? 'F' : 'Show Finished'}
                         checked={showFinsihed}
                         onChange={(ev, checked) => setShowFinished(checked)}
                       />
                       <Checkbox
-                        label="Show Cancelled"
+                        label={['xs', 'sm'].indexOf(sc) !== -1 ? 'C' : 'Show Cancelled'}
                         checked={showCancelled}
                         onChange={(ev, checked) => setShowCancelled(checked)}
                       />
@@ -303,24 +330,27 @@ const TaskDashboard = () => {
           </Col>
         </Row>
         <Separator />
-        <Row justify="around">
-          {selectedUsers.map((selUser) => (
-            <TaskContainer
-              key={selUser}
-              tasks={tasks
-                .filter(
-                  (task) => task.assignedTo.find((user) => user.id === selUser)
+        <SelectionZone selection={selection}>
+          <Row justify="around">
+            {selectedUsers.map((selUser) => (
+              <TaskContainer
+                key={selUser}
+                tasks={tasksWithIdx
+                  .filter(
+                    (task) => task.assignedTo.find((user) => user.id === selUser)
                     !== undefined,
-                )
-                .sort((t1, t2) => (t1.expectedStartDate < t2.expectedStartDate ? -1 : 1))}
-              user={users.find((u) => u.id === selUser)}
-              setTasks={setTasks}
-              handleStatusChange={handleStatusChange}
-              showFinished={showFinsihed}
-              showCancelled={showCancelled}
-            />
-          ))}
-        </Row>
+                  )
+                  .sort((t1, t2) => (t1.expectedStartDate < t2.expectedStartDate ? -1 : 1))}
+                user={users.find((u) => u.id === selUser)}
+                setTasks={setTasks}
+                handleStatusChange={handleStatusChange}
+                showFinished={showFinsihed}
+                showCancelled={showCancelled}
+                selectedId={selectedKey}
+              />
+            ))}
+          </Row>
+        </SelectionZone>
       </Container>
       {newPanel.render}
       {resolveBusyConflictDialog.render}
