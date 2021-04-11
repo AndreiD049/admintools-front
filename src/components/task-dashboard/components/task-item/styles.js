@@ -45,8 +45,14 @@ const styles = makeStyles((theme) => ({
       },
     },
   },
+  rootOverdue: {
+    backgroundColor: theme.semanticColors.blockingBackground,
+  },
   rootSelected: {
-    backgroundColor: theme.palette.themeLighterAlt,
+    backgroundColor: `${theme.palette.themeLighterAlt} !important`,
+  },
+  rootDisabled: {
+    filter: 'grayscale(1)',
   },
   status: {
     alignSelf: 'center',

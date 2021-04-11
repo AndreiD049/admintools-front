@@ -28,6 +28,7 @@ const TaskCollapsed = ({
   setCollapsed,
   handleStatusChange,
   editable,
+  disabled,
 }) => {
   const classes = useStyles();
 
@@ -36,7 +37,7 @@ const TaskCollapsed = ({
     setCollapsed(true);
   };
 
-  return (
+  return !disabled && (
     <div className={classes.root}>
       <Collapse isOpened={!collapsed}>
         <Separator />
@@ -105,6 +106,7 @@ TaskCollapsed.propTypes = {
   collapsed: PropTypes.bool.isRequired,
   setCollapsed: PropTypes.func.isRequired,
   editable: PropTypes.bool.isRequired,
+  disabled: PropTypes.bool.isRequired,
 };
 
 export default TaskCollapsed;

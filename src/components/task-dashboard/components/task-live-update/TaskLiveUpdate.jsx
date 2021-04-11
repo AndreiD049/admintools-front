@@ -5,9 +5,10 @@ import GlobalContext from '../../../../services/GlobalContext';
 import constants from '../../../../utils/constants';
 import TaskService from '../../../../services/tasks/TaskService';
 import ObjectUtils from '../../../../utils/object';
+import ConnectionService from '../../../../services/ConnectionService';
 
 const TaskLiveUpdate = ({
-  tasks, setTasks, hours, setReload,
+  tasks, setTasks, selectedUsers, hours, setReload,
 }) => {
   const global = useContext(GlobalContext);
 
@@ -58,6 +59,19 @@ const TaskLiveUpdate = ({
     };
   }, [global.connection, global.user.id, hours.duration, hours.from, setReload, setTasks, tasks]);
 
+  // Handle subscribing to selected users
+  useEffect(() => {
+    async function run() {
+      if (global.connectionId) {
+        await ConnectionService.subscribe({
+          to: selectedUsers,
+          connectionId: global.connectionId,
+        });
+      }
+    }
+    run();
+  }, [selectedUsers, global.connectionId]);
+
   return null;
 };
 
@@ -66,6 +80,7 @@ TaskLiveUpdate.propTypes = {
     id: PropTypes.string,
   })).isRequired,
   setTasks: PropTypes.func.isRequired,
+  selectedUsers: PropTypes.arrayOf(PropTypes.string).isRequired,
   hours: PropTypes.shape({
     from: PropTypes.instanceOf(DateTime),
     to: PropTypes.instanceOf(DateTime),

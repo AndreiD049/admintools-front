@@ -3,14 +3,17 @@ import { ActionButton, DatePicker, Stack } from '@fluentui/react';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-const CurrentDate = ({ currentDate, setCurrentDate }) => (
+const CurrentDate = ({ currentDate, setCurrentDate, setTasks }) => (
   <>
     <Stack horizontal verticalAlign="center" horizontalAlign="center">
       <ActionButton
-        onClick={() => setCurrentDate((prev) => ({
-          ...prev,
-          from: prev.from.minus({ day: 1 }),
-        }))}
+        onClick={() => {
+          setTasks([]);
+          return setCurrentDate((prev) => ({
+            ...prev,
+            from: prev.from.minus({ day: 1 }),
+          }));
+        }}
         iconProps={{
           iconName: 'Previous',
         }}
@@ -19,6 +22,7 @@ const CurrentDate = ({ currentDate, setCurrentDate }) => (
         value={currentDate.toJSDate()}
         onSelectDate={(date) => setCurrentDate((prev) => {
           const dt = DateTime.fromJSDate(date);
+          setTasks([]);
           return {
             ...prev,
             from: prev.from.set({
@@ -31,10 +35,13 @@ const CurrentDate = ({ currentDate, setCurrentDate }) => (
         firstDayOfWeek={1}
       />
       <ActionButton
-        onClick={() => setCurrentDate((prev) => ({
-          ...prev,
-          from: prev.from.plus({ day: 1 }),
-        }))}
+        onClick={() => {
+          setTasks([]);
+          return setCurrentDate((prev) => ({
+            ...prev,
+            from: prev.from.plus({ day: 1 }),
+          }));
+        }}
         iconProps={{
           iconName: 'Next',
         }}
@@ -46,6 +53,7 @@ const CurrentDate = ({ currentDate, setCurrentDate }) => (
 CurrentDate.propTypes = {
   currentDate: PropTypes.instanceOf(DateTime).isRequired,
   setCurrentDate: PropTypes.func.isRequired,
+  setTasks: PropTypes.func.isRequired,
 };
 
 export default CurrentDate;

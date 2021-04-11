@@ -8,6 +8,7 @@ import {
   Stack,
   StackItem,
   List,
+  Text,
 } from '@fluentui/react';
 import { Transition } from 'react-transition-group';
 import TaskItem from '../task-item';
@@ -22,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
     width: '350px',
     minWidth: '350px',
     minHeight: '400px',
-    maxHeight: '600px',
+    // maxHeight: '600px',
     padding: '5px',
     overflow: 'auto',
     backgroundColor: theme.semanticColors.bodyBackground,
@@ -32,22 +33,42 @@ const useStyles = makeStyles((theme) => ({
     },
     marginTop: theme.spacing.l1,
   },
+  textHeader: {
+    color: theme.palette.neutralSecondary,
+    fontWeight: 'bold',
+  },
 }));
 
 const defaultStyle = {
-  transition: 'opacity 300ms ease-in-out',
+  transition: 'all 300ms ease-in-out',
   opacity: 0,
 };
 
 const transitionStyles = {
-  entering: { opacity: 1 },
-  entered: { opacity: 1 },
-  exiting: { opacity: 0 },
-  exited: { opacity: 0 },
+  entering: {
+    opacity: 1,
+  },
+  entered: {
+    opacity: 1,
+  },
+  exiting: {
+    opacity: 0,
+  },
+  exited: {
+    opacity: 0,
+  },
 };
 
 const Task = ({
-  task, setTasks, editable, showFinished, showCancelled, selectedId, handleStatusChange,
+  task,
+  setTasks,
+  editable,
+  showFinished,
+  showCancelled,
+  selectedId,
+  handleStatusChange,
+  overdue,
+  disabled,
 }) => {
   const handleIn = (status) => {
     if (status === constants.tasks.status.Finished && !showFinished) return false;
@@ -66,6 +87,7 @@ const Task = ({
         <div
           data-is-focusable
           data-selection-index={task.idx}
+          data-selection-disabled={disabled}
           style={{
             ...defaultStyle,
             ...transitionStyles[state],
@@ -77,6 +99,8 @@ const Task = ({
             setTasks={setTasks}
             editable={editable}
             handleStatusChange={handleStatusChange}
+            overdue={overdue}
+            disabled={disabled}
           />
         </div>
       )}
@@ -86,6 +110,7 @@ const Task = ({
 
 const TaskContainer = ({
   tasks,
+  overdue,
   setTasks,
   handleStatusChange,
   user,
@@ -95,10 +120,34 @@ const TaskContainer = ({
 }) => {
   const classes = useStyles();
   const global = useContext(GlobalContext);
-  const items = useMemo(() => tasks.map((task) => ({
-    key: task.id,
-    data: task,
-  })), [tasks]);
+  const items = useMemo(() => tasks
+    .map((task) => ({
+      key: task.id,
+      data: task,
+    })), [tasks]);
+  const overdueItems = useMemo(() => overdue
+    .map((task) => ({
+      key: task.id,
+      data: task,
+    })), [overdue]);
+
+  const [countOverdue, countCurrent] = useMemo(() => {
+    const countItems = (col) => {
+      const countFunc = (prev, itm) => {
+        if (showFinished && showCancelled) return prev + 1;
+        switch (itm.data.status) {
+          case constants.tasks.status.Finished:
+            return showFinished ? prev + 1 : prev;
+          case constants.tasks.status.Cancelled:
+            return showCancelled ? prev + 1 : prev;
+          default:
+            return prev + 1;
+        }
+      };
+      return col.reduce(countFunc, 0);
+    };
+    return [countItems(overdueItems), countItems(items)];
+  }, [overdueItems, items, showCancelled, showFinished]);
 
   return (
     <div className={classes.root}>
@@ -107,9 +156,46 @@ const TaskContainer = ({
           <Persona size={PersonaSize.size32} text={user?.username} />
         </StackItem>
         <Separator />
+        {/* Overdue */}
+        {
+          countOverdue > 0
+            ? (
+              <>
+                <Text className={classes.textHeader} style={{ textAlign: 'center' }} variant="mediumPlus">Overdue</Text>
+                <Separator />
+                <List
+                  items={[...overdueItems]}
+                  onRenderCell={(item) => (
+                    <Task
+                      task={item.data}
+                      setTasks={setTasks}
+                      handleStatusChange={handleStatusChange}
+                      showFinished={showFinished}
+                      showCancelled={showCancelled}
+                      selectedId={selectedId}
+                      editable={global.user.id === user.id}
+                      overdue
+                    />
+                  )}
+                />
+              </>
+            )
+            : null
+        }
         {/* Use Fluent UI Basic List for Virtualization */}
+        {
+          countOverdue > 0 && countCurrent > 0
+            ? (
+              <>
+                <Separator />
+                <Text className={classes.textHeader} style={{ textAlign: 'center' }} variant="mediumPlus">Current</Text>
+                <Separator />
+              </>
+            )
+            : null
+        }
         <List
-          items={items}
+          items={[...items]}
           onRenderCell={(item) => (
             <Task
               task={item.data}
@@ -119,6 +205,7 @@ const TaskContainer = ({
               showCancelled={showCancelled}
               selectedId={selectedId}
               editable={global.user.id === user.id}
+              disabled={countOverdue > 0}
             />
           )}
         />
@@ -140,10 +227,14 @@ Task.propTypes = {
   showFinished: PropTypes.bool.isRequired,
   showCancelled: PropTypes.bool.isRequired,
   selectedId: PropTypes.string,
+  overdue: PropTypes.bool,
+  disabled: PropTypes.bool,
 };
 
 Task.defaultProps = {
   selectedId: null,
+  overdue: false,
+  disabled: false,
 };
 
 // TaskContainer Props Definition
@@ -154,6 +245,7 @@ TaskContainer.propTypes = {
   }),
   handleStatusChange: PropTypes.func.isRequired,
   tasks: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  overdue: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   setTasks: PropTypes.func.isRequired,
   showFinished: PropTypes.bool.isRequired,
   showCancelled: PropTypes.bool.isRequired,

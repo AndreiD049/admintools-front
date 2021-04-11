@@ -1,4 +1,5 @@
 import React, {
+  useCallback,
   useEffect, useRef, useState,
 } from 'react';
 import PropTypes from 'prop-types';
@@ -17,7 +18,7 @@ import TaskTime from './components/TaskTime';
 const { status } = constants.tasks;
 
 const TaskItem = ({
-  task, handleStatusChange, selected, editable,
+  task, handleStatusChange, selected, editable, overdue, disabled,
 }) => {
   const classes = useStyles();
   const [icons, setIcons] = useState({
@@ -31,6 +32,11 @@ const TaskItem = ({
     ...prev,
     [icon]: state,
   }));
+
+  const handleCollapseToggle = useCallback(() => {
+    if (disabled) return setCollapsed(true);
+    return setCollapsed((prev) => !prev);
+  }, [disabled]);
 
   // Register task timer, perform checks every minute
   useEffect(() => {
@@ -60,7 +66,16 @@ const TaskItem = ({
   }, [task, icons]);
 
   return (
-    <div className={clsx(classes.root, selected && classes.rootSelected)}>
+    <div
+      className={
+        clsx(
+          classes.root,
+          overdue && classes.rootOverdue,
+          selected && classes.rootSelected,
+          disabled && classes.rootDisabled,
+        )
+      }
+    >
       <div
         className={clsx(`task-${task.status.toLowerCase()}`, classes.column)}
       >
@@ -109,13 +124,14 @@ const TaskItem = ({
           setCollapsed={setCollapsed}
           handleStatusChange={handleStatusChange}
           editable={editable}
+          disabled={disabled}
         />
         <div
           tabIndex="-1"
           role="button"
-          onKeyDown={(evt) => evt.key === 'Enter' && setCollapsed((prev) => !prev)}
+          onKeyDown={(evt) => evt.key === 'Enter' && handleCollapseToggle()}
           className={clsx(classes.collapse)}
-          onClick={() => setCollapsed((prev) => !prev)}
+          onClick={handleCollapseToggle}
         >
           <ActionButton
             className={classes.chevron}
@@ -149,10 +165,14 @@ TaskItem.propTypes = {
   }).isRequired,
   selected: PropTypes.bool,
   editable: PropTypes.bool.isRequired,
+  overdue: PropTypes.bool,
+  disabled: PropTypes.bool,
 };
 
 TaskItem.defaultProps = {
   selected: false,
+  overdue: false,
+  disabled: false,
 };
 
 export default TaskItem;

@@ -1,6 +1,5 @@
 import {
   Checkbox,
-  ComboBox,
   CommandBar,
   DefaultButton,
   Icon,
@@ -13,7 +12,7 @@ import {
   SelectionZone,
 } from '@fluentui/react';
 import React, {
-  useState, useContext, useEffect, useMemo,
+  useState, useContext, useMemo,
 } from 'react';
 import {
   Col, Container, Row, useScreenClass,
@@ -33,8 +32,8 @@ import constants from '../../utils/constants';
 import TaskBusyConflict from './components/task-busy-conflict/TaskBusyConflict';
 import UserService from '../../services/UserService';
 import useLocalStorageState from '../ui-hooks/useLocalStorage';
-import ConnectionService from '../../services/ConnectionService';
 import TaskLiveUpdate from './components/task-live-update/TaskLiveUpdate';
+import UserCombobox from '../shared/user-combobox';
 
 const { status } = constants.tasks;
 
@@ -54,7 +53,6 @@ const TaskDashboard = () => {
   const classes = useStyles();
   const global = useContext(GlobalContext);
   const [users] = useFetch(UserService.teamUsersPath);
-  const [userOptions, setUserOptions] = useState([]);
   const [reload, setReload] = useState(true);
   const [
     selectedUsers,
@@ -111,7 +109,39 @@ const TaskDashboard = () => {
   }), [hours, selectedUsers, reload]);
 
   const [tasks, setTasks] = useFetch(TaskService.baseUrl, taskParams, taskOptions);
-  const tasksWithIdx = useMemo(() => tasks.map((task, idx) => ({ ...task, idx })), [tasks]);
+  const taskMap = useMemo(() => {
+    const result = new Map();
+    // Add indexes to tasks needed for selection component
+    const withIdx = tasks.map((t, idx) => ({ ...t, idx }));
+    // Determine interval of hours that are current
+    // Hours should be in local time already, as tasks are also in local time
+    const hoursFromLocal = hours.from.setZone('local', { keepLocalTime: true });
+    const hoursTo = hoursFromLocal.plus({ minute: hours.duration });
+    const interval = hoursFromLocal.until(hoursTo);
+    // For each selected user, find his current tasks and overdue tasks
+    for (const selUser of selectedUsers) {
+      const tasksResult = {
+        current: [],
+        overdue: [],
+      };
+      withIdx
+        .filter((task) => task.assignedTo.find((user) => user.id === selUser) !== undefined)
+        .forEach((task) => {
+          const startDT = DateTime.fromISO(task.expectedStartDate);
+          const actualStartDT = DateTime.fromISO(task.actualStartDate);
+          if (interval.contains(startDT) || interval.contains(actualStartDT)) {
+            tasksResult.current.push(task);
+          } else {
+            tasksResult.overdue.push(task);
+          }
+        });
+      // Sort the list
+      tasksResult.current.sort((a, b) => TaskService.sortTasks(a, b, showFinsihed, showCancelled));
+      result.set(selUser, tasksResult);
+    }
+    return result;
+  }, [tasks, selectedUsers, hours, showFinsihed, showCancelled]);
+
   // Selection data
   const [selectedKey, setSelectedKey] = useState(null);
   const selection = useMemo(() => new Selection({
@@ -119,7 +149,7 @@ const TaskDashboard = () => {
     items: tasks.map((t) => ({
       key: t.id,
       data: t,
-    }), [tasks]),
+    })),
     onSelectionChanged: () => {
       const sel = selection.getSelection();
       if (sel.length > 0) {
@@ -139,78 +169,6 @@ const TaskDashboard = () => {
       setTasks((prev) => prev
         .filter((t) => t.id !== task.id)
         .concat(TaskService.createTaskObject(task)));
-    }
-  };
-
-  const newPanel = usePanel(
-    AddTask,
-    {
-      headerText: 'Create new task',
-      onRenderFooterContent: () => (
-        <PrimaryButton text="Create" type="submit" form="create-task-form" />
-      ),
-    },
-    {
-      handleAdd: handleTaskAdd,
-    },
-  );
-
-  const [dialogProps, setDialogProps] = useState({});
-  const resolveBusyConflictDialog = useDialog(
-    TaskBusyConflict,
-    {
-      isBlocking: true,
-      title: 'Busy task found',
-      dialogFooter: (_accept, cancel) => (
-        <>
-          <DefaultButton onClick={cancel}>Cancel</DefaultButton>
-          <PrimaryButton
-            style={{ marginLeft: '5px' }}
-            form="task-busy-resolve"
-            type="submit"
-          >
-            Continue
-          </PrimaryButton>
-        </>
-      ),
-    },
-    dialogProps,
-  );
-
-  useEffect(() => {
-    async function run() {
-      if (global.connectionId) {
-        await ConnectionService.subscribe({
-          to: selectedUsers,
-          connectionId: global.connectionId,
-        });
-      }
-    }
-    run();
-  }, [selectedUsers, global.connectionId]);
-
-  /**
-   * Update user options
-   */
-  useEffect(() => {
-    setUserOptions(
-      users.map((user) => ({
-        key: user.id,
-        text: user.username,
-        data: user,
-      })),
-    );
-  }, [users]);
-
-  const handleUserSelect = (ev, option) => {
-    if (option.selected) {
-      if (option.key === global.user.id) {
-        setSelectedUsers((prev) => [option.key].concat(prev));
-      } else {
-        setSelectedUsers((prev) => prev.concat(option.key));
-      }
-    } else {
-      setSelectedUsers((prev) => prev.filter((user) => user !== option.key));
     }
   };
 
@@ -249,19 +207,60 @@ const TaskDashboard = () => {
       ));
   };
 
+  const newPanel = usePanel(
+    AddTask,
+    {
+      headerText: 'Create new task',
+      onRenderFooterContent: () => (
+        <PrimaryButton text="Create" type="submit" form="create-task-form" />
+      ),
+    },
+    {
+      handleAdd: handleTaskAdd,
+    },
+  );
+
+  const [dialogProps, setDialogProps] = useState({});
+  const resolveBusyConflictDialog = useDialog(
+    TaskBusyConflict,
+    {
+      isBlocking: true,
+      title: 'Busy task found',
+      dialogFooter: (_accept, cancel) => (
+        <>
+          <DefaultButton onClick={cancel}>Cancel</DefaultButton>
+          <PrimaryButton
+            style={{ marginLeft: '5px' }}
+            form="task-busy-resolve"
+            type="submit"
+          >
+            Continue
+          </PrimaryButton>
+        </>
+      ),
+    },
+    dialogProps,
+  );
+
   return (
     <>
-      <TaskLiveUpdate tasks={tasks} setTasks={setTasks} hours={hours} setReload={setReload} />
+      <TaskLiveUpdate
+        tasks={tasks}
+        setTasks={setTasks}
+        selectedUsers={selectedUsers}
+        hours={hours}
+        setReload={setReload}
+      />
       <Container lg>
         <PageHeader text="Daily tasks" />
         <Row>
           <Col xs={12}>
-            <CurrentDate currentDate={hours.from} setCurrentDate={setHours} />
+            <CurrentDate currentDate={hours.from} setCurrentDate={setHours} setTasks={setTasks} />
           </Col>
         </Row>
         <Row>
           <Col>
-            <WorkingHours hours={hours} setHours={setHours} />
+            <WorkingHours hours={hours} setHours={setHours} setTasks={setTasks} />
           </Col>
         </Row>
         <Separator />
@@ -298,16 +297,12 @@ const TaskDashboard = () => {
                         className={classes.searchIcon}
                         iconName="ProfileSearch"
                       />
-                      <ComboBox
-                        autoComplete="on"
-                        options={userOptions}
-                        multiSelect
+                      <UserCombobox
+                        users={users}
                         selectedKey={selectedUsers}
+                        setSelectedUsers={setSelectedUsers}
+                        multiSelect
                         openOnKeyboardFocus
-                        onChange={handleUserSelect}
-                        calloutProps={{
-                          calloutMaxHeight: 500,
-                        }}
                       />
                     </Stack>
                   ),
@@ -346,12 +341,8 @@ const TaskDashboard = () => {
             {selectedUsers.map((selUser) => (
               <TaskContainer
                 key={selUser}
-                tasks={tasksWithIdx
-                  .filter(
-                    (task) => task.assignedTo.find((user) => user.id === selUser)
-                    !== undefined,
-                  )
-                  .sort((t1, t2) => (t1.expectedStartDate < t2.expectedStartDate ? -1 : 1))}
+                tasks={taskMap.get(selUser).current}
+                overdue={taskMap.get(selUser).overdue}
                 user={users.find((u) => u.id === selUser)}
                 setTasks={setTasks}
                 handleStatusChange={handleStatusChange}
