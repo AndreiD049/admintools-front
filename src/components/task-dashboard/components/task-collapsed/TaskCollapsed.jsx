@@ -27,6 +27,7 @@ const TaskCollapsed = ({
   collapsed,
   setCollapsed,
   handleStatusChange,
+  editable,
 }) => {
   const classes = useStyles();
 
@@ -40,52 +41,56 @@ const TaskCollapsed = ({
       <Collapse isOpened={!collapsed}>
         <Separator />
         <TaskPersonas task={task} />
-        <Separator>
-          <Text variant="smallPlus">Status</Text>
-        </Separator>
-        <ButtonGrid
-          columnCount={2}
-          onRenderItem={(item) => (
-            <DefaultButton
-              onClick={handleChange(item)}
-              disabled={item.disabled}
-              style={{
-                width: 115,
-                margin: 3,
-                fontSize: 8,
-                height: 18,
-              }}
-            >
-              <Text variant="small">{item.text}</Text>
-            </DefaultButton>
-          )}
-          items={[
-            {
-              key: 'inprogress',
-              text: 'In progress',
-              status: 'InProgress',
-              disabled: task.status === 'InProgress',
-            },
-            {
-              key: 'paused',
-              text: 'Paused',
-              status: 'Paused',
-              disabled: task.status !== 'InProgress',
-            },
-            {
-              key: 'finished',
-              text: 'Finished',
-              status: 'Finished',
-              disabled: task.status === 'Finished',
-            },
-            {
-              key: 'cancelled',
-              text: 'Cancelled',
-              status: 'Cancelled',
-              disabled: task.status === 'Cancelled',
-            },
-          ]}
-        />
+        { editable && (
+          <>
+            <Separator>
+              <Text variant="smallPlus">Status</Text>
+            </Separator>
+            <ButtonGrid
+              columnCount={2}
+              onRenderItem={(item) => (
+                <DefaultButton
+                  onClick={handleChange(item)}
+                  disabled={item.disabled}
+                  style={{
+                    width: 115,
+                    margin: 3,
+                    fontSize: 8,
+                    height: 18,
+                  }}
+                >
+                  <Text variant="small">{item.text}</Text>
+                </DefaultButton>
+              )}
+              items={[
+                {
+                  key: 'inprogress',
+                  text: 'In progress',
+                  status: 'InProgress',
+                  disabled: task.status === 'InProgress',
+                },
+                {
+                  key: 'paused',
+                  text: 'Paused',
+                  status: 'Paused',
+                  disabled: task.status !== 'InProgress',
+                },
+                {
+                  key: 'finished',
+                  text: 'Finished',
+                  status: 'Finished',
+                  disabled: task.status === 'Finished',
+                },
+                {
+                  key: 'cancelled',
+                  text: 'Cancelled',
+                  status: 'Cancelled',
+                  disabled: task.status === 'Cancelled',
+                },
+              ]}
+            />
+          </>
+        )}
       </Collapse>
     </div>
   );
@@ -99,6 +104,7 @@ TaskCollapsed.propTypes = {
   }).isRequired,
   collapsed: PropTypes.bool.isRequired,
   setCollapsed: PropTypes.func.isRequired,
+  editable: PropTypes.bool.isRequired,
 };
 
 export default TaskCollapsed;

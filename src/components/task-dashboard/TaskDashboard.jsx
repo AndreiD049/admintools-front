@@ -36,6 +36,8 @@ import useLocalStorageState from '../ui-hooks/useLocalStorage';
 import ConnectionService from '../../services/ConnectionService';
 import TaskLiveUpdate from './components/task-live-update/TaskLiveUpdate';
 
+const { status } = constants.tasks;
+
 const useStyles = makeStyles((theme) => ({
   searchIcon: {
     color: theme.palette.themePrimary,
@@ -128,7 +130,12 @@ const TaskDashboard = () => {
 
   const handleTaskAdd = (task) => {
     const expectedStart = DateTime.fromISO(task.expectedStartDate);
-    if (expectedStart >= hours.from && expectedStart <= hours.to) {
+    const hoursTo = hours.from.plus({ minute: hours.duration });
+    const interval = hours.from.until(hoursTo);
+    // Task should be either from today or it should be non-finished and from the past
+    if (interval.contains(expectedStart)
+      || ([status.Finished, status.Cancelled].indexOf(task.status) === -1
+      && expectedStart < hours.from)) {
       setTasks((prev) => prev
         .filter((t) => t.id !== task.id)
         .concat(TaskService.createTaskObject(task)));

@@ -13,6 +13,7 @@ import TaskService from '../../../../services/tasks/TaskService';
 import UserService from '../../../../services/UserService';
 import { useFetch } from '../../../../services/hooks';
 import PeoplePicker from '../../../shared/people-picker/PeoplePicker';
+import NotificationService from '../../../../services/NotificationService';
 
 const AddTask = ({ setOpen, handleAdd }) => {
   const [users] = useFetch(UserService.teamUsersPath, null, {
@@ -45,6 +46,10 @@ const AddTask = ({ setOpen, handleAdd }) => {
   const handleSubmit = async (evt) => {
     evt.persist();
     evt.preventDefault();
+    if (data.assignedTo.length < 1) {
+      NotificationService.notifyInfo('At least one assigned person is required');
+      return;
+    }
     const result = await TaskService.createTask({
       title: data.title,
       description: data.description,
