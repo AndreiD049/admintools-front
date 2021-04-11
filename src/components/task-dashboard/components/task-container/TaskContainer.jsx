@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
     width: '350px',
     minWidth: '350px',
     minHeight: '400px',
-    // maxHeight: '600px',
+    maxHeight: '600px',
     padding: '5px',
     overflow: 'auto',
     backgroundColor: theme.semanticColors.bodyBackground,
