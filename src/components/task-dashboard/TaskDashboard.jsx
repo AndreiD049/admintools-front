@@ -131,8 +131,10 @@ const TaskDashboard = () => {
           const actualStartDT = DateTime.fromISO(task.actualStartDate);
           if (interval.contains(startDT) || interval.contains(actualStartDT)) {
             tasksResult.current.push(task);
-          } else {
+          } else if ([status.Finished, status.Cancelled].indexOf(task.status) === -1) {
             tasksResult.overdue.push(task);
+          } else {
+            tasksResult.current.push(task);
           }
         });
       // Sort the list
