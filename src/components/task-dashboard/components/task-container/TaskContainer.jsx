@@ -1,4 +1,6 @@
-import React, { useContext, useMemo } from 'react';
+import React, {
+  useCallback, useContext, useMemo,
+} from 'react';
 import PropTypes from 'prop-types';
 import {
   makeStyles,
@@ -40,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const defaultStyle = {
-  transition: 'all 300ms ease-in-out',
+  transition: 'all 350ms ease-in-out',
   opacity: 0,
 };
 
@@ -70,17 +72,19 @@ const Task = ({
   overdue,
   disabled,
 }) => {
-  const handleIn = (status) => {
+  const handleIn = useCallback((status) => {
     if (status === constants.tasks.status.Finished && !showFinished) return false;
     if (status === constants.tasks.status.Cancelled && !showCancelled) return false;
     return true;
-  };
+  }, [showFinished, showCancelled]);
+
+  if (!task) return null;
 
   return (
     <Transition
-      key={task.id}
       in={handleIn(task.status)}
-      timeout={300}
+      timeout={350}
+      appear
       unmountOnExit
     >
       {(state) => (
@@ -164,19 +168,24 @@ const TaskContainer = ({
                 <Text className={classes.textHeader} style={{ textAlign: 'center' }} variant="mediumPlus">Overdue</Text>
                 <Separator />
                 <List
-                  items={[...overdueItems]}
-                  onRenderCell={(item) => (
-                    <Task
-                      task={item.data}
-                      setTasks={setTasks}
-                      handleStatusChange={handleStatusChange}
-                      showFinished={showFinished}
-                      showCancelled={showCancelled}
-                      selectedId={selectedId}
-                      editable={global.user.id === user.id}
-                      overdue
-                    />
-                  )}
+                  // Nasty hack, add a null item to the front of the list to avoid
+                  // last items not rendered if all of the first items are finished
+                  // Virtualization issue
+                  items={[{ key: 0, data: null }, ...overdueItems]}
+                  onRenderCell={(item) => (item.data
+                    ? (
+                      <Task
+                        task={item.data}
+                        setTasks={setTasks}
+                        handleStatusChange={handleStatusChange}
+                        showFinished={showFinished}
+                        showCancelled={showCancelled}
+                        selectedId={selectedId}
+                        editable={global.user.id === user.id}
+                        overdue
+                      />
+                    )
+                    : (<div style={{ height: 1 }} />))}
                 />
               </>
             )
@@ -195,19 +204,24 @@ const TaskContainer = ({
             : null
         }
         <List
-          items={[...items]}
-          onRenderCell={(item) => (
-            <Task
-              task={item.data}
-              setTasks={setTasks}
-              handleStatusChange={handleStatusChange}
-              showFinished={showFinished}
-              showCancelled={showCancelled}
-              selectedId={selectedId}
-              editable={global.user.id === user.id}
-              disabled={countOverdue > 0}
-            />
-          )}
+          items={[{ key: 0, data: null }, ...items]}
+          // Nasty hack, add a null item to the front of the list to avoid
+          // last items not rendered if all of the first items are finished
+          // Virtualization issue
+          onRenderCell={(item) => (item.data
+            ? (
+              <Task
+                task={item.data}
+                setTasks={setTasks}
+                handleStatusChange={handleStatusChange}
+                showFinished={showFinished}
+                showCancelled={showCancelled}
+                selectedId={selectedId}
+                editable={global.user.id === user.id}
+                disabled={countOverdue > 0}
+              />
+            )
+            : (<div style={{ height: 1 }} />))}
         />
       </Stack>
     </div>

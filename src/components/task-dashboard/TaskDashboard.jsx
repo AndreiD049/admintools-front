@@ -1,13 +1,8 @@
 import {
-  Checkbox,
-  CommandBar,
   DefaultButton,
-  Icon,
-  makeStyles,
   PrimaryButton,
   SelectionMode,
   Separator,
-  Stack,
   Selection,
   SelectionZone,
 } from '@fluentui/react';
@@ -15,7 +10,7 @@ import React, {
   useState, useContext, useMemo,
 } from 'react';
 import {
-  Col, Container, Row, useScreenClass,
+  Col, Container, Row,
 } from 'react-grid-system';
 import { DateTime } from 'luxon';
 import { useFetch } from '../../services/hooks';
@@ -33,24 +28,11 @@ import TaskBusyConflict from './components/task-busy-conflict/TaskBusyConflict';
 import UserService from '../../services/UserService';
 import useLocalStorageState from '../ui-hooks/useLocalStorage';
 import TaskLiveUpdate from './components/task-live-update/TaskLiveUpdate';
-import UserCombobox from '../shared/user-combobox';
+import TaskCommandBar from './components/task-command-bar';
 
 const { status } = constants.tasks;
 
-const useStyles = makeStyles((theme) => ({
-  searchIcon: {
-    color: theme.palette.themePrimary,
-    marginLeft: theme.spacing.s1,
-    marginRight: theme.spacing.s1,
-  },
-  marginRight: {
-    marginRight: theme.spacing.l1,
-  },
-}));
-
 const TaskDashboard = () => {
-  const sc = useScreenClass();
-  const classes = useStyles();
   const global = useContext(GlobalContext);
   const [users] = useFetch(UserService.teamUsersPath);
   const [reload, setReload] = useState(true);
@@ -85,7 +67,7 @@ const TaskDashboard = () => {
     },
   );
 
-  const [showFinsihed, setShowFinished] = useLocalStorageState(
+  const [showFinished, setShowFinished] = useLocalStorageState(
     'DTShowFinished',
     false,
   );
@@ -109,6 +91,25 @@ const TaskDashboard = () => {
   }), [hours, selectedUsers, reload]);
 
   const [tasks, setTasks] = useFetch(TaskService.baseUrl, taskParams, taskOptions);
+
+  // Selection data
+  const [selectedKey, setSelectedKey] = useState(null);
+  const selection = useMemo(() => new Selection({
+    selectionMode: SelectionMode.single,
+    items: tasks.map((t) => ({
+      key: t.id,
+      data: t,
+    })),
+    onSelectionChanged: () => {
+      const sel = selection.getSelection();
+      if (sel.length > 0) {
+        setSelectedKey(sel[0].key);
+      } else {
+        setSelectedKey(null);
+      }
+    },
+  }), [tasks]);
+
   const taskMap = useMemo(() => {
     const result = new Map();
     // Add indexes to tasks needed for selection component
@@ -138,27 +139,12 @@ const TaskDashboard = () => {
           }
         });
       // Sort the list
-      tasksResult.current.sort((a, b) => TaskService.sortTasks(a, b, showFinsihed, showCancelled));
+      tasksResult.current.sort((a, b) => TaskService
+        .sortTasks(a, b));
       result.set(selUser, tasksResult);
     }
     return result;
-  }, [tasks, selectedUsers, hours, showFinsihed, showCancelled]);
-
-  // Selection data
-  const [selectedKey, setSelectedKey] = useState(null);
-  const selection = useMemo(() => new Selection({
-    selectionMode: SelectionMode.single,
-    items: tasks.map((t) => ({
-      key: t.id,
-      data: t,
-    })),
-    onSelectionChanged: () => {
-      const sel = selection.getSelection();
-      if (sel.length > 0) {
-        setSelectedKey(sel[0].key);
-      }
-    },
-  }), [tasks]);
+  }, [tasks, selectedUsers, hours]);
 
   const handleTaskAdd = (task) => {
     const expectedStart = DateTime.fromISO(task.expectedStartDate);
@@ -207,6 +193,7 @@ const TaskDashboard = () => {
           ? TaskService.createTaskObject(updated.result)
           : t),
       ));
+    selection.toggleAllSelected();
   };
 
   const newPanel = usePanel(
@@ -268,72 +255,15 @@ const TaskDashboard = () => {
         <Separator />
         <Row>
           <Col>
-            <CommandBar
-              items={[
-                {
-                  key: 'new',
-                  text: 'New',
-                  iconProps: {
-                    iconName: 'Add',
-                  },
-                  onClick: () => {
-                    newPanel.setOpen(true);
-                  },
-                },
-              ]}
-              farItems={[
-                {
-                  key: 'users',
-                  text: 'Users',
-                  iconProps: {
-                    iconName: 'ProfileSearch',
-                  },
-                  onRender: () => (
-                    <Stack
-                      horizontal
-                      horizontalAlign="center"
-                      verticalAlign="center"
-                      className={classes.marginRight}
-                    >
-                      <Icon
-                        className={classes.searchIcon}
-                        iconName="ProfileSearch"
-                      />
-                      <UserCombobox
-                        users={users}
-                        selectedKey={selectedUsers}
-                        setSelectedUsers={setSelectedUsers}
-                        multiSelect
-                        openOnKeyboardFocus
-                      />
-                    </Stack>
-                  ),
-                },
-                {
-                  key: 'showFinished',
-                  iconProps: {
-                    iconName: 'RedEye',
-                  },
-                  onRender: () => (
-                    <Stack
-                      tokens={{ childrenGap: 4 }}
-                      horizontalAlign="start"
-                      verticalAlign="center"
-                    >
-                      <Checkbox
-                        label={['xs', 'sm'].indexOf(sc) !== -1 ? 'F' : 'Show Finished'}
-                        checked={showFinsihed}
-                        onChange={(ev, checked) => setShowFinished(checked)}
-                      />
-                      <Checkbox
-                        label={['xs', 'sm'].indexOf(sc) !== -1 ? 'C' : 'Show Cancelled'}
-                        checked={showCancelled}
-                        onChange={(ev, checked) => setShowCancelled(checked)}
-                      />
-                    </Stack>
-                  ),
-                },
-              ]}
+            <TaskCommandBar
+              handleNew={() => newPanel.setOpen(true)}
+              users={users}
+              selectedUsers={selectedUsers}
+              setSelectedUsers={setSelectedUsers}
+              showFinished={showFinished}
+              setShowFinished={setShowFinished}
+              showCancelled={showCancelled}
+              setShowCancelled={setShowCancelled}
             />
           </Col>
         </Row>
@@ -348,7 +278,7 @@ const TaskDashboard = () => {
                 user={users.find((u) => u.id === selUser)}
                 setTasks={setTasks}
                 handleStatusChange={handleStatusChange}
-                showFinished={showFinsihed}
+                showFinished={showFinished}
                 showCancelled={showCancelled}
                 selectedId={selectedKey}
               />

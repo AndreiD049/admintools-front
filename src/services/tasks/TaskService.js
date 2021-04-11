@@ -1,9 +1,6 @@
 import { DateTime } from 'luxon';
 import axios from 'axios';
 import NotificationService from '../NotificationService';
-import constants from '../../utils/constants';
-
-const { status } = constants.tasks;
 
 const TaskService = {
   baseUrl: '/api/tasks',
@@ -148,15 +145,10 @@ const TaskService = {
     return copy;
   },
 
-  sortTasks(taskA, taskB, showFinished, showCancelled) {
+  sortTasks(taskA, taskB) {
     // First sort on priority
     if (taskA.priority !== taskB.priority) return taskB.priority - taskA.priority;
     // Then, if Finished or Cancelled items should be hidden, put them at the end of the list
-    // (for virtualization)
-    if ((!showFinished && taskA.status === status.Finished)
-      || (!showCancelled && taskA.status === status.Cancelled)) return 1;
-    if ((!showFinished && taskB.status === status.Finished)
-      || (!showCancelled && taskB.status === status.Cancelled)) return -1;
     // Else, just sort the task based on Date finish -> first to expire
     return taskA.sortValue - taskB.sortValue;
   },
