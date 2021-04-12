@@ -270,7 +270,7 @@ const TaskDashboard = () => {
         <Separator />
         <SelectionZone selection={selection}>
           <Row justify="around">
-            {selectedUsers.map((selUser) => (
+            {selectedUsers.map((selUser) => users.find((u) => u.id === selUser) !== undefined && (
               <TaskContainer
                 key={selUser}
                 tasks={taskMap.get(selUser).current}
