@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useContext, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import {
   Checkbox, CommandBar, FontIcon, makeStyles, Stack,
 } from '@fluentui/react';
 import { useScreenClass } from 'react-grid-system';
 import UserCombobox from '../../../shared/user-combobox';
+import constants from '../../../../utils/constants';
+import GlobalContext from '../../../../services/GlobalContext';
 
 const useStyles = makeStyles((theme) => ({
   searchIcon: {
@@ -26,9 +28,15 @@ const TaskCommandBar = ({
   setShowFinished,
   showCancelled,
   setShowCancelled,
+  selectedTaskId,
+  moveTaskDialog,
 }) => {
+  const global = useContext(GlobalContext);
   const sc = useScreenClass();
   const classes = useStyles();
+  const canUpdateOtherTasks = useMemo(() => global
+    .Authorize(constants.securities.TASK.code, constants.securities.TASK.grants.updateOther),
+  [global]);
 
   return (
     <CommandBar
@@ -40,6 +48,27 @@ const TaskCommandBar = ({
             iconName: 'Add',
           },
           onClick: handleNew,
+        },
+        {
+          key: 'move',
+          text: 'Move',
+          disabled: selectedTaskId === null || !canUpdateOtherTasks,
+          iconProps: {
+            iconName: 'Move',
+          },
+          onClick: async () => {
+            const answer = await moveTaskDialog.show();
+            return answer;
+          },
+        },
+        {
+          key: 'edit',
+          text: 'Edit',
+          disabled: selectedTaskId === null || !canUpdateOtherTasks,
+          iconProps: {
+            iconName: 'Edit',
+          },
+          onClick: () => null,
         },
       ]}
       farItems={[
@@ -108,6 +137,14 @@ TaskCommandBar.propTypes = {
   setShowFinished: PropTypes.func.isRequired,
   showCancelled: PropTypes.bool.isRequired,
   setShowCancelled: PropTypes.func.isRequired,
+  selectedTaskId: PropTypes.string,
+  moveTaskDialog: PropTypes.shape({
+    show: PropTypes.func,
+  }).isRequired,
+};
+
+TaskCommandBar.defaultProps = {
+  selectedTaskId: null,
 };
 
 export default TaskCommandBar;

@@ -1,6 +1,8 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { createContext, useEffect, useState } from 'react';
-import { Dialog, DialogFooter, DialogType } from '@fluentui/react';
+import {
+  DefaultButton, Dialog, DialogFooter, DialogType, PrimaryButton,
+} from '@fluentui/react';
 import constants from '../../utils/constants';
 
 const DialogContext = createContext({
@@ -16,6 +18,18 @@ const DialogContext = createContext({
   setDialogFooter: null,
 });
 
+const footerOkCancel = (accept, cancel, options) => (
+  <>
+    <DefaultButton onClick={cancel}>{options?.cancelText ?? 'Cancel'}</DefaultButton>
+    <PrimaryButton
+      onClick={accept}
+      style={{ marginLeft: '5px' }}
+    >
+      {options?.okText ?? 'Ok'}
+    </PrimaryButton>
+  </>
+);
+
 /**
  * @param {Object} Component
  * @param {Object} options
@@ -24,6 +38,9 @@ const DialogContext = createContext({
  * @param {Number} options.type
  * @param {String} options.title
  * @param {String} options.subText
+ * @param {String} options.cancelText
+ * @param {String} options.okText
+ * @param {String} options.submitForm
  * @param {Function} options.dialogFooter
  * @param {Object} componentProps
  */
@@ -84,7 +101,7 @@ const useDialog = (Component, options = {}, componentProps = {}) => {
       >
         <Component accept={accept} cancel={cancel} {...componentProps} />
         {dialogFooter ? (
-          <DialogFooter>{dialogFooter(accept, cancel)}</DialogFooter>
+          <DialogFooter>{dialogFooter(accept, cancel, options)}</DialogFooter>
         ) : null}
       </Dialog>
     </DialogContext.Provider>
@@ -100,4 +117,4 @@ const useDialog = (Component, options = {}, componentProps = {}) => {
 
 export default useDialog;
 
-export { DialogContext };
+export { DialogContext, footerOkCancel };

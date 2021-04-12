@@ -172,6 +172,7 @@ const constants = {
         read: 'read',
         create: 'create',
         update: 'update',
+        updateOther: 'update-other',
         delete: 'delete',
       },
     },

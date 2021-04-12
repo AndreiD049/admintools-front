@@ -22,7 +22,7 @@ import CurrentDate from './components/current-date/CurrentDate';
 import TaskContainer from './components/task-container/TaskContainer';
 import WorkingHours from './components/working-hours/WorkingHours';
 import GlobalContext from '../../services/GlobalContext';
-import useDialog from '../ui-hooks/useDialog';
+import useDialog, { footerOkCancel } from '../ui-hooks/useDialog';
 import constants from '../../utils/constants';
 import TaskBusyConflict from './components/task-busy-conflict/TaskBusyConflict';
 import UserService from '../../services/UserService';
@@ -139,8 +139,8 @@ const TaskDashboard = () => {
           }
         });
       // Sort the list
-      tasksResult.current.sort((a, b) => TaskService
-        .sortTasks(a, b));
+      tasksResult.overdue.sort(TaskService.sortTasks);
+      tasksResult.current.sort(TaskService.sortTasks);
       result.set(selUser, tasksResult);
     }
     return result;
@@ -178,6 +178,15 @@ const TaskDashboard = () => {
         });
         const answer = await resolveBusyConflictDialog.show();
         if (answer === constants.dialogAnswers.No) return;
+        // update conflicting tasks, user answered yes
+        const paused = conflicts.map((ctask) => TaskService.updateTaskStatus(ctask.id, {
+          status: constants.tasks.status.Paused,
+        }));
+        (await Promise
+          .all(paused))
+          .map((tsk) => setTasks((prev) => prev.map((t) => (t.id === tsk.result.id
+            ? TaskService.createTaskObject(tsk.result)
+            : t))));
       }
     }
     const updated = await TaskService.updateTaskStatus(task.id, { status: newStatus });
@@ -193,7 +202,6 @@ const TaskDashboard = () => {
           ? TaskService.createTaskObject(updated.result)
           : t),
       ));
-    selection.toggleAllSelected();
   };
 
   const newPanel = usePanel(
@@ -215,20 +223,19 @@ const TaskDashboard = () => {
     {
       isBlocking: true,
       title: 'Busy task found',
-      dialogFooter: (_accept, cancel) => (
-        <>
-          <DefaultButton onClick={cancel}>Cancel</DefaultButton>
-          <PrimaryButton
-            style={{ marginLeft: '5px' }}
-            form="task-busy-resolve"
-            type="submit"
-          >
-            Continue
-          </PrimaryButton>
-        </>
-      ),
+      okText: 'Continue',
+      dialogFooter: footerOkCancel,
     },
     dialogProps,
+  );
+
+  const moveTaskDialog = useDialog(
+    () => <div>TODO</div>,
+    {
+      isBlocking: true,
+      title: 'Move task',
+      dialogFooter: footerOkCancel,
+    },
   );
 
   return (
@@ -264,6 +271,8 @@ const TaskDashboard = () => {
               setShowFinished={setShowFinished}
               showCancelled={showCancelled}
               setShowCancelled={setShowCancelled}
+              selectedTaskId={selectedKey}
+              moveTaskDialog={moveTaskDialog}
             />
           </Col>
         </Row>
@@ -288,6 +297,7 @@ const TaskDashboard = () => {
       </Container>
       {newPanel.render}
       {resolveBusyConflictDialog.render}
+      {moveTaskDialog.render}
     </>
   );
 };
